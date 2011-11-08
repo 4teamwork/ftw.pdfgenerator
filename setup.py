@@ -3,6 +3,11 @@ import os
 
 version = '1.0'
 
+tests_require = [
+    'plone.app.testing',
+    'plone.mocktestcase',
+    ]
+
 setup(name='ftw.pdfgenerator',
       version=version,
       description="A library for generating PDF representations of Plone " + \
@@ -33,6 +38,8 @@ setup(name='ftw.pdfgenerator',
         'setuptools',
         # -*- Extra requirements: -*-
         ],
+      tests_require=tests_require,
+      extras_require=dict(tests=tests_require),
 
       entry_points="""
       # -*- Entry points: -*-
