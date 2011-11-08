@@ -1,0 +1,5 @@
+
+*.egg-info
+*.mo
+*.pyc
+README.html
