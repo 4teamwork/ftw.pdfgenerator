@@ -7,3 +7,4 @@ README.html
 bin/
 buildout.cfg
 develop-eggs/
+parts/
