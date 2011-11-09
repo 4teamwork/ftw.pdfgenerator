@@ -32,6 +32,14 @@ Usage
 =====
 
 
+Links
+=====
+
+- Package on pypi: http://pypi.python.org/pypi/ftw.pdfgenerator
+- Main github project repository: https://github.com/4teamwork/ftw.pdfgenerator
+- Issue tracker: https://github.com/4teamwork/ftw.pdfgenerator/issues
+
+
 .. _MacTeX: http://www.tug.org/mactex/2011/
 .. _Tex Live: http://www.tug.org/texlive/
 .. _MiKTeX: http://www.miktex.org/
