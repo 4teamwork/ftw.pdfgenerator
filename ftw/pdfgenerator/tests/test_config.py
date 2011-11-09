@@ -3,12 +3,16 @@
 
 from ftw.pdfgenerator.config import DefaultConfig
 from ftw.pdfgenerator.interfaces import IConfig
+from ftw.pdfgenerator.testing import PDFGENERATOR_ZCML_LAYER
 from unittest2 import TestCase
+from zope.component import queryUtility
 from zope.interface.verify import verifyClass
 import os
 
 
 class TestDefaultConfigurationUtility(TestCase):
+
+    layer = PDFGENERATOR_ZCML_LAYER
 
     def test_config_implements_interface(self):
         self.assertTrue(IConfig.implementedBy(DefaultConfig))
@@ -35,3 +39,8 @@ class TestDefaultConfigurationUtility(TestCase):
         self.assertNotEqual(path_one, path_two)
         os.rmdir(path_one)
         os.rmdir(path_two)
+
+    def test_config_utility_is_registered_and_default_utility(self):
+        self.assertIsNotNone(queryUtility(IConfig))
+
+        self.assertEqual(queryUtility(IConfig).__class__, DefaultConfig)
