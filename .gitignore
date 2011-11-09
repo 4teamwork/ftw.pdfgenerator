@@ -6,5 +6,6 @@
 README.html
 bin/
 buildout.cfg
+coverage/
 develop-eggs/
 parts/
