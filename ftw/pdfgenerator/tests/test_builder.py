@@ -1,0 +1,225 @@
+from ftw.pdfgenerator.builder import Builder
+from ftw.pdfgenerator.config import DefaultConfig
+from ftw.pdfgenerator.exceptions import BuildTerminated, PDFBuildFailed
+from ftw.pdfgenerator.interfaces import IBuilder, IBuilderFactory, IConfig
+from ftw.pdfgenerator.testing import PDFGENERATOR_ZCML_LAYER
+from mocker import Mocker, MATCH, expect, ANY
+from plone.mocktestcase import MockTestCase
+from zipfile import ZipFile
+from zope.component import getUtility
+from zope.interface.verify import verifyClass
+import os
+import shutil
+import tempfile
+
+
+class TestBuilder(MockTestCase):
+
+    layer = PDFGENERATOR_ZCML_LAYER
+
+    def setUp(self):
+        self.testcase_mocker = Mocker()
+        self.builddir = os.path.join(tempfile.mkdtemp('test-builder'), 'build')
+
+        config = self.testcase_mocker.proxy(
+            DefaultConfig(),
+            spec=None,
+            count=False)
+        self.mock_utility(config, IConfig)
+
+        expect(config.get_build_directory()).result(self.builddir)
+        self.config = config
+
+        self.testcase_mocker.replay()
+        os.mkdir(self.builddir)
+        super(TestBuilder, self).setUp()
+
+    def tearDown(self):
+        self.testcase_mocker.verify()
+        self.testcase_mocker.restore()
+        super(TestBuilder, self).tearDown()
+
+    def testTearDown(self):
+        if os.path.exists(self.builddir):
+            shutil.rmtree(self.builddir)
+
+    def test_utility_is_factory(self):
+        factory = getUtility(IBuilderFactory)
+        self.assertFalse(IBuilder.implementedBy(factory))
+        self.assertEqual(factory().__class__, Builder)
+
+    def test_factory_returns_builder(self):
+        factory = getUtility(IBuilderFactory)
+        builder = factory()
+        self.assertTrue(IBuilder.providedBy(builder))
+        verifyClass(IBuilder, Builder)
+
+    def test_builder_implements_interface(self):
+        self.assertTrue(IBuilder.implementedBy(Builder))
+        verifyClass(IBuilder, Builder)
+
+    def test_build_directory_is_mocked_in_test_setup(self):
+        factory = getUtility(IBuilderFactory)
+        builder = factory()
+        self.assertEqual(builder.build_directory, self.builddir)
+
+    def test_add_file(self):
+        builder = getUtility(IBuilderFactory)()
+        builder.add_file('foo.txt', 'Foo\nBar')
+
+        self.assertTrue(os.path.exists(self.builddir))
+        filepath = os.path.join(self.builddir, 'foo.txt')
+        self.assertTrue(os.path.exists(filepath))
+        self.assertEqual(open(filepath).read(), 'Foo\nBar')
+
+    def test_terminated_exception_raised(self):
+        builder = self.mocker.patch(getUtility(IBuilderFactory)())
+        fake_pdf_path = os.path.join(self.builddir, 'export.pdf')
+        fake_pdf = open(fake_pdf_path, 'w')
+        fake_pdf.write('the pdf')
+        fake_pdf.close()
+
+        self.expect(builder._build_pdf(ANY)).result(fake_pdf_path)
+        self.replay()
+
+        builder.build('LaTeX')
+
+        with self.assertRaises(BuildTerminated) as cm:
+            builder.add_file('foo.txt', 'Foo\nBar')
+        self.assertEqual(str(cm.exception), 'The build is already terminated.')
+
+        with self.assertRaises(BuildTerminated) as cm:
+            builder.build('LaTeX')
+        self.assertEqual(str(cm.exception), 'The build is already terminated.')
+
+        with self.assertRaises(BuildTerminated) as cm:
+            builder.build_zip('LaTeX')
+        self.assertEqual(str(cm.exception), 'The build is already terminated.')
+
+    def test_build_removes_directory(self):
+        builder = self.mocker.patch(getUtility(IBuilderFactory)())
+
+        def execute_mock(cmd):
+            self.assertEqual(
+                open(os.path.join(self.builddir, 'export.tex')).read(),
+                'LaTeX Code')
+
+            pdf = open(os.path.join(self.builddir, 'export.pdf'), 'w')
+            pdf.write('Rendered PDF')
+            pdf.close()
+            return 0, '', ''
+
+        self.expect(
+            builder._execute(
+                MATCH(lambda cmd: cmd.startswith('pdflatex ')))
+            ).call(execute_mock)
+
+        self.replay()
+
+        self.assertTrue(builder.config.remove_build_directory)
+        self.assertEqual(builder.build('LaTeX Code'), 'Rendered PDF')
+        self.assertFalse(os.path.exists(builder.build_directory))
+
+    def test_build_does_not_remove_directory_if_disabled(self):
+        builder = self.mocker.patch(getUtility(IBuilderFactory)())
+        self.expect(builder.config.remove_build_directory).result(False)
+
+        def execute_mock(cmd):
+            self.assertEqual(
+                open(os.path.join(self.builddir, 'export.tex')).read(),
+                'LaTeX Code')
+
+            pdf = open(os.path.join(self.builddir, 'export.pdf'), 'w')
+            pdf.write('Rendered PDF')
+            pdf.close()
+            return 0, '', ''
+
+        self.expect(
+            builder._execute(
+                MATCH(lambda cmd: cmd.startswith('pdflatex ')))
+            ).call(execute_mock)
+
+        self.replay()
+
+        self.assertEqual(builder.build('LaTeX Code'), 'Rendered PDF')
+        self.assertTrue(os.path.exists(builder.build_directory))
+
+    def test_build_zip_returns_valid_zip_file_as_stream(self):
+        builder = self.mocker.patch(getUtility(IBuilderFactory)())
+
+        def execute_mock(cmd):
+            self.assertEqual(
+                open(os.path.join(self.builddir, 'export.tex')).read(),
+                'LaTeX Code')
+
+            pdf = open(os.path.join(self.builddir, 'export.pdf'), 'w')
+            pdf.write('Rendered PDF')
+            pdf.close()
+            return 0, '', ''
+
+        self.expect(
+            builder._execute(
+                MATCH(lambda cmd: cmd.startswith('pdflatex ')))
+            ).call(execute_mock)
+
+        self.replay()
+        self.assertTrue(builder.config.remove_build_directory)
+
+        builder.add_file('mystyle.sty', 'LaTeX sty file content')
+
+        data = builder.build_zip('LaTeX Code')
+        self.assertTrue(hasattr(data, 'read'))
+
+        zipobj = ZipFile(data)
+        filenames_in_zip = zipobj.namelist()
+
+        self.assertIn('export.tex', filenames_in_zip)
+        self.assertIn('export.pdf', filenames_in_zip)
+        self.assertIn('mystyle.sty', filenames_in_zip)
+
+        self.assertEqual('LaTeX Code', zipobj.read('export.tex'))
+        self.assertEqual('LaTeX sty file content', zipobj.read('mystyle.sty'))
+
+        self.assertFalse(os.path.exists(builder.build_directory))
+
+    def test_build_removes_directory_even_if_build_failed(self):
+        builder = self.mocker.patch(getUtility(IBuilderFactory)())
+
+        self.expect(builder._execute(ANY)).result((
+                1, '', 'could not build pdf for some reason...'))
+
+        self.replay()
+
+        with self.assertRaises(PDFBuildFailed) as cm:
+            builder.build('LaTeX')
+        self.assertEqual(str(cm.exception),
+                         'could not build pdf for some reason...')
+
+        self.assertFalse(os.path.exists(builder.build_directory))
+
+    def test_build_zio_removes_directory_even_if_build_failed(self):
+        builder = self.mocker.patch(getUtility(IBuilderFactory)())
+
+        self.expect(builder._execute(ANY)).result((
+                1, '', 'could not build pdf for some reason...'))
+
+        self.replay()
+
+        with self.assertRaises(PDFBuildFailed) as cm:
+            builder.build_zip('LaTeX')
+        self.assertEqual(str(cm.exception),
+                         'could not build pdf for some reason...')
+
+        self.assertFalse(os.path.exists(builder.build_directory))
+
+    def test_execute_runs_command_in_build_directory(self):
+        builder = getUtility(IBuilderFactory)()
+
+        file_ = open(os.path.join(builder.build_directory, 'foo.txt'), 'w+')
+        file_.write('bar')
+        file_.close()
+
+        self.assertEqual(builder._execute('ls .'), (0, 'foo.txt\n', ''))
+        self.assertEqual(builder._execute('cat foo.txt'), (0, 'bar', ''))
+        self.assertEqual(builder._execute('cat baz'),
+                         (1, '', 'cat: baz: No such file or directory\n'))

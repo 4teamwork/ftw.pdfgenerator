@@ -5,4 +5,9 @@
       factory="ftw.pdfgenerator.config.DefaultConfig"
       />
 
+  <utility
+      component="ftw.pdfgenerator.builder.builder_factory"
+      provides="ftw.pdfgenerator.interfaces.IBuilderFactory"
+      />
+
 </configure>
