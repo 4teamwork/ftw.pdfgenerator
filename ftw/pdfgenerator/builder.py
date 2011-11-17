@@ -60,13 +60,13 @@ class Builder(object):
 
         else:
             data = StringIO()
-            zip = ZipFile(data, 'w')
+            zip_file = ZipFile(data, 'w')
 
             for filename in os.listdir(self.build_directory):
-                zip.write(os.path.join(self.build_directory, filename),
+                zip_file.write(os.path.join(self.build_directory, filename),
                           filename)
 
-            zip.close()
+            zip_file.close()
             data.seek(0)
 
             self._cleanup_build()
