@@ -98,7 +98,8 @@ class Builder(object):
 
     def _rerun_required(self, stdout):
         if self._rerun_limit == 0:
-            return False
+            raise PDFBuildFailed('Maximum pdf build limit reached.')
+
         self._rerun_limit -= 1
 
         previous_aux_data = self._aux_data

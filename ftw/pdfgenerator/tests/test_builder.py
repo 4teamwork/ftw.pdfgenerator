@@ -257,3 +257,24 @@ class TestBuilder(MockTestCase):
         self.replay()
 
         builder._build_pdf('The latex')
+
+    def test_maximum_reruns(self):
+        builder = getUtility(IBuilderFactory)()
+        rerun_limit = builder._rerun_limit
+        builder = self.mocker.patch(builder)
+
+        aux_path = os.path.join(self.builddir, 'export.aux')
+
+        def exec_mock(cmd):
+            aux = open(aux_path, 'a+')
+            aux.write('another run')
+            aux.close()
+            return (0, 'some log', '')
+
+        self.expect(builder._execute(ANY)).call(exec_mock).count(rerun_limit)
+
+        self.replay()
+
+        with self.assertRaises(PDFBuildFailed) as cm:
+            builder._build_pdf('The latex')
+        self.assertEqual(str(cm.exception), 'Maximum pdf build limit reached.')
