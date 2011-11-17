@@ -197,7 +197,7 @@ class TestBuilder(MockTestCase):
 
         self.assertFalse(os.path.exists(builder.build_directory))
 
-    def test_build_zio_removes_directory_even_if_build_failed(self):
+    def test_build_zip_removes_directory_even_if_build_failed(self):
         builder = self.mocker.patch(getUtility(IBuilderFactory)())
 
         self.expect(builder._execute(ANY)).result((
