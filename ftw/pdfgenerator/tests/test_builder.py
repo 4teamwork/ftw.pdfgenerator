@@ -223,3 +223,33 @@ class TestBuilder(MockTestCase):
         self.assertEqual(builder._execute('cat foo.txt'), (0, 'bar', ''))
         self.assertEqual(builder._execute('cat baz'),
                          (1, '', 'cat: baz: No such file or directory\n'))
+
+    def test_build_pdf_reruns_pdflatex_if_needed(self):
+        builder = self.mocker.patch(getUtility(IBuilderFactory)())
+        aux_path = os.path.join(self.builddir, 'export.aux')
+
+        self._reruns__executed_call_counter = 0
+
+        def exec_mock(cmd):
+            self._reruns__executed_call_counter += 1
+            if self._reruns__executed_call_counter == 1:
+                aux = open(aux_path, 'w+')
+                aux.write('first run')
+                aux.close()
+                return (0, 'some log\nRerun to get it better\ndone', '')
+
+            elif self._reruns__executed_call_counter == 2:
+                aux = open(aux_path, 'wa')
+                aux.write('second run')
+                aux.close()
+                return (0, 'some log', '')
+
+            elif self._reruns__executed_call_counter == 3:
+                # no change in aux
+                return (0, 'some log', '')
+
+        self.expect(builder._execute(ANY)).call(exec_mock).count(3)
+
+        self.replay()
+
+        builder._build_pdf('The latex')

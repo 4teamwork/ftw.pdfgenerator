@@ -17,6 +17,8 @@ class Builder(object):
         self.config = getUtility(IConfig)
         self.build_directory = self.config.get_build_directory()
         self._terminated = False
+        self._aux_data = None
+        self._rerun_limit = 10
 
     def add_file(self, filename, data):
         if self._terminated:
@@ -84,13 +86,42 @@ class Builder(object):
         latex_file.write(latex)
         latex_file.close()
 
-        cmd = 'pdflatex --interaction=nonstopmode %s' % latex_path
-        exitcode, stdout, stderr = self._execute(cmd)
+        stdout = ''
+        while self._rerun_required(stdout):
+            cmd = 'pdflatex --interaction=nonstopmode %s' % latex_path
+            exitcode, stdout, stderr = self._execute(cmd)
 
-        if exitcode > 0:
-            raise PDFBuildFailed(stderr)
+            if exitcode > 0:
+                raise PDFBuildFailed(stderr)
 
         return pdf_path
+
+    def _rerun_required(self, stdout):
+        if self._rerun_limit == 0:
+            return False
+        self._rerun_limit -= 1
+
+        previous_aux_data = self._aux_data
+
+        self._aux_data = []
+        for filename in os.listdir(self.build_directory):
+            if filename.endswith('.aux'):
+                path = os.path.join(self.build_directory, filename)
+                file_ = open(path)
+                self._aux_data.append(file_.read())
+                file_.close()
+
+        if 'Rerun to get' in stdout:
+            return True
+
+        elif previous_aux_data is None:
+            return True
+
+        elif previous_aux_data != self._aux_data:
+            return True
+
+        else:
+            return False
 
     def _cleanup_build(self):
         self._terminated = True
