@@ -1,14 +1,18 @@
 from ftw.pdfgenerator.exceptions import ConflictingUsePackageOrder
 from ftw.pdfgenerator.interfaces import IBuilderFactory
 from ftw.pdfgenerator.interfaces import ILaTeXLayout
+from zope.component import adapts
 from zope.component import getUtility
-from zope.interface import implements
+from zope.interface import implements, Interface
 
 
 class BaseLayout(object):
     implements(ILaTeXLayout)
+    adapts(Interface, Interface)
 
-    def __init__(self):
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
         self._packages = []
 
     def use_package(self, packagename, options=None, append_options=True,

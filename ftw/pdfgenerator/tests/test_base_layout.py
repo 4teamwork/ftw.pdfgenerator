@@ -7,6 +7,7 @@ from ftw.pdfgenerator.interfaces import IBuilderFactory
 from ftw.pdfgenerator.interfaces import ILaTeXLayout
 from ftw.pdfgenerator.layout.baselayout import BaseLayout
 from plone.mocktestcase import MockTestCase
+from zope.component import adaptedBy
 from zope.interface.verify import verifyClass
 
 
@@ -16,8 +17,12 @@ class TestBaseLayout(MockTestCase):
         self.assertTrue(ILaTeXLayout.implementedBy(BaseLayout))
         verifyClass(ILaTeXLayout, BaseLayout)
 
+    def test_adapts_context_and_request(self):
+        # BaseLayout should adapt two things (context and request).
+        self.assertEquals(len(adaptedBy(BaseLayout)), 2)
+
     def test_use_package(self):
-        layout = BaseLayout()
+        layout = BaseLayout(self.create_dummy(), self.create_dummy())
 
         self.assertEqual(layout.get_packages_latex(), '')
 
@@ -50,7 +55,7 @@ class TestBaseLayout(MockTestCase):
             '\\usepackage{titlesec}\n')
 
     def test_use_package_bad_package_name(self):
-        layout = BaseLayout()
+        layout = BaseLayout(self.create_dummy(), self.create_dummy())
 
         with self.assertRaises(ValueError) as cm:
             layout.use_package(None)
@@ -67,7 +72,7 @@ class TestBaseLayout(MockTestCase):
             'Package name should be a string, got 5 (int)')
 
     def test_remove_package(self):
-        layout = BaseLayout()
+        layout = BaseLayout(self.create_dummy(), self.create_dummy())
         self.assertEqual(layout.get_packages_latex(), '')
 
         layout.use_package('color')
@@ -93,7 +98,7 @@ class TestBaseLayout(MockTestCase):
         # use_package in combination with insert_after
         # should also work when the "other" package is not yet registered.
 
-        layout = BaseLayout()
+        layout = BaseLayout(self.create_dummy(), self.create_dummy())
         self.assertEqual(layout.get_packages_latex(), '')
 
         # test insert_after
@@ -113,7 +118,7 @@ class TestBaseLayout(MockTestCase):
     def test_use_package_conflicting_order(self):
         # Using use_package with conflicting orders should raise exceptions
 
-        layout = BaseLayout()
+        layout = BaseLayout(self.create_dummy(), self.create_dummy())
         self.assertEqual(layout.get_packages_latex(), '')
 
         # insert_after itself
@@ -144,7 +149,7 @@ class TestBaseLayout(MockTestCase):
         self.expect(builderfactory()).call(lambda: layout_state)
         self.replay()
 
-        layout = BaseLayout()
+        layout = BaseLayout(self.create_dummy(), self.create_dummy())
         layout_state = 'initialized'
 
         self.assertEqual(layout.get_builder(), 'initialized')
