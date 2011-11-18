@@ -48,7 +48,7 @@ class ILaTeXLayout(Interface):
     parts of the LaTeX code together. It manages the also the packages.
     """
 
-    def use_package(packagename, options=[], append_options=True,
+    def use_package(packagename, options=None, append_options=True,
                     insert_after=None):
         """This will add a `\usepackage{packagname}[options]'
         command to the LaTeX code, where the options part is optionally.
