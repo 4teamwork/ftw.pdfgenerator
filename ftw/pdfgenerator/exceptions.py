@@ -11,3 +11,8 @@ class PDFBuildFailed(Exception):
     The "message" of the exception should be the stdout of the build
     process.
     """
+
+
+class ConflictingUsePackageOrder(Exception):
+    """The package order is conflicting in the `ILaTeXLayout`.
+    """
