@@ -1,5 +1,7 @@
 from ftw.pdfgenerator.exceptions import ConflictingUsePackageOrder
+from ftw.pdfgenerator.interfaces import IBuilderFactory
 from ftw.pdfgenerator.interfaces import ILaTeXLayout
+from zope.component import getUtility
 from zope.interface import implements
 
 
@@ -74,6 +76,11 @@ class BaseLayout(object):
             latex.append(pkg_latex)
 
         return ''.join(latex)
+
+    def get_builder(self):
+        """Documentation in ILaTeXLayout.get_builder
+        """
+        return getUtility(IBuilderFactory)()
 
     def _validate_package_name(self, packagename):
         """Validates the type of a package. It should be string or unicode.

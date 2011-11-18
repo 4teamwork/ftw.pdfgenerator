@@ -74,3 +74,8 @@ class ILaTeXLayout(Interface):
     def get_packages_latex():
         """Returns the LaTeX code of the `\usepackage` commands.
         """
+
+    def get_builder():
+        """Returns the builder instance. This should be lazy and create the
+        builder on first use.
+        """

@@ -3,6 +3,7 @@
 # W0201: Attribute defined outside __init__
 
 from ftw.pdfgenerator.exceptions import ConflictingUsePackageOrder
+from ftw.pdfgenerator.interfaces import IBuilderFactory
 from ftw.pdfgenerator.interfaces import ILaTeXLayout
 from ftw.pdfgenerator.layout.baselayout import BaseLayout
 from plone.mocktestcase import MockTestCase
@@ -134,3 +135,16 @@ class TestBaseLayout(MockTestCase):
         self.assertEqual(
             str(cm.exception),
             'Conflicting order: bar after baz after foo after bar.')
+
+    def test_get_builder_is_lazy(self):
+        builderfactory = self.mocker.mock()
+        self.mock_utility(builderfactory, IBuilderFactory)
+
+        layout_state = 'nothing done'
+        self.expect(builderfactory()).call(lambda: layout_state)
+        self.replay()
+
+        layout = BaseLayout()
+        layout_state = 'initialized'
+
+        self.assertEqual(layout.get_builder(), 'initialized')
