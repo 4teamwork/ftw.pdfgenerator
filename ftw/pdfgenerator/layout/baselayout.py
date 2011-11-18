@@ -7,6 +7,10 @@ from zope.interface import implements, Interface
 
 
 class BaseLayout(object):
+    """BaseLayout is abstract base class for all layouts. Layouts adapt
+    context and request.
+    """
+
     implements(ILaTeXLayout)
     adapts(Interface, Interface)
 
