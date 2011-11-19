@@ -1,5 +1,6 @@
 from ftw.pdfgenerator.interfaces import ITemplating
 from ftw.pdfgenerator.utils import baseclasses
+from mako.lookup import TemplateLookup
 from zope.interface import implements
 import inspect
 import os
@@ -55,8 +56,39 @@ class BaseTemplating(object):
 
         return None
 
-    def render_template(self, filename):
+    def render_template(self, filename, **kwargs):
         # render_template should be implemented by a subclass, which will
         # be more specific about the template rendering engine.
         raise NotImplementedError(
             'render_template() is not implemented on BaseTemplating.')
+
+
+class MakoTemplating(BaseTemplating):
+    """Provides a mako templating integration.
+    """
+
+    def __init__(self):
+        super(MakoTemplating, self).__init__()
+        self._mako_template_lookup = None
+
+    @property
+    def template_lookup(self):
+        """Returns a mako TemplateLookup object, which has all current
+        template directories configured.
+        """
+
+        if getattr(self, '_mako_template_lookup', None) is None:
+            dirs = self.get_template_directories()
+            self._mako_template_lookup = TemplateLookup(directories=dirs)
+
+        return self._mako_template_lookup
+
+    def render_template(self, filename, **kwargs):
+        """Renders a mako template. Additional rendering arguments may be
+        passed as keyword arguments as if the mako template was called
+        directly.
+        """
+
+        template = self.template_lookup.get_template(filename)
+        kwargs['view'] = self
+        return template.render(**kwargs)

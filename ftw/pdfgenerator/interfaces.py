@@ -120,6 +120,6 @@ class ITemplating(Interface):
         such name was found.
         """
 
-    def render_template(filename):
+    def render_template(filename, **kwargs):
         """Renders a template and returns the result.
         """

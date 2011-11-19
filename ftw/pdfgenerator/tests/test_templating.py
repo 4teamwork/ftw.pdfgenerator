@@ -6,6 +6,7 @@
 
 from ftw.pdfgenerator.interfaces import ITemplating
 from ftw.pdfgenerator.templating import BaseTemplating
+from ftw.pdfgenerator.templating import MakoTemplating
 from unittest2 import TestCase
 from zope.interface.verify import verifyClass
 import os
@@ -170,3 +171,49 @@ class TestBaseTemplating(TestCase):
         self.assertEqual(
             str(cm.exception),
             'render_template() is not implemented on BaseTemplating.')
+
+
+class TestMakoTemplating(TestCase):
+
+    def setUp(self):
+        testdata_basedir = os.path.join(os.path.dirname(__file__),
+                                        'templates')
+
+        self.templates_foo = os.path.join(testdata_basedir, 'foo')
+        self.templates_bar = os.path.join(testdata_basedir, 'bar')
+        self.templates_baz = os.path.join(testdata_basedir, 'baz')
+
+    def test_render_template_renders_template(self):
+        class Foo(MakoTemplating):
+            template_directories = [self.templates_foo]
+
+        obj = Foo()
+        self.assertEqual(
+            obj.render_template('titlepage.tex', title='Wohoo'),
+            '\\title{Wohoo}\n\n\\maketitle\n\n')
+
+    def test_render_template_with_inheritance(self):
+        class Foo(MakoTemplating):
+            template_directories = [self.templates_foo]
+
+        class Bar(Foo):
+            template_directories = [self.templates_bar]
+
+        obj = Bar()
+        self.assertEqual(
+            obj.render_template('customtitlepage.tex', title='foo',
+                                custom='bar'),
+            '\\title{foo}\n\n{\\large\\bf bar}\n\n')
+
+    def test_render_template_view_access(self):
+        class Foo(MakoTemplating):
+            template_directories = [self.templates_foo]
+
+            def __init__(self):
+                MakoTemplating.__init__(self)
+                self.name = 'John'
+
+        foo = Foo()
+        self.assertEqual(
+            foo.render_template('welcome.tex'),
+            '{\\large Hello {\\bf John}!}\n')
