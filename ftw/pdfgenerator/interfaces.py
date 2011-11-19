@@ -85,3 +85,41 @@ class ILaTeXLayout(Interface):
         """Returns the builder instance. This should be lazy and create the
         builder on first use.
         """
+
+
+class ITemplating(Interface):
+    """The `ITemplating` interface is used for mixin classes enabling template
+    support for any inheriting class.
+
+    It makes it possible to define template directories on every inheriting
+    class, so that the templates easily can extend or include each other.
+
+    The `template_directories` list can be set on every inheriting class. If
+    the superclass also has set it, it will also be respected when searching a
+    template. When searching a template it will walk up the superclasses and
+    takes the first template found. This makes it possible to override
+    tempaltes defined in superclasses.
+    """
+
+    template_directories = Attribute(
+        'A list of paths to template directories. The paths in the back are '
+        'dominant. The paths may be absolute or relative to the path of the '
+        'module where the class is defined.')
+
+    def get_template_directories():
+        """Returns a list of absolute paths to template directories. The paths
+        in front are dominant: if there are multiple templates with the same
+        path in different directories, the ones from the directories in front
+        of the list will be taken.
+        """
+
+    def get_template(filename):
+        """Returns the contents of a template with the name `filename`
+        which is found in one of the directories of
+        `get_template_directories` or returns `None` if no template with
+        such name was found.
+        """
+
+    def render_template(filename):
+        """Renders a template and returns the result.
+        """
