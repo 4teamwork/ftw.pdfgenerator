@@ -101,7 +101,8 @@ class BaseLayout(object):
             packagename = packagename.encode('utf-8')
 
         elif not isinstance(packagename, str):
-            raise ValueError('Package name should be a string, got %s (%s)' % (
+            raise ValueError(
+                'Package name should be a string, got %s (%s)' % (
                     str(packagename), type(packagename).__name__))
 
     def _use_package_circular_order_validator(self, packagename,

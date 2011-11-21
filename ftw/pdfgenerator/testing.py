@@ -5,7 +5,8 @@ import ftw.pdfgenerator
 
 
 class PDFGeneratorZCMLLayer(Layer):
-    """A layer which only sets up the zcml, but does not start a zope instance.
+    """A layer which only sets up the zcml, but does not start a zope
+    instance.
     """
 
     defaultBases = (zca.ZCML_DIRECTIVES,)

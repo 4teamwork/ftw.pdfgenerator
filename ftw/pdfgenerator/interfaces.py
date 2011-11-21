@@ -14,9 +14,9 @@ class IConfig(Interface):
         'after finishing the build.')
 
     def get_build_directory():
-        """Returns the path to a directory, where the PDF should be built. This
-        method should not return the same path twice. The directory should
-        exist and be writeable.
+        """Returns the path to a directory, where the PDF should be built.
+        This method should not return the same path twice. The directory
+        should exist and be writeable.
         """
 
 
@@ -88,16 +88,16 @@ class ILaTeXLayout(Interface):
 
 
 class ITemplating(Interface):
-    """The `ITemplating` interface is used for mixin classes enabling template
-    support for any inheriting class.
+    """The `ITemplating` interface is used for mixin classes enabling
+    template support for any inheriting class.
 
     It makes it possible to define template directories on every inheriting
     class, so that the templates easily can extend or include each other.
 
     The `template_directories` list can be set on every inheriting class. If
-    the superclass also has set it, it will also be respected when searching a
-    template. When searching a template it will walk up the superclasses and
-    takes the first template found. This makes it possible to override
+    the superclass also has set it, it will also be respected when searching
+    a template. When searching a template it will walk up the superclasses
+    and takes the first template found. This makes it possible to override
     tempaltes defined in superclasses.
     """
 
@@ -107,10 +107,10 @@ class ITemplating(Interface):
         'module where the class is defined.')
 
     def get_template_directories():
-        """Returns a list of absolute paths to template directories. The paths
-        in front are dominant: if there are multiple templates with the same
-        path in different directories, the ones from the directories in front
-        of the list will be taken.
+        """Returns a list of absolute paths to template directories.
+        The paths in front are dominant: if there are multiple templates
+        with the same path in different directories, the ones from the
+        directories in front of the list will be taken.
         """
 
     def get_template(filename):

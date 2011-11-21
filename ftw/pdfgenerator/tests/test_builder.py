@@ -23,7 +23,8 @@ class TestBuilder(MockTestCase):
 
     def setUp(self):
         self.testcase_mocker = Mocker()
-        self.builddir = os.path.join(tempfile.mkdtemp('test-builder'), 'build')
+        self.builddir = os.path.join(tempfile.mkdtemp('test-builder'),
+                                     'build')
 
         config = self.testcase_mocker.proxy(
             DefaultConfig(),
@@ -90,15 +91,18 @@ class TestBuilder(MockTestCase):
 
         with self.assertRaises(BuildTerminated) as cm:
             builder.add_file('foo.txt', 'Foo\nBar')
-        self.assertEqual(str(cm.exception), 'The build is already terminated.')
+        self.assertEqual(str(cm.exception),
+                         'The build is already terminated.')
 
         with self.assertRaises(BuildTerminated) as cm:
             builder.build('LaTeX')
-        self.assertEqual(str(cm.exception), 'The build is already terminated.')
+        self.assertEqual(str(cm.exception),
+                         'The build is already terminated.')
 
         with self.assertRaises(BuildTerminated) as cm:
             builder.build_zip('LaTeX')
-        self.assertEqual(str(cm.exception), 'The build is already terminated.')
+        self.assertEqual(str(cm.exception),
+                         'The build is already terminated.')
 
     def test_build_removes_directory(self):
         builder = self.mocker.patch(getUtility(IBuilderFactory)())
@@ -182,7 +186,8 @@ class TestBuilder(MockTestCase):
         self.assertIn('mystyle.sty', filenames_in_zip)
 
         self.assertEqual('LaTeX Code', zipobj.read('export.tex'))
-        self.assertEqual('LaTeX sty file content', zipobj.read('mystyle.sty'))
+        self.assertEqual('LaTeX sty file content',
+                         zipobj.read('mystyle.sty'))
 
         self.assertFalse(os.path.exists(builder.build_directory))
 
@@ -277,4 +282,5 @@ class TestBuilder(MockTestCase):
 
         with self.assertRaises(PDFBuildFailed) as cm:
             builder._build_pdf('The latex')
-        self.assertEqual(str(cm.exception), 'Maximum pdf build limit reached.')
+        self.assertEqual(str(cm.exception),
+                         'Maximum pdf build limit reached.')
