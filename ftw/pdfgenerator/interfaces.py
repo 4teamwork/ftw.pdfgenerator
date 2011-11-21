@@ -123,3 +123,17 @@ class ITemplating(Interface):
     def render_template(filename, **kwargs):
         """Renders a template and returns the result.
         """
+
+
+class ILaTeXView(Interface):
+    """A LaTeX view is an adapter of context, request and layout. It renders
+    the object in LaTeX.
+    """
+
+    def __init__(context, request, layout):
+        """A LaTeX view is a multi-adapter of context, request and layout.
+        """
+
+    def render():
+        """Renders the object in LaTeX and returns the LaTeX code as string.
+        """
