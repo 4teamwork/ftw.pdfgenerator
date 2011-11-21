@@ -137,3 +137,141 @@ class ILaTeXView(Interface):
     def render():
         """Renders the object in LaTeX and returns the LaTeX code as string.
         """
+
+
+class IHTML2LaTeXConverter(Interface):
+    """A `IHTML2LatexConverter` converts HTML to LaTeX. It is a multi adapter
+    of (context, request, layout, builder).
+
+    The converter runs a list of replace statements on the HTML. Each
+    statement can be either a direct replacement, a regular expression or
+    a subconverter.
+    """
+
+    default_patterns = Attribute('List of default patterns.')
+
+    def __init__(context, request, layout, builder):
+        """
+        """
+
+    def get_default_subconverters():
+        """Returns the default list of subconverters.
+        """
+
+    def register_patterns(patterns):
+        """Registers a list of custom patterns.
+        """
+
+    def register_subconverters(subconverters):
+        """Registers a list of converters.
+        """
+
+    def convert(html, custom_patterns=None, custom_subconverters=None,
+                trim=True):
+        """Converts HTML to LaTeX.
+
+        Arguments:
+        html -- HTML as string.
+        custom_map -- A list of custom patterns.
+        custom_converters -- A list of custom subconverters, which will be
+        merged into the custom_map.
+        trim -- Strip the HTML before converting to LaTeX. (Default: `True`).
+        """
+
+
+class IHTML2LaTeXConvertRunner(Interface):
+    """A kind of fork of `IHTML2LatexConverter`, which does the actual
+    converting. It is passed to sub converters, so that the can update the
+    current HTML / LaTeX code.
+    """
+
+    def __init__(converter, patterns, html, trim=True):
+        """
+        """
+
+    def lock_chars(startPos, endPos):
+        """
+        Locks a specific part of the html. Other Patterns will not match this
+        part of html anymore. This is generally used by SubConverters, if
+        they replaced the HTML with latex.
+        See replaceAndLock()
+        """
+
+    def replace(startPos, endPos, text):
+        """
+        Replaces a specific part in the HTML with [text] (e.g. latex code).
+        The new text will be replaced by further patterns! Please use
+        lockChars() or replaceAndLock() if you don't want further patterns
+        to match and replace
+        """
+
+    def replace_and_lock(startPos, endPos, text):
+        """
+        Replaces a spefic part in the HTML with [text] and locks it with
+        lockChars() after replacing.
+        See replace() and lockChars()
+        """
+
+    def convert(html, custom_patterns=None, custom_subconverters=None,
+                trim=True):
+        """Convert a sub-part of the HTML. This initializes another
+        runner and converts returns the results. This is necessary for
+        converting HTML parts matched in subconverters.
+        """
+
+    def runner_convert():
+        """This method does the actual converting. It should never by called
+        directly, but through HTML2LatexConverter.convert()
+        """
+
+
+class ISubConverter(Interface):
+    """A SubConverter converts specific, advanced parts of a HTML to LaTeX.
+    """
+
+    pattern = Attribute('Regex pattern as string.')
+    placeholder = Attribute(
+        'The subconverter will be registered at the point of the '
+        'placeholder in the patterns list.')
+
+    def __init__(converter, match, html):
+        """
+        Arguments:
+        converter -- Reference to the IHTML2LaTeXConverter
+        match -- regex match object
+        html -- full html
+        """
+
+    def __call__():
+        """Initiates the converting.
+        """
+
+    def get_html():
+        """Return the matched html.
+        """
+
+    def replace_and_lock(latex):
+        """Sends the `latex` back to the main converter and locks it so that
+        no subsequent patterns will match / replace.
+        The original match area will be replaced by `latex`.
+        """
+
+    def replace(latex):
+        """Sends the `latex` back to the main converter, the original match
+        area will be replaced.
+        Subsequent patterns may match the latex.
+        """
+
+
+HTML2LATEX_MODE_REPLACE = 'replace'
+HTML2LATEX_MODE_REGEXP = 'regexp'
+HTML2LATEX_MODE_REGEXP_FUNCTION = 'regexp function'
+
+HTML2LATEX_CUSTOM_PATTERN_PLACEHOLDER = 'placeholder for custom patterns'
+HTML2LATEX_CUSTOM_PATTERN_PLACEHOLDER_TOP = \
+    'top placeholder for custom patterns'
+HTML2LATEX_CUSTOM_PATTERN_PLACEHOLDER_BOTTOM = \
+    'bottom placeholder for custom patterns'
+
+HTML2LATEX_REPEAT_MODIFIER = 'repeat pattern'
+HTML2LATEX_PREVENT_CHARACTER = chr(7)
