@@ -36,6 +36,7 @@ setup(name='ftw.pdfgenerator',
 
       install_requires=[
         'setuptools',
+        'Mako',
         # -*- Extra requirements: -*-
         ],
       tests_require=tests_require,
