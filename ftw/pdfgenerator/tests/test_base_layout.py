@@ -153,3 +153,16 @@ class TestBaseLayout(MockTestCase):
         layout_state = 'initialized'
 
         self.assertEqual(layout.get_builder(), 'initialized')
+
+    def test_get_builder_does_not_recreate_builder(self):
+        builder = object()
+        factory = self.mocker.mock()
+        self.expect(factory()).result(builder).count(1)
+        self.mock_utility(factory, IBuilderFactory)
+
+        self.replay()
+
+        layout = BaseLayout(self.create_dummy(), self.create_dummy())
+        self.assertEqual(layout.get_builder(), layout.get_builder())
+
+

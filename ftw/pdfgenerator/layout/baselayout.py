@@ -18,6 +18,7 @@ class BaseLayout(object):
         self.context = context
         self.request = request
         self._packages = []
+        self._builder = None
 
     def use_package(self, packagename, options=None, append_options=True,
                     insert_after=None):
@@ -88,7 +89,10 @@ class BaseLayout(object):
     def get_builder(self):
         """Documentation in ILaTeXLayout.get_builder
         """
-        return getUtility(IBuilderFactory)()
+
+        if getattr(self, '_builder', None) is None:
+            self._builder = getUtility(IBuilderFactory)()
+        return self._builder
 
     def _validate_package_name(self, packagename):
         """Validates the type of a package. It should be string or unicode.
