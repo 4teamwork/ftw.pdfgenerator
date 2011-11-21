@@ -37,7 +37,7 @@ setup(name='ftw.pdfgenerator',
       install_requires=[
         'setuptools',
         'Mako',
-        'BeautifulSoup',
+        'BeautifulSoup < 4',
         # -*- Extra requirements: -*-
         ],
       tests_require=tests_require,
