@@ -42,6 +42,11 @@ class IBuilder(Interface):
         directory.
         """
 
+    def cleanup():
+        """Cleanup the temporary directory. This is necessary when the
+        builder was requested but nothing was built.
+        """
+
 
 class ILaTeXLayout(Interface):
     """A LaTeX layout defines the head of the LaTeX file and puts the

@@ -3,50 +3,25 @@
 # W0201: Attribute defined outside __init__
 
 from ftw.pdfgenerator.builder import Builder
-from ftw.pdfgenerator.config import DefaultConfig
 from ftw.pdfgenerator.exceptions import BuildTerminated, PDFBuildFailed
-from ftw.pdfgenerator.interfaces import IBuilder, IBuilderFactory, IConfig
-from ftw.pdfgenerator.testing import PDFGENERATOR_ZCML_LAYER
-from mocker import Mocker, MATCH, expect, ANY
+from ftw.pdfgenerator.interfaces import IBuilder, IBuilderFactory
+from ftw.pdfgenerator.testing import PREDEFINED_BUILD_DIRECTORY_LAYER
+from mocker import MATCH, ANY
 from plone.mocktestcase import MockTestCase
 from zipfile import ZipFile
 from zope.component import getUtility
 from zope.interface.verify import verifyClass
 import os
-import shutil
-import tempfile
+
 
 
 class TestBuilder(MockTestCase):
 
-    layer = PDFGENERATOR_ZCML_LAYER
+    layer = PREDEFINED_BUILD_DIRECTORY_LAYER
 
     def setUp(self):
-        self.testcase_mocker = Mocker()
-        self.builddir = os.path.join(tempfile.mkdtemp('test-builder'),
-                                     'build')
-
-        config = self.testcase_mocker.proxy(
-            DefaultConfig(),
-            spec=None,
-            count=False)
-        self.mock_utility(config, IConfig)
-
-        expect(config.get_build_directory()).result(self.builddir)
-        self.config = config
-
-        self.testcase_mocker.replay()
-        os.mkdir(self.builddir)
         super(TestBuilder, self).setUp()
-
-    def tearDown(self):
-        self.testcase_mocker.verify()
-        self.testcase_mocker.restore()
-        super(TestBuilder, self).tearDown()
-
-    def testTearDown(self):
-        if os.path.exists(self.builddir):
-            shutil.rmtree(self.builddir)
+        self.builddir = self.layer.builddir
 
     def test_utility_is_factory(self):
         factory = getUtility(IBuilderFactory)
@@ -284,3 +259,9 @@ class TestBuilder(MockTestCase):
             builder._build_pdf('The latex')
         self.assertEqual(str(cm.exception),
                          'Maximum pdf build limit reached.')
+
+    def test_cleanup(self):
+        builder = getUtility(IBuilderFactory)()
+        self.assertTrue(os.path.exists(builder.build_directory))
+        builder.cleanup()
+        self.assertFalse(os.path.exists(builder.build_directory))

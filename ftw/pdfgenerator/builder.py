@@ -72,6 +72,10 @@ class Builder(object):
             self._cleanup_build()
             return data
 
+    def cleanup(self):
+        if not self._terminated:
+            self._cleanup_build()
+
     def _build_pdf(self, latex):
         """Build the pdf in the build_directory and return the path to
         the pdf.
