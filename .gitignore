@@ -10,3 +10,4 @@ coverage/
 develop-eggs/
 eggs/
 parts/
+var/
