@@ -1,8 +1,11 @@
 from ftw.pdfgenerator import interfaces
 from ftw.pdfgenerator.html2latex import converter
 from ftw.pdfgenerator.html2latex import subconverter
+from ftw.pdfgenerator.layout.baselayout import BaseLayout
+from ftw.pdfgenerator.testing import PDFGENERATOR_ZCML_LAYER
 from plone.mocktestcase import MockTestCase
 from unittest2 import TestCase
+from zope.component import getMultiAdapter
 from zope.interface.verify import verifyClass
 
 
@@ -114,11 +117,23 @@ class TestBasePatternAware(TestCase):
 
 class TestHTML2LatexConverter(MockTestCase):
 
+    layer = PDFGENERATOR_ZCML_LAYER
+
     def test_implements_interface(self):
         self.assertTrue(interfaces.IHTML2LaTeXConverter.implementedBy(
                 converter.HTML2LatexConverter))
         verifyClass(interfaces.IHTML2LaTeXConverter,
                     converter.HTML2LatexConverter)
+
+    def test_default_converter_adapter_registration(self):
+        context = self.create_dummy()
+        request = self.create_dummy()
+        layout = BaseLayout(context, request)
+
+        obj = getMultiAdapter((context, request, layout),
+                              interfaces.IHTML2LaTeXConverter)
+
+        self.assertEqual(obj.__class__, converter.HTML2LatexConverter)
 
     def test_converter_uses_copy_of_default_subconverters(self):
         class NoSubconvertersConverter(converter.HTML2LatexConverter):

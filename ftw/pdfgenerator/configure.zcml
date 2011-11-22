@@ -10,4 +10,8 @@
       provides="ftw.pdfgenerator.interfaces.IBuilderFactory"
       />
 
+  <adapter
+      factory="ftw.pdfgenerator.html2latex.converter.HTML2LatexConverter"
+      />
+
 </configure>

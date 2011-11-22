@@ -5,7 +5,8 @@ from ftw.pdfgenerator.html2latex.subconverters import listing
 from ftw.pdfgenerator.html2latex.subconverters import table
 from ftw.pdfgenerator.utils import xml2htmlentities
 from random import choice
-from zope.interface import implements
+from zope.component import adapts
+from zope.interface import implements, Interface
 import re
 
 
@@ -93,6 +94,7 @@ class BasePatternAware(object):
 
 class HTML2LatexConverter(BasePatternAware):
     implements(interfaces.IHTML2LaTeXConverter)
+    adapts(Interface, Interface, interfaces.ILaTeXLayout)
 
     default_patterns = DEFAULT_PATTERNS
 
