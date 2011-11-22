@@ -5,6 +5,51 @@
 from zope.interface import Interface, Attribute
 
 
+class IPDFAssembler(Interface):
+    """The PDF assembler assembles the PDF. It puts together all LaTeX parts,
+    merges them with the layout and builds it with the builder.
+    """
+
+    def __init__(context, request):
+        """The PDF assembler is a multi-adapter adapting context and request.
+        """
+
+    def build_pdf(layout=None, view=None, builder=None, request=None):
+        """Builds the LaTeX and converts it to a PDF. The pdf data is
+        returned as string. If `request` is passed, it will send it writes
+        it to the response using the ID of the current context as filename
+        base.
+
+        Arguments:
+        layout -- Use a custom layout for this build.
+        view -- Use a specific ILaTeX view for this build.
+        request -- Write the resulting PDF to the request.
+        """
+
+    def build_latex(layout=None, view=None, builder=None, request=None):
+        """Builds the LaTeX and returns it as string without converting it to
+        a PDF.
+
+        Arguments:
+        layout -- Use a custom layout for this build.
+        view -- Use a specific ILaTeX view for this build.
+        request -- Not relevant here, but the signature should match
+        `build_pdf`.
+        """
+
+    def build_zip(layout=None, view=None, builder=None, request=None):
+        """Builds the LaTeX and converts it to a PDF like `build_pdf` does,
+        but returns a ZIP bundle of all used files (.tex-files, images,
+        resources, the resulting .pdf, etc). If `request` is passed,
+        it will write the file directly to the request.
+
+        Arguments:
+        layout -- Use a custom layout for this build.
+        view -- Use a specific ILaTeX view for this build.
+        request -- Write the resulting ZIP to the request.
+        """
+
+
 class IConfig(Interface):
     """PDFGenerator configuration utility.
     """

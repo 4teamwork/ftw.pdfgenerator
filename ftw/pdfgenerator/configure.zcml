@@ -14,4 +14,8 @@
       factory="ftw.pdfgenerator.html2latex.converter.HTML2LatexConverter"
       />
 
+  <adapter
+      factory="ftw.pdfgenerator.assembler.PDFAssembler"
+      />
+
 </configure>
