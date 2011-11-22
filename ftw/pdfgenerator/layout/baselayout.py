@@ -1,8 +1,7 @@
 from ftw.pdfgenerator.exceptions import ConflictingUsePackageOrder
-from ftw.pdfgenerator.interfaces import IBuilderFactory
+from ftw.pdfgenerator.interfaces import IBuilder
 from ftw.pdfgenerator.interfaces import ILaTeXLayout
 from zope.component import adapts
-from zope.component import getUtility
 from zope.interface import implements, Interface
 
 
@@ -12,13 +11,13 @@ class BaseLayout(object):
     """
 
     implements(ILaTeXLayout)
-    adapts(Interface, Interface)
+    adapts(Interface, Interface, IBuilder)
 
-    def __init__(self, context, request):
+    def __init__(self, context, request, builder):
         self.context = context
         self.request = request
+        self.builder = builder
         self._packages = []
-        self._builder = None
 
     def use_package(self, packagename, options=None, append_options=True,
                     insert_after=None):
@@ -89,10 +88,7 @@ class BaseLayout(object):
     def get_builder(self):
         """Documentation in ILaTeXLayout.get_builder
         """
-
-        if getattr(self, '_builder', None) is None:
-            self._builder = getUtility(IBuilderFactory)()
-        return self._builder
+        return self.builder
 
     def _validate_package_name(self, packagename):
         """Validates the type of a package. It should be string or unicode.

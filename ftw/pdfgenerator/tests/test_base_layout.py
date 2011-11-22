@@ -3,26 +3,33 @@
 # W0201: Attribute defined outside __init__
 
 from ftw.pdfgenerator.exceptions import ConflictingUsePackageOrder
-from ftw.pdfgenerator.interfaces import IBuilderFactory
+from ftw.pdfgenerator.interfaces import IBuilder
 from ftw.pdfgenerator.interfaces import ILaTeXLayout
 from ftw.pdfgenerator.layout.baselayout import BaseLayout
 from plone.mocktestcase import MockTestCase
 from zope.component import adaptedBy
+from zope.interface import directlyProvides
 from zope.interface.verify import verifyClass
 
 
 class TestBaseLayout(MockTestCase):
 
+    def setUp(self):
+        self.builder = self.create_dummy()
+        directlyProvides(self.builder, IBuilder)
+
+
     def test_implements_interface(self):
         self.assertTrue(ILaTeXLayout.implementedBy(BaseLayout))
         verifyClass(ILaTeXLayout, BaseLayout)
 
-    def test_adapts_context_and_request(self):
-        # BaseLayout should adapt two things (context and request).
-        self.assertEquals(len(adaptedBy(BaseLayout)), 2)
+    def test_adapts(self):
+        # BaseLayout should adapt three things (context, request, builder).
+        self.assertEquals(len(adaptedBy(BaseLayout)), 3)
 
     def test_use_package(self):
-        layout = BaseLayout(self.create_dummy(), self.create_dummy())
+        layout = BaseLayout(self.create_dummy(), self.create_dummy(),
+                            self.builder)
 
         self.assertEqual(layout.get_packages_latex(), '')
 
@@ -31,7 +38,7 @@ class TestBaseLayout(MockTestCase):
                          '\\usepackage[utf8]{inputenc}\n')
 
         layout.use_package(u'titlesec', 'noindentafter',
-                         insert_after='inputenc')
+                           insert_after='inputenc')
         self.assertEqual(layout.get_packages_latex(),
                          '\\usepackage[utf8]{inputenc}\n'
                          '\\usepackage[noindentafter]{titlesec}\n')
@@ -55,7 +62,8 @@ class TestBaseLayout(MockTestCase):
             '\\usepackage{titlesec}\n')
 
     def test_use_package_bad_package_name(self):
-        layout = BaseLayout(self.create_dummy(), self.create_dummy())
+        layout = BaseLayout(self.create_dummy(), self.create_dummy(),
+                            self.builder)
 
         with self.assertRaises(ValueError) as cm:
             layout.use_package(None)
@@ -72,7 +80,8 @@ class TestBaseLayout(MockTestCase):
             'Package name should be a string, got 5 (int)')
 
     def test_remove_package(self):
-        layout = BaseLayout(self.create_dummy(), self.create_dummy())
+        layout = BaseLayout(self.create_dummy(), self.create_dummy(),
+                            self.builder)
         self.assertEqual(layout.get_packages_latex(), '')
 
         layout.use_package('color')
@@ -98,7 +107,8 @@ class TestBaseLayout(MockTestCase):
         # use_package in combination with insert_after
         # should also work when the "other" package is not yet registered.
 
-        layout = BaseLayout(self.create_dummy(), self.create_dummy())
+        layout = BaseLayout(self.create_dummy(), self.create_dummy(),
+                            self.builder)
         self.assertEqual(layout.get_packages_latex(), '')
 
         # test insert_after
@@ -118,7 +128,8 @@ class TestBaseLayout(MockTestCase):
     def test_use_package_conflicting_order(self):
         # Using use_package with conflicting orders should raise exceptions
 
-        layout = BaseLayout(self.create_dummy(), self.create_dummy())
+        layout = BaseLayout(self.create_dummy(), self.create_dummy(),
+                            self.builder)
         self.assertEqual(layout.get_packages_latex(), '')
 
         # insert_after itself
@@ -141,28 +152,5 @@ class TestBaseLayout(MockTestCase):
             str(cm.exception),
             'Conflicting order: bar after baz after foo after bar.')
 
-    def test_get_builder_is_lazy(self):
-        builderfactory = self.mocker.mock()
-        self.mock_utility(builderfactory, IBuilderFactory)
-
-        layout_state = 'nothing done'
-        self.expect(builderfactory()).call(lambda: layout_state)
-        self.replay()
-
-        layout = BaseLayout(self.create_dummy(), self.create_dummy())
-        layout_state = 'initialized'
-
-        self.assertEqual(layout.get_builder(), 'initialized')
-
-    def test_get_builder_does_not_recreate_builder(self):
-        builder = object()
-        factory = self.mocker.mock()
-        self.expect(factory()).result(builder).count(1)
-        self.mock_utility(factory, IBuilderFactory)
-
-        self.replay()
-
-        layout = BaseLayout(self.create_dummy(), self.create_dummy())
-        self.assertEqual(layout.get_builder(), layout.get_builder())
 
 

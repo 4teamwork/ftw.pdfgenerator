@@ -128,7 +128,8 @@ class TestHTML2LatexConverter(MockTestCase):
     def test_default_converter_adapter_registration(self):
         context = self.create_dummy()
         request = self.create_dummy()
-        layout = BaseLayout(context, request)
+        builder = self.create_dummy()
+        layout = BaseLayout(context, request, builder)
 
         obj = getMultiAdapter((context, request, layout),
                               interfaces.IHTML2LaTeXConverter)

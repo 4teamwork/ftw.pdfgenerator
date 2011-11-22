@@ -47,11 +47,11 @@ class ILaTeXLayout(Interface):
     """A LaTeX layout defines the head of the LaTeX file and puts the
     parts of the LaTeX code together. It manages the also the packages.
 
-    ILaTeXLayout is a multi-adapter of context and request.
+    ILaTeXLayout is a multi-adapter of context, request and builder.
     """
 
-    def __init__(context, request):
-        """ILaTeXLayout is adapts context and request.
+    def __init__(context, request, builder):
+        """ILaTeXLayout adapts context, request and the builder.
         """
 
     def use_package(packagename, options=None, append_options=True,
@@ -82,8 +82,7 @@ class ILaTeXLayout(Interface):
         """
 
     def get_builder():
-        """Returns the builder instance. This should be lazy and create the
-        builder on first use.
+        """Returns the builder instance.
         """
 
 
