@@ -4,6 +4,7 @@ from ftw.pdfgenerator.testing import PDFGENERATOR_ZCML_LAYER
 from mocker import ARGS
 from plone.mocktestcase import MockTestCase
 from zope.component import getMultiAdapter
+from zope.interface import Interface
 from zope.interface.verify import verifyClass
 
 
@@ -63,6 +64,27 @@ class TestPDFAssembler(MockTestCase):
                                        builder=builder, request=request),
                          request)
 
+    def test_build_pdf_with_no_request_returns_data(self):
+        view = self.mocker.mock()
+        self.expect(view.render()).result('content latex')
+
+        layout = self.mocker.mock()
+        self.expect(layout.render_latex('content latex')).result(
+            'full latex')
+
+        builder = self.mocker.mock()
+        self.expect(builder.build('full latex')).result('the pdf')
+
+        context = object()
+        request = object()
+
+        self.replay()
+
+        obj = getMultiAdapter((context, request), interfaces.IPDFAssembler)
+        self.assertEqual(obj.build_pdf(layout=layout, view=view,
+                                       builder=builder),
+                         'the pdf')
+
     def test_build_zip_parameters(self):
         view = self.mocker.mock()
         self.expect(view.render()).result('content latex')
@@ -90,6 +112,27 @@ class TestPDFAssembler(MockTestCase):
                                        builder=builder, request=request),
                          request)
 
+    def test_build_zip_with_no_request_returns_data(self):
+        view = self.mocker.mock()
+        self.expect(view.render()).result('content latex')
+
+        layout = self.mocker.mock()
+        self.expect(layout.render_latex('content latex')).result(
+            'full latex')
+
+        builder = self.mocker.mock()
+        self.expect(builder.build_zip('full latex').read()).result('the zip')
+
+        context = object()
+        request = object()
+
+        self.replay()
+
+        obj = getMultiAdapter((context, request), interfaces.IPDFAssembler)
+        self.assertEqual(obj.build_zip(layout=layout, view=view,
+                                       builder=builder),
+                         'the zip')
+
     def test_get_builder(self):
         factory = self.mocker.mock()
         builder = self.mocker.mock()
@@ -102,3 +145,35 @@ class TestPDFAssembler(MockTestCase):
         obj = getMultiAdapter((object(), object()), interfaces.IPDFAssembler)
         self.assertEqual(obj.get_builder(), builder)
         self.assertEqual(obj.get_builder(), obj.get_builder())
+
+    def test_get_layout(self):
+        context = self.create_dummy()
+        request = self.create_dummy()
+        builder = self.create_dummy()
+
+        layout = self.mocker.mock()
+        self.mock_adapter(layout, interfaces.ILaTeXLayout,
+                          (Interface, Interface, Interface))
+        self.expect(layout(context, request, builder)).result(layout)
+
+        self.replay()
+
+        obj = getMultiAdapter((context, request), interfaces.IPDFAssembler)
+        obj._builder = builder
+        self.assertEqual(obj.get_layout(), layout)
+
+    def test_get_view(self):
+        context = self.create_dummy()
+        request = self.create_dummy()
+        layout = self.create_dummy()
+
+        view = self.mocker.mock()
+        self.mock_adapter(view, interfaces.ILaTeXView,
+                          (Interface, Interface, Interface))
+        self.expect(view(context, request, layout)).result(view)
+
+        self.replay()
+
+        obj = getMultiAdapter((context, request), interfaces.IPDFAssembler)
+        obj._layout = layout
+        self.assertEqual(obj.get_view(), view)

@@ -78,7 +78,7 @@ class PDFAssembler(object):
         """
         if getattr(self, '_view', None) is None:
             self._view = getMultiAdapter(
-                (self.contex, self.request, self.get_layout()),
+                (self.context, self.request, self.get_layout()),
                 ILaTeXView)
         return self._view
 
