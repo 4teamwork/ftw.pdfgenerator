@@ -152,5 +152,10 @@ class TestBaseLayout(MockTestCase):
             str(cm.exception),
             'Conflicting order: bar after baz after foo after bar.')
 
+    def test_render_latex_raises_not_implemented(self):
+        # The BaseLayout does not specify how to render the LaTeX.
+        layout = BaseLayout(self.create_dummy(), self.create_dummy(),
+                            self.builder)
 
-
+        with self.assertRaises(NotImplementedError):
+            layout.render_latex('latex')

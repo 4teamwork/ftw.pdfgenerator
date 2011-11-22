@@ -85,6 +85,14 @@ class BaseLayout(object):
 
         return ''.join(latex)
 
+    def render_latex(self, content_latex):
+        """Renders the layout with the `content_latex` embedded.
+
+        Arguments:
+        `content_latex` -- LaTeX code of the rendered view.
+        """
+        raise NotImplementedError()
+
     def get_builder(self):
         """Documentation in ILaTeXLayout.get_builder
         """

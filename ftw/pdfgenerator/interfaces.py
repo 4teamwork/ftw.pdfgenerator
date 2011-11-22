@@ -85,6 +85,12 @@ class ILaTeXLayout(Interface):
         """Returns the builder instance.
         """
 
+    def render_latex(content_latex):
+        """Renders the layout with the `content_latex` embedded.
+
+        Arguments:
+        `content_latex` -- LaTeX code of the rendered view.
+        """
 
 class ITemplating(Interface):
     """The `ITemplating` interface is used for mixin classes enabling
