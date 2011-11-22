@@ -150,7 +150,7 @@ class IHTML2LaTeXConverter(Interface):
 
     default_patterns = Attribute('List of default patterns.')
 
-    def __init__(context, request, layout, builder):
+    def __init__(context, request, layout):
         """
         """
 

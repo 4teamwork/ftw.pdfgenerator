@@ -21,8 +21,7 @@ class TestBasicPatterns(TestCase):
         self.converter = BasicConverter(
             context=object(),
             request=object(),
-            layout=object(),
-            builder=object())
+            layout=object())
 
         self.convert = self.converter.convert
 

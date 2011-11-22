@@ -96,11 +96,10 @@ class HTML2LatexConverter(BasePatternAware):
 
     default_patterns = DEFAULT_PATTERNS
 
-    def __init__(self, context, request, layout, builder):
+    def __init__(self, context, request, layout):
         self.context = context
         self.request = request
         self.layout = layout
-        self.builder = builder
 
         super(HTML2LatexConverter, self).__init__(
             patterns=self.__class__.default_patterns[:])

@@ -126,14 +126,14 @@ class TestHTML2LatexConverter(MockTestCase):
                 return []
 
         obj = NoSubconvertersConverter(
-            object(), object(), object(), object())
+            object(), object(), object())
 
         self.assertEqual(obj.patterns, converter.DEFAULT_PATTERNS)
         self.assertNotEqual(id(obj.patterns), id(converter.DEFAULT_PATTERNS))
 
     def test_convert_with_custom_pattern(self):
         obj = converter.HTML2LatexConverter(
-            object(), object(), object(), object())
+            object(), object(), object())
 
         self.assertEqual(
             obj.convert('foo bar baz', custom_patterns=[
@@ -148,7 +148,7 @@ class TestHTML2LatexConverter(MockTestCase):
                 self.replace(r'{\bf replaced}')
 
         obj = converter.HTML2LatexConverter(
-            object(), object(), object(), object())
+            object(), object(), object())
 
         self.assertEqual(
             obj.convert('foo bar baz bar', custom_subconverters=[
@@ -174,7 +174,7 @@ class TestHTML2LaTeXConvertRunner(MockTestCase):
 
     def test_raises_when_convert_started_twice(self):
         obj = converter.HTML2LatexConverter(
-            object(), object(), object(), object())
+            object(), object(), object())
         runner = converter.HTML2LatexConvertRunner(obj, [], '')
 
         runner.runner_convert()

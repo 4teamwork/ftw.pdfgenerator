@@ -18,8 +18,7 @@ class SubconverterTestBase(TestCase):
         self.converter = HTML2LatexConverter(
             context=object(),
             request=object(),
-            layout=object(),
-            builder=object())
+            layout=object())
 
         self.convert = self.converter.convert
 
@@ -231,8 +230,7 @@ class TestTableConverter(MockTestCase):
         converter = HTML2LatexConverter(
             context=object(),
             request=object(),
-            layout=layout,
-            builder=object())
+            layout=layout)
 
         return converter.convert(*args, **kwargs)
 
@@ -240,8 +238,7 @@ class TestTableConverter(MockTestCase):
         converter = HTML2LatexConverter(
             context=object(),
             request=object(),
-            layout=object(),
-            builder=object())
+            layout=object())
 
         self.assertIn(
             table.TableConverter,
