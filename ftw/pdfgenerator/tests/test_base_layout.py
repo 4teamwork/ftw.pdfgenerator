@@ -159,3 +159,11 @@ class TestBaseLayout(MockTestCase):
 
         with self.assertRaises(NotImplementedError):
             layout.render_latex('latex')
+
+    def test_get_builder_returns_builder(self):
+        context = self.create_dummy()
+        request = self.create_dummy()
+        builder = self.create_dummy()
+        layout = BaseLayout(context, request, builder)
+
+        self.assertEqual(layout.get_builder(), builder)
