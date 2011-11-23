@@ -1,9 +1,10 @@
 # pylint: disable=R0801
 # R0801: Similar lines in 3 files
 
-from ftw.pdfgenerator.interfaces import ILaTeXView
-from ftw.pdfgenerator.view import MakoLaTeXView
+from ftw.pdfgenerator.interfaces import ILaTeXView, IRecursiveLaTeXView
+from ftw.pdfgenerator.view import MakoLaTeXView, RecursiveLaTeXView
 from plone.mocktestcase import MockTestCase
+from zope.interface import Interface
 from zope.interface.verify import verifyClass
 import os
 
@@ -96,3 +97,59 @@ class TestMakoLaTeXView(MockTestCase):
 
         self.assertEqual(FooView(context, request, layout).render(),
                          '{\\large Hello {\\bf Hugo Boss}!}\n')
+
+
+class TestRecursiveLaTeXView(MockTestCase):
+
+    def test_implements_interface(self):
+        self.assertTrue(IRecursiveLaTeXView.implementedBy(RecursiveLaTeXView))
+        verifyClass(IRecursiveLaTeXView, RecursiveLaTeXView)
+
+    def test_adapted_objects_are_stored_right(self):
+        context = object()
+        request = object()
+        layout = object()
+
+        obj = RecursiveLaTeXView(context, request, layout)
+        self.assertEquals(obj.context, context)
+        self.assertEquals(obj.request, request)
+        self.assertEquals(obj.layout, layout)
+
+    def test_render_children(self):
+        request = object()
+        layout = object()
+
+        context = self.mocker.mock()
+        obj1 = self.mocker.mock()
+        obj2 = self.mocker.mock()
+
+        self.expect(context.listFolderContents()).result([obj1, obj2])
+
+        subview = self.mocker.mock()
+        self.mock_adapter(subview, ILaTeXView,
+                          (Interface, Interface, Interface))
+
+        self.expect(
+            subview(obj1, request, layout).render()).result('object one latex')
+        self.expect(
+            subview(obj2, request, layout).render()).result('object two latex')
+
+        self.replay()
+
+        view = RecursiveLaTeXView(context, request, layout)
+        self.assertEqual(view.render_children(),
+                         'object one latex\nobject two latex')
+
+    def test_get_render_arguments_contains_latex_content(self):
+        context = request = layout = object()
+        view = self.mocker.patch(RecursiveLaTeXView(context, request, layout))
+
+        self.expect(view.render_children()).result('children latex')
+
+        self.replay()
+
+        self.assertEqual(view.get_render_arguments(),
+                         {'latex_content': 'children latex'})
+
+
+

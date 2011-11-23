@@ -1,7 +1,9 @@
-from ftw.pdfgenerator.interfaces import ILaTeXLayout, ILaTeXView
+from ftw.pdfgenerator.interfaces import ILaTeXLayout
+from ftw.pdfgenerator.interfaces import ILaTeXView
+from ftw.pdfgenerator.interfaces import IRecursiveLaTeXView
 from ftw.pdfgenerator.templating import MakoTemplating
+from zope.component import adapts, getMultiAdapter
 from zope.interface import implements, Interface
-from zope.component import adapts
 
 
 class MakoLaTeXView(MakoTemplating):
@@ -55,3 +57,29 @@ class MakoLaTeXView(MakoTemplating):
 
         return self.render_template(self.template_name,
                                     **self.get_render_arguments())
+
+
+class RecursiveLaTeXView(MakoLaTeXView):
+    """A recursive LaTeX view, which also renders the content of the child
+    objects.
+    """
+
+    implements(IRecursiveLaTeXView)
+
+    def render_children(self):
+        """Render LaTeX views of children and return the LaTeX content.
+        """
+
+        latex = []
+
+        for obj in self.context.listFolderContents():
+            view = getMultiAdapter((obj, self.request, self.layout),
+                                   ILaTeXView)
+            latex.append(view.render())
+
+        return '\n'.join(latex)
+
+    def get_render_arguments(self):
+        args = super(RecursiveLaTeXView, self).get_render_arguments()
+        args['latex_content'] = self.render_children()
+        return args

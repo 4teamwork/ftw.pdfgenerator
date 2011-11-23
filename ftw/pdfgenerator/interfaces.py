@@ -194,6 +194,12 @@ class ILaTeXView(Interface):
         """
 
 
+class IRecursiveLaTeXView(ILaTeXView):
+    """A recursive LaTeX view walks down the tree and renders subcontent of
+    a folder too.
+    """
+
+
 class IHTML2LaTeXConverter(Interface):
     """A `IHTML2LatexConverter` converts HTML to LaTeX. It is a multi adapter
     of (context, request, layout, builder).
