@@ -3,7 +3,7 @@ from ftw.pdfgenerator.interfaces import IConfig
 from mocker import Mocker, expect
 from plone.testing import Layer
 from plone.testing import zca
-from zope.component import provideUtility, getUtility
+from zope.component import provideUtility
 from zope.configuration import xmlconfig
 import ftw.pdfgenerator
 import os
