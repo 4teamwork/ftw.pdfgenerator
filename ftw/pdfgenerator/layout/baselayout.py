@@ -1,7 +1,8 @@
 from ftw.pdfgenerator.exceptions import ConflictingUsePackageOrder
 from ftw.pdfgenerator.interfaces import IBuilder
+from ftw.pdfgenerator.interfaces import IHTML2LaTeXConverter
 from ftw.pdfgenerator.interfaces import ILaTeXLayout
-from zope.component import adapts
+from zope.component import adapts, getMultiAdapter
 from zope.interface import implements, Interface
 
 
@@ -18,6 +19,7 @@ class BaseLayout(object):
         self.request = request
         self.builder = builder
         self._packages = []
+        self._converter = None
 
     def use_package(self, packagename, options=None, append_options=True,
                     insert_after=None):
@@ -170,3 +172,14 @@ class BaseLayout(object):
                                        order.index(b['packagename'])))
 
         return packages
+
+    def get_converter(self):
+        """Returns the current instance of the IHTML2LaTeXConverter.
+        """
+
+        if getattr(self, '_converter', None):
+            self._converter  = getMultiAdapter(
+                (self.context, self.request, self),
+                IHTML2LaTeXConverter)
+
+        return self._converter

@@ -142,6 +142,10 @@ class ILaTeXLayout(Interface):
         `content_latex` -- LaTeX code of the rendered view.
         """
 
+    def get_converter():
+        """Returns the current instance of the IHTML2LaTeXConverter.
+        """
+
 class ITemplating(Interface):
     """The `ITemplating` interface is used for mixin classes enabling
     template support for any inheriting class.

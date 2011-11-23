@@ -6,6 +6,7 @@ from ftw.pdfgenerator.exceptions import ConflictingUsePackageOrder
 from ftw.pdfgenerator.interfaces import IBuilder
 from ftw.pdfgenerator.interfaces import ILaTeXLayout
 from ftw.pdfgenerator.layout.baselayout import BaseLayout
+from ftw.pdfgenerator.testing import PDFGENERATOR_ZCML_LAYER
 from plone.mocktestcase import MockTestCase
 from zope.component import adaptedBy
 from zope.interface import directlyProvides
@@ -13,6 +14,8 @@ from zope.interface.verify import verifyClass
 
 
 class TestBaseLayout(MockTestCase):
+
+    layer = PDFGENERATOR_ZCML_LAYER
 
     def setUp(self):
         self.builder = self.create_dummy()
@@ -167,3 +170,13 @@ class TestBaseLayout(MockTestCase):
         layout = BaseLayout(context, request, builder)
 
         self.assertEqual(layout.get_builder(), builder)
+
+    def test_get_converter_keeps_instance(self):
+        context = self.create_dummy()
+        request = self.create_dummy()
+        builder = self.create_dummy()
+
+        layout = BaseLayout(context, request, builder)
+
+        self.assertEqual(layout.get_converter(), layout.get_converter())
+
