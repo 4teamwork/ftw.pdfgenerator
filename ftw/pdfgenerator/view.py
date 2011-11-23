@@ -58,6 +58,12 @@ class MakoLaTeXView(MakoTemplating):
         return self.render_template(self.template_name,
                                     **self.get_render_arguments())
 
+    def convert(self, *args, **kwargs):
+        """Convert HTML to LaTeX using the IHTML2LaTeXConverter.
+        See the IHTML2LaTeXConverter.convert documentation.
+        """
+        return self.layout.get_converter().convert(*args, **kwargs)
+
 
 class RecursiveLaTeXView(MakoLaTeXView):
     """A recursive LaTeX view, which also renders the content of the child

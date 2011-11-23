@@ -98,6 +98,22 @@ class TestMakoLaTeXView(MockTestCase):
         self.assertEqual(FooView(context, request, layout).render(),
                          '{\\large Hello {\\bf Hugo Boss}!}\n')
 
+    def test_convert_passes_to_converter(self):
+        context = request = object()
+        layout = self.mocker.mock()
+        converter = self.mocker.mock()
+
+        html = 'this <b>is</b> html\n '
+        latex = 'this {\bf is} html'
+
+        self.expect(layout.get_converter()).result(converter)
+        self.expect(converter.convert(html, trim=True)).result(latex)
+
+        self.replay()
+
+        view = MakoLaTeXView(context, request, layout)
+        self.assertEqual(view.convert(html, trim=True), latex)
+
 
 class TestRecursiveLaTeXView(MockTestCase):
 
@@ -150,6 +166,3 @@ class TestRecursiveLaTeXView(MockTestCase):
 
         self.assertEqual(view.get_render_arguments(),
                          {'latex_content': 'children latex'})
-
-
-

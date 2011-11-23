@@ -197,6 +197,11 @@ class ILaTeXView(Interface):
         """Renders the object in LaTeX and returns the LaTeX code as string.
         """
 
+    def convert(*args, **kwargs):
+        """Convert HTML to LaTeX using the IHTML2LaTeXConverter.
+        See the IHTML2LaTeXConverter.convert documentation.
+        """
+
 
 class IRecursiveLaTeXView(ILaTeXView):
     """A recursive LaTeX view walks down the tree and renders subcontent of
