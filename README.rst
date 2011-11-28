@@ -1,7 +1,7 @@
 Introduction
 ============
 
-The `ftw.pdfgenerator` provides tools and utilities for generating PDFs out of plone
+The ``ftw.pdfgenerator`` provides tools and utilities for generating PDFs out of plone
 objects.
 
 
