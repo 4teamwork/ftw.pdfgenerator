@@ -46,11 +46,8 @@ class TableConverter(subconverter.SubConverter):
         if '_css_classes' not in dir(self):
             self._css_classes = []
             domTable = self.dom.getElementsByTagName('table')[0]
-            try:
-                classes = domTable.getAttribute('class').strip()
-                self._css_classes = classes.split(' ')
-            except:
-                pass
+            classes = domTable.getAttribute('class').strip()
+            self._css_classes = classes.split(' ')
         return self._css_classes
 
     def getBorder(self):
