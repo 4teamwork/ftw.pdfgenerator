@@ -189,7 +189,7 @@ class TableConverter(subconverter.SubConverter):
                     # find and register columns
                     try:
                         colspan = int(domCell.getAttribute('colspan'))
-                    except:
+                    except ValueError:
                         colspan = 1
 
                     for cid in range(columnIndex, columnIndex + colspan):
@@ -221,9 +221,10 @@ class TableConverter(subconverter.SubConverter):
             colgroup = colgroups[0]
             for col in colgroup.getElementsByTagName('col'):
                 try:
-                    columns += col.getAttribute('colspan')
-                except:
+                    columns += int(col.getAttribute('colspan'))
+                except (ValueError, TypeError):
                     columns += 1
+
         # by <td>- and <th>-Tags
         for tr in self.dom.getElementsByTagName('tr'):
             trColumns = 0
@@ -231,8 +232,8 @@ class TableConverter(subconverter.SubConverter):
                 tr.getElementsByTagName('th')
             for cell in cells:
                 try:
-                    trColumns += cell.getAttribute('colspan')
-                except:
+                    trColumns += int(cell.getAttribute('colspan'))
+                except (ValueError, TypeError):
                     trColumns += 1
             if trColumns > columns:
                 columns = trColumns
@@ -278,7 +279,7 @@ class LatexColumn(object):
                 try:
                     self._width = LatexWidth.convert(
                         self.domCol.getAttribute('width'))
-                except:
+                except ValueError:
                     pass
 
             # .. otherwise try to get width of a cell
@@ -292,9 +293,9 @@ class LatexColumn(object):
 
     def getAlign(self):
         if '_align' not in dir(self):
-            try:
+            if self.domCol:
                 self._align = self.domCol.getAttribute('align')
-            except:
+            else:
                 self._align = None
         return self._align
 
@@ -465,18 +466,22 @@ class LatexCell(object):
 
     def getWidth(self):
         if '_width' not in dir(self):
-            try:
-                self._width = LatexWidth.convert(
-                    self.domCell.getAttribute('width'))
-            except:
+            if not self.domCell:
                 self._width = None
+
+            else:
+                try:
+                    self._width = LatexWidth.convert(
+                        self.domCell.getAttribute('width'))
+                except ValueError:
+                    self._width = None
         return self._width
 
     def getColspan(self):
         if '_colspan' not in dir(self):
             try:
                 self._colspan = int(self.domCell.getAttribute('colspan'))
-            except:
+            except (AttributeError, ValueError):
                 self._colspan = 1
         return self._colspan
 
@@ -484,7 +489,7 @@ class LatexCell(object):
         if '_rowspan' not in dir(self):
             try:
                 self._rowspan = int(self.domCell.getAttribute('rowspan'))
-            except:
+            except (AttributeError, ValueError):
                 self._rowspan = 1
         return self._rowspan
 
@@ -500,7 +505,7 @@ class LatexCell(object):
             for i in range(1, len(self.columns)):
                 try:
                     width += self.columns[i].getWidth()
-                except:
+                except ValueError:
                     # one of the columns has no or invalid width (not addable)
                     return None
             return width
@@ -509,11 +514,12 @@ class LatexCell(object):
     def getAlign(self):
         if '_align':
             self._align = None
-            try:
+
+            if self.domCell:
                 self._align = self.domCell.getAttribute('align')
-            except:
-                if self.getColspan() == 1:
-                    self._align = self.columns[0].getAlign()
+
+            if not self._align and self.getColspan() == 1:
+                self._align = self.columns[0].getAlign()
         return self._align
 
     def getFormat(self):
@@ -540,14 +546,13 @@ class LatexCell(object):
 
     def getCssClasses(self):
         if '_css_classes' not in dir(self):
-            self._css_classes = []
-
-            try:
+            if self.domCell:
                 classes = self.domCell.getAttribute('class').strip()
                 self._css_classes = classes.split(' ')
 
-            except:
-                pass
+            else:
+                self._css_classes = []
+
         return self._css_classes
 
 
@@ -605,7 +610,7 @@ class LatexWidth(object):
             obj.unit = 'em'
             return obj
 
-        raise Exception(
+        raise ValueError(
             'Could not convert string "%s" to valid LatexWidth' % width)
     convert = classmethod(convert)
 
