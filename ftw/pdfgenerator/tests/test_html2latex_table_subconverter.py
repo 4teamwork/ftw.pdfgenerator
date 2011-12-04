@@ -1,6 +1,7 @@
 from ftw.pdfgenerator.html2latex.converter import HTML2LatexConverter
 from ftw.pdfgenerator.html2latex.subconverters import table
 from plone.mocktestcase import MockTestCase
+from unittest2 import TestCase
 
 
 class TestTableConverter(MockTestCase):
@@ -380,3 +381,84 @@ class TestTableConverter(MockTestCase):
                 r''))
 
         self.assertEqual(self.convert(html), latex)
+
+
+class TestLatexWidth(TestCase):
+
+    def test_failing_convertion(self):
+        with self.assertRaises(ValueError) as cm:
+            table.LatexWidth.convert('123xy')
+
+        self.assertEqual(
+            str(cm.exception),
+            'Could not convert string "123xy" to valid LatexWidth')
+
+    def test_absolute_unit_width(self):
+        width1 = table.LatexWidth.convert('100cm')
+        self.assertEqual(width1.get(), r'100.0cm')
+        self.assertEqual(str(width1), r'100.0cm')
+
+        width2 = table.LatexWidth.convert('50.3cm')
+        self.assertEqual(width2.get(), r'50.3cm')
+
+        self.assertEqual((width1 + width2).get(),
+                         r'150.3cm')
+
+    def test_relative_width(self):
+        width1 = table.LatexWidth.convert('10%')
+        self.assertEqual(str(width1), r'0.1\linewidth')
+
+        width2 = table.LatexWidth.convert('25%')
+        self.assertEqual(str(width2), r'0.25\linewidth')
+
+        self.assertEqual(str(width1 + width2),
+                         r'0.35\linewidth')
+
+    def test_defaults_to_em(self):
+        width1 = table.LatexWidth.convert('50')
+        self.assertEqual(str(width1), r'50.0em')
+
+        width2 = table.LatexWidth.convert('20.0em')
+        self.assertEqual(str(width1 + width2),
+                         r'70.0em')
+
+    def test_cm_is_converted_to_mm_when_summing(self):
+        width1 = table.LatexWidth.convert('10.3cm')
+        width2 = table.LatexWidth.convert('20.1mm')
+        self.assertEqual(str(width1 + width2),
+                         r'123.1mm')
+        self.assertEqual(str(width2 + width1),
+                         r'123.1mm')
+
+    def test_fails_if_summing_with_non_width(self):
+        width = table.LatexWidth.convert('10.3cm')
+
+        with self.assertRaises(ValueError) as cm:
+            width + 5
+
+        self.assertEqual(
+            str(cm.exception),
+            'Cannot accumulate LatexWidth with int')
+
+    def test_fails_if_unmatching_units(self):
+        width1 = table.LatexWidth.convert('10em')
+        width2 = table.LatexWidth.convert('20mm')
+
+        with self.assertRaises(ValueError) as cm:
+            width1 + width2
+
+        self.assertEqual(
+            str(cm.exception),
+            'Cannot accumulate LatexWidths with different units (em, mm)')
+
+    def test_fails_if_unmatching_types(self):
+        width1 = table.LatexWidth.convert('10em')
+        width2 = table.LatexWidth.convert('20%')
+
+
+        with self.assertRaises(ValueError) as cm:
+            width1 + width2
+
+        self.assertEqual(
+            str(cm.exception),
+            'Cannot accumulate relative and absolute widths.')

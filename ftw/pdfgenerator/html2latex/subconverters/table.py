@@ -184,7 +184,7 @@ class TableConverter(subconverter.SubConverter):
 
         # sorting
         cells.sort(lambda a, b: cmp(a.parentNode.childNodes.index(a),
-                                  b.parentNode.childNodes.index(b)))
+                                    b.parentNode.childNodes.index(b)))
         columnIndex = 0
         cellIndex = 0
 
@@ -588,26 +588,26 @@ class LatexWidth(object):
         'em',
         ]
 
-    width = 0
-    type = None
-    unit = ''
+    def __init__(self, width=0, type=None, unit=''):
+        self.width = width
+        self.type = type
+        self.unit = unit
 
+    @classmethod
     def convert(cls, width):
         """
         creates a LatexWidth object by a HTML width-Attribute
         """
-        obj = cls()
-        # absolute
 
+        # absolute
         for unit in cls.VALID_ABSOLUTE_UNITS:
             match = re.compile('^([0-9,\.]{1,})(%s)$' % unit).match(width)
             if match:
                 w, u = match.groups()
                 w = w.replace(',', '.')
-                obj.width = float(w)
-                obj.type = LatexWidth.TYPE_ABSOLUTE
-                obj.unit = u
-                return obj
+                return cls(width=float(w),
+                           type=LatexWidth.TYPE_ABSOLUTE,
+                           unit=u)
 
         # relative
         unit = '%'
@@ -615,23 +615,20 @@ class LatexWidth(object):
         if match:
             w, u = match.groups()
             w = w.replace(',', '.')
-            obj.width = float(w) / 100
-            obj.type = LatexWidth.TYPE_RELATIVE
-            obj.unit = None
-            return obj
+            return cls(width=float(w) / 100,
+                       type=LatexWidth.TYPE_RELATIVE,
+                       unit=None)
 
         # without unit -> use 'em'
-        match = re.compile('^([0-9,\.])$').match(width)
+        match = re.compile('^([0-9,\.]*)$').match(width)
         if match:
             w = width.replace(',', '.')
-            obj.width = float(w)
-            obj.type = LatexWidth.TYPE_ABSOLUTE
-            obj.unit = 'em'
-            return obj
+            return cls(width=float(w),
+                       type=LatexWidth.TYPE_ABSOLUTE,
+                       unit='em')
 
         raise ValueError(
             'Could not convert string "%s" to valid LatexWidth' % width)
-    convert = classmethod(convert)
 
     def get(self):
         if self.type == LatexWidth.TYPE_ABSOLUTE:
@@ -644,19 +641,45 @@ class LatexWidth(object):
 
     def __add__(self, b):
         if not isinstance(b, LatexWidth):
-            raise AttributeError(
-                'Expected LatexWidth instance as first attribute')
+            raise ValueError(
+                'Cannot accumulate LatexWidth with %s' % (
+                    type(b).__name__))
 
-        if self.type != b.type:
-            raise AttributeError('Cant sum LatexWidths with different ' + \
-                                     'types (%s, %s)' % (self.type, b.type))
+        a, b = self.__class__._harmonize_units(self, b)
 
-        if self.unit != b.unit:
-            raise AttributeError('Cant sum LatexWidths with different ' + \
-                                     'units (%s, %s)' % (self.unit, b.unit))
+        if a.type != b.type:
+            raise ValueError(
+                'Cannot accumulate relative and absolute widths.')
 
-        sum_ = LatexWidth()
-        sum_.type = self.type
-        sum_.unit = self.unit
-        sum_.width = (self.width + b.width)
-        return sum_
+        if a.unit != b.unit:
+            raise ValueError(
+                'Cannot accumulate LatexWidths with different ' + \
+                    'units (%s, %s)' % (a.unit, b.unit))
+
+        return LatexWidth(width=(a.width + b.width),
+                          type=a.type,
+                          unit=a.unit)
+
+    @staticmethod
+    def _harmonize_units(a, b):
+        """If possible, converts the units of a and b so that they are
+        the same.
+        """
+
+        if a.type != b.type or a.unit == b.unit:
+            return a, b
+
+        elif a.unit == 'mm' and b.unit == 'cm':
+            b2 = LatexWidth(width=b.width * 10,
+                            type=b.type,
+                            unit='mm')
+            return a, b2
+
+        elif a.unit == 'cm' and b.unit == 'mm':
+            a2 = LatexWidth(width=a.width * 10,
+                            type=a.type,
+                            unit='mm')
+            return a2, b
+
+        else:
+            return a, b
