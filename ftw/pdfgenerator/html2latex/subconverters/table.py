@@ -56,20 +56,6 @@ class TableConverter(subconverter.SubConverter):
             return int(domTable.getAttribute('border'))>0
         return False
 
-    def hasTableParts(self):
-        """
-        If the HTML table has thead / tbody, it returns True,
-        otherwise False
-        """
-        if '_has_table_parts' not in dir(self):
-            thead = self.dom.getElementsByTagName('thead')
-            tbody = self.dom.getElementsByTagName('tbody')
-            if len(thead)>0 or len(tbody)>0:
-                self._has_table_parts = True
-            else:
-                self._has_table_parts = False
-        return self._has_table_parts
-
     def render(self):
         hline=self.getBorder() and '\n\\hline' or ''
         latex = '\\begin{longtable}{%s}%s\n' % (self.getTableFormat(),hline)
