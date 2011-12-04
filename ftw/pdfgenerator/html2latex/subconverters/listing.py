@@ -35,8 +35,6 @@ class ListConverter(subconverter.SubConverter):
 
                 # iterate, because there may be multiple lists
                 begin_env, end_env = self._create_environ(node)
-                if not begin_env:
-                    continue
 
                 latex.append(begin_env)
                 for elm in node.childNodes:
@@ -68,13 +66,7 @@ class ListConverter(subconverter.SubConverter):
 
     def _create_environ(self, list_):
         name = list_.tagName.lower()
-        env = ''
-
-        if name in self.listing_tag_mapping.keys():
-            env = self.listing_tag_mapping[name]
-
-        else:
-            return None, None
+        env = self.listing_tag_mapping[name]
 
         return (r'\begin{%s}' % env,
                 r'\end{%s}' % env)

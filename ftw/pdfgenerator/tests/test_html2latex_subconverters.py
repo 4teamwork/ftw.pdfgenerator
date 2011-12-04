@@ -211,6 +211,29 @@ class TestListConverter(SubconverterTestBase):
 
         self.assertEqual(self.convert(html), latex)
 
+    def test_wrong_match(self):
+        html = '<ulwrong><li>foo</li></ulwrong>'
+
+        latex = 'foo'
+
+        self.assertEqual(self.convert(html), latex)
+
+    def test_bad_html_fallback(self):
+        html = '\n'.join((
+                '<ul>',
+                '<li>foo</li>',
+                'bar',
+                '</ul>'))
+
+        latex = '\n'.join((
+                r'\begin{itemize}',
+                r'\item foo',
+                r'bar',
+                r'\end{itemize}',
+                r''))
+
+        self.assertEqual(self.convert(html), latex)
+
 
 class TestTableConverter(MockTestCase):
 
