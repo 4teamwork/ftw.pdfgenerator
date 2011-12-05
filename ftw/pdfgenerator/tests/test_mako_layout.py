@@ -31,7 +31,7 @@ class TestMakoLayoutBase(MockTestCase):
 
         foo = FooLayout(object(), object(), object())
         self.assertEqual(
-            foo.render(),
+            foo.render_latex(''),
             '\\title{hello world!!!}\n\n\\maketitle\n\n')
 
     def test_default_render_arguments(self):
@@ -45,7 +45,7 @@ class TestMakoLayoutBase(MockTestCase):
         bar = BarLayout(object(), object(), object())
 
         with self.assertRaises(ValueError) as cm:
-            bar.render()
+            bar.render_latex('')
 
         self.assertEqual(
         str(cm.exception),

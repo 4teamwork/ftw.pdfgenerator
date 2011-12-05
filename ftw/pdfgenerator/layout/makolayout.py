@@ -18,7 +18,7 @@ class MakoLayoutBase(BaseLayout, MakoTemplating):
         BaseLayout.__init__(self, context, request, builder)
         MakoTemplating.__init__(self)
 
-    def render(self):
+    def render_latex(self, content_latex):
         """Renders the template `template_name`, which is in one of the
         defined `template_directories`.
         """
@@ -27,8 +27,11 @@ class MakoLayoutBase(BaseLayout, MakoTemplating):
             raise ValueError('%s: `template_name` is not defined.' % (
                     self.__class__.__name__))
 
+        args = self.get_render_arguments()
+        args['content'] = content_latex
+
         return self.render_template(self.template_name,
-                                    **self.get_render_arguments())
+                                    **args)
 
     def get_render_arguments(self):
         """Returns a dict of arguments passed to the default template.
