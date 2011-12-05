@@ -163,7 +163,6 @@ class TestBasicPatterns(TestCase):
         self.assertEqual(self.convert('<p><strong><br />Text</strong></p>'),
                          r'{\bf Text}')
 
-
     def test_curly_bracket_spaces(self):
         # If there is no space at left of the curly brackets, there will
         # not be any space in the displayed text (PDF), but in HTML it
@@ -192,7 +191,6 @@ class TestBasicPatterns(TestCase):
 
         self.assertEqual(self.convert('a<i>b</i>c'),
                          'a{\\it b}c')
-
 
     def test_links(self):
         # Blank links should be stripped
@@ -235,19 +233,24 @@ class TestBasicPatterns(TestCase):
         # XXX: fix those tests: maybe decode to unicode or use propper utf8
         # char escaping.
         self.assertEqual(
-            self.convert('&euro;&lsquo;&rsquo;&rsquo;&ldquo;&rdquo;&ndash;&mdash;'),
-            '\euro{}‘’’“”–—')
+            self.convert('&euro;&lsquo;&rsquo;&rsquo;'
+                         '&ldquo;&rdquo;&ndash;&mdash;'),
+            '\euro{}‘’’�'
+            '��”–—')
 
         self.assertEqual(
-            self.convert('&iexcl;&cent;&pound;&curren;&sect;&uml;&copy;&ordf;'),
+            self.convert(
+                '&iexcl;&cent;&pound;&curren;&sect;&uml;&copy;&ordf;'),
             '¡\cent{}£\currency{}\S¨©ª')
 
         self.assertEqual(
-            self.convert('&laquo;&not;&reg;&macr;&deg;&plusmn;&sup2;&sup3;&acute;&micro;'),
+            self.convert('&laquo;&not;&reg;&macr;&deg;'
+                         '&plusmn;&sup2;&sup3;&acute;&micro;'),
             '«¬®¯°±²³´µ')
 
         self.assertEqual(
-            self.convert('&para;&middot;&cedil;&sup1;&ordm;&raquo;&frac14;&frac12;&frac34;&iquest;'),
+            self.convert('&para;&middot;&cedil;&sup1;&ordm;'
+                         '&raquo;&frac14;&frac12;&frac34;&iquest;'),
             '¶·¸¹º»¼½¾¿')
 
         self.assertEqual(

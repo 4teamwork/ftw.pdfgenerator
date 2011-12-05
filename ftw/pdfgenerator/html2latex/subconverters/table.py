@@ -588,9 +588,9 @@ class LatexWidth(object):
         'em',
         ]
 
-    def __init__(self, width=0, type=None, unit=''):
+    def __init__(self, width=0, type_=None, unit=''):
         self.width = width
-        self.type = type
+        self.type = type_
         self.unit = unit
 
     @classmethod
@@ -606,7 +606,7 @@ class LatexWidth(object):
                 w, u = match.groups()
                 w = w.replace(',', '.')
                 return cls(width=float(w),
-                           type=LatexWidth.TYPE_ABSOLUTE,
+                           type_=LatexWidth.TYPE_ABSOLUTE,
                            unit=u)
 
         # relative
@@ -616,7 +616,7 @@ class LatexWidth(object):
             w, u = match.groups()
             w = w.replace(',', '.')
             return cls(width=float(w) / 100,
-                       type=LatexWidth.TYPE_RELATIVE,
+                       type_=LatexWidth.TYPE_RELATIVE,
                        unit=None)
 
         # without unit -> use 'em'
@@ -624,7 +624,7 @@ class LatexWidth(object):
         if match:
             w = width.replace(',', '.')
             return cls(width=float(w),
-                       type=LatexWidth.TYPE_ABSOLUTE,
+                       type_=LatexWidth.TYPE_ABSOLUTE,
                        unit='em')
 
         raise ValueError(
@@ -645,7 +645,7 @@ class LatexWidth(object):
                 'Cannot accumulate LatexWidth with %s' % (
                     type(b).__name__))
 
-        a, b = self.__class__._harmonize_units(self, b)
+        a, b = self.__class__.harmonize_units(self, b)
 
         if a.type != b.type:
             raise ValueError(
@@ -657,11 +657,11 @@ class LatexWidth(object):
                     'units (%s, %s)' % (a.unit, b.unit))
 
         return LatexWidth(width=(a.width + b.width),
-                          type=a.type,
+                          type_=a.type,
                           unit=a.unit)
 
     @staticmethod
-    def _harmonize_units(a, b):
+    def harmonize_units(a, b):
         """If possible, converts the units of a and b so that they are
         the same.
         """
@@ -671,13 +671,13 @@ class LatexWidth(object):
 
         elif a.unit == 'mm' and b.unit == 'cm':
             b2 = LatexWidth(width=b.width * 10,
-                            type=b.type,
+                            type_=b.type,
                             unit='mm')
             return a, b2
 
         elif a.unit == 'cm' and b.unit == 'mm':
             a2 = LatexWidth(width=a.width * 10,
-                            type=a.type,
+                            type_=a.type,
                             unit='mm')
             return a2, b
 

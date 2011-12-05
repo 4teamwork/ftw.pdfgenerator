@@ -12,8 +12,8 @@ class ListConverter(subconverter.SubConverter):
 
     pattern = r'<(ul|ol)(.*)</\1>'
     listing_tag_mapping = {
-        'ul' : 'itemize',
-        'ol' : 'enumerate',
+        'ul': 'itemize',
+        'ol': 'enumerate',
     }
 
     def __call__(self):
@@ -39,7 +39,7 @@ class ListConverter(subconverter.SubConverter):
                 latex.append(begin_env)
                 for elm in node.childNodes:
 
-                    if elm.nodeType==3:
+                    if elm.nodeType == 3:
                         content_html = elm.toxml().strip()
 
                     else:

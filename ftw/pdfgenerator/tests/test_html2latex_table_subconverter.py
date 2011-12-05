@@ -212,7 +212,6 @@ class TestTableConverter(MockTestCase):
 
         self.assertEqual(self.convert(html), latex)
 
-
     def test_multiple_tables(self):
         # Multiple tables should work as well
 
@@ -259,7 +258,6 @@ class TestTableConverter(MockTestCase):
                 r' {\bf yeah}'))
 
         self.assertEqual(self.convert(html), latex)
-
 
     def test_htmlentities(self):
         # We should be able to use html entities (minidom has some
@@ -434,7 +432,7 @@ class TestLatexWidth(TestCase):
         width = table.LatexWidth.convert('10.3cm')
 
         with self.assertRaises(ValueError) as cm:
-            width + 5
+            width = width + 5
 
         self.assertEqual(
             str(cm.exception),
@@ -445,7 +443,7 @@ class TestLatexWidth(TestCase):
         width2 = table.LatexWidth.convert('20mm')
 
         with self.assertRaises(ValueError) as cm:
-            width1 + width2
+            width1 = width1 + width2
 
         self.assertEqual(
             str(cm.exception),
@@ -455,9 +453,8 @@ class TestLatexWidth(TestCase):
         width1 = table.LatexWidth.convert('10em')
         width2 = table.LatexWidth.convert('20%')
 
-
         with self.assertRaises(ValueError) as cm:
-            width1 + width2
+            width1 = width1 + width2
 
         self.assertEqual(
             str(cm.exception),
