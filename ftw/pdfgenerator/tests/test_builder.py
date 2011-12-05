@@ -189,10 +189,7 @@ class TestBuilder(MockTestCase):
 
         self.replay()
 
-        with self.assertRaises(PDFBuildFailed) as cm:
-            builder.build_zip('LaTeX')
-        self.assertEqual(str(cm.exception),
-                         'could not build pdf for some reason...')
+        builder.build_zip('LaTeX')
 
         self.assertFalse(os.path.exists(builder.build_directory))
 

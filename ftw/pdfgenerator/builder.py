@@ -55,22 +55,19 @@ class Builder(object):
             self._build_pdf(latex)
 
         except PDFBuildFailed:
-            self._cleanup_build()
-            raise
+            pass
+        data = StringIO()
+        zip_file = ZipFile(data, 'w')
 
-        else:
-            data = StringIO()
-            zip_file = ZipFile(data, 'w')
+        for filename in os.listdir(self.build_directory):
+            zip_file.write(os.path.join(self.build_directory, filename),
+                      filename)
 
-            for filename in os.listdir(self.build_directory):
-                zip_file.write(os.path.join(self.build_directory, filename),
-                          filename)
+        zip_file.close()
+        data.seek(0)
 
-            zip_file.close()
-            data.seek(0)
-
-            self._cleanup_build()
-            return data
+        self._cleanup_build()
+        return data
 
     def cleanup(self):
         if not self._terminated:
