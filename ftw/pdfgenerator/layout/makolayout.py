@@ -27,6 +27,8 @@ class MakoLayoutBase(BaseLayout, MakoTemplating):
             raise ValueError('%s: `template_name` is not defined.' % (
                     self.__class__.__name__))
 
+        self.register_default_packages()
+
         args = self.get_render_arguments()
         args['content'] = content_latex
 
@@ -37,3 +39,9 @@ class MakoLayoutBase(BaseLayout, MakoTemplating):
         """Returns a dict of arguments passed to the default template.
         """
         return {}
+
+    def register_default_packages(self):
+        """This method is called before rendering and may register
+        required packages (`use_package`).
+        """
+        pass
