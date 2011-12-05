@@ -123,7 +123,7 @@ class TestAsPDFView(MockTestCase):
         context, request = self.mock_allow_alternate_output(True)
 
         aspdf = self.mocker.patch(AsPDFView(context, request), spec=False)
-        self.expect(request.get('form.submitted', False)).result(False)
+        self.expect(request.get('submitted', False)).result(False)
         self.expect(aspdf.index()).result('rendered html')
 
         self.replay()
@@ -142,7 +142,7 @@ class TestAsPDFView(MockTestCase):
 
     def test_call_uses_output_from_request_if_admin(self):
         context, request = self.mock_allow_alternate_output(True)
-        self.expect(request.get('form.submitted', False)).result(True)
+        self.expect(request.get('submitted', False)).result(True)
         self.expect(request.get('output')).result('latex')
 
         aspdf = self.mocker.patch(AsPDFView(context, request))

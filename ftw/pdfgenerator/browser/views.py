@@ -11,7 +11,7 @@ class AsPDFView(BrowserView):
 
     def __call__(self):
         if self.allow_alternate_output():
-            if self.request.get('form.submitted', False):
+            if self.request.get('submitted', False):
                 output = self.request.get('output')
                 return self.export(output)
 
