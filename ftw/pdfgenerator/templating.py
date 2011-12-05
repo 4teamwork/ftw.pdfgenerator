@@ -79,7 +79,10 @@ class MakoTemplating(BaseTemplating):
 
         if getattr(self, '_mako_template_lookup', None) is None:
             dirs = self.get_template_directories()
-            self._mako_template_lookup = TemplateLookup(directories=dirs)
+            self._mako_template_lookup = TemplateLookup(
+                directories=dirs,
+                default_filters=['decode.utf8'],
+                input_encoding='utf-8')
 
         return self._mako_template_lookup
 
