@@ -217,3 +217,12 @@ class TestMakoTemplating(TestCase):
         self.assertEqual(
             foo.render_template('welcome.tex'),
             '{\\large Hello {\\bf John}!}\n')
+
+    def test_get_raw_template(self):
+        class Foo(MakoTemplating):
+            template_directories = [self.templates_foo]
+
+        foo = Foo()
+        self.assertEqual(
+            foo.get_raw_template('welcome.tex'),
+            r'{\large Hello {\bf ${view.name}}!}' + '\n')

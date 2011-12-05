@@ -4,6 +4,8 @@ from mako.lookup import TemplateLookup
 from zope.interface import implements
 import inspect
 import os
+import posixpath
+import re
 
 
 class BaseTemplating(object):
@@ -95,3 +97,14 @@ class MakoTemplating(BaseTemplating):
         template = self.template_lookup.get_template(filename)
         kwargs['view'] = self
         return template.render(**kwargs)
+
+    def get_raw_template(self, name):
+        """Returns the contents of a template file without parsing it.
+        """
+        # XXX make faster!!
+        uri = re.sub(r'^\/+', '', name)
+        for dir_ in self.template_lookup.directories:
+            srcfile = posixpath.normpath(posixpath.join(dir_, uri))
+            if os.path.isfile(srcfile):
+                return open(srcfile).read()
+        return None
