@@ -87,6 +87,8 @@ class Builder(object):
         assert not os.path.exists(pdf_path), 'export.pdf already exists'
 
         latex_file = open(latex_path, 'w')
+        if isinstance(latex, unicode):
+            latex = latex.encode('utf-8')
         latex_file.write(latex)
         latex_file.close()
 
