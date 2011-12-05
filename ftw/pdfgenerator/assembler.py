@@ -76,7 +76,7 @@ class PDFAssembler(object):
         return layout.render_latex(content_latex)
 
     def _attach_to_response(self, request, data, extension):
-        filename = '%s.%s' % (self.context.id(), extension)
+        filename = '%s.%s' % (self.context.id, extension)
         response = request.RESPONSE
         response.setHeader('Content-Type',
                            'application/%s; charset=utf-8' % extension)

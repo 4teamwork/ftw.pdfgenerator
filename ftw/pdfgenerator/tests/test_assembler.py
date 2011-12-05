@@ -39,7 +39,7 @@ class TestPDFAssembler(MockTestCase):
 
     def test_build_pdf_parameters(self):
         context = self.mocker.mock()
-        self.expect(context.id(), 'theid')
+        self.expect(context.id, 'theid')
 
         layout = self.mocker.mock()
         self.expect(layout.render_latex_for(context)).result('content latex')
@@ -83,7 +83,7 @@ class TestPDFAssembler(MockTestCase):
 
     def test_build_zip_parameters(self):
         context = self.mocker.mock()
-        self.expect(context.id(), 'theid')
+        self.expect(context.id, 'theid')
 
         layout = self.mocker.mock()
         self.expect(layout.render_latex_for(context)).result('content latex')
