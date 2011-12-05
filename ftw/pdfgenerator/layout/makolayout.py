@@ -46,3 +46,8 @@ class MakoLayoutBase(BaseLayout, MakoTemplating):
         required packages (`use_package`).
         """
         pass
+
+    def add_raw_template_file(self, name):
+        """Adds the contents of a file to the builder without parsing it.
+        """
+        self.builder.add_file(name, data=self.get_raw_template(name))
