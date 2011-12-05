@@ -31,8 +31,7 @@ class PDFAssembler(object):
         else:
             return self._attach_to_response(request, data, 'pdf')
 
-    def build_latex(self, layout=None, builder=None,
-                    request=None):
+    def build_latex(self, layout=None, builder=None, request=None):
         self._layout = layout
         self._builder = builder
 
