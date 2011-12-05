@@ -178,5 +178,6 @@ class TestBaseLayout(MockTestCase):
 
         layout = BaseLayout(context, request, builder)
 
+        self.assertNotEqual(layout.get_converter(), None)
         self.assertEqual(layout.get_converter(), layout.get_converter())
 

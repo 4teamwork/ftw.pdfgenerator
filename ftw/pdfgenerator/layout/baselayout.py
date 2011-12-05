@@ -177,7 +177,7 @@ class BaseLayout(object):
         """Returns the current instance of the IHTML2LaTeXConverter.
         """
 
-        if getattr(self, '_converter', None):
+        if getattr(self, '_converter', None) is None:
             self._converter  = getMultiAdapter(
                 (self.context, self.request, self),
                 IHTML2LaTeXConverter)
