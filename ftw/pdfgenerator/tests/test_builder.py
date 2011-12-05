@@ -177,7 +177,7 @@ class TestBuilder(MockTestCase):
         with self.assertRaises(PDFBuildFailed) as cm:
             builder.build('LaTeX')
         self.assertEqual(str(cm.exception),
-                         'could not build pdf for some reason...')
+                         'PDF missing.')
 
         self.assertFalse(os.path.exists(builder.build_directory))
 
@@ -208,6 +208,7 @@ class TestBuilder(MockTestCase):
     def test_build_pdf_reruns_pdflatex_if_needed(self):
         builder = self.mocker.patch(getUtility(IBuilderFactory)())
         aux_path = os.path.join(self.builddir, 'export.aux')
+        pdf_path = os.path.join(self.builddir, 'export.pdf')
 
         self._reruns__executed_call_counter = 0
 
@@ -217,6 +218,9 @@ class TestBuilder(MockTestCase):
                 aux = open(aux_path, 'w+')
                 aux.write('first run')
                 aux.close()
+                pdf = open(pdf_path, 'w+')
+                pdf.write('the pdf')
+                pdf.close()
                 return (0, 'some log\nRerun to get it better\ndone', '')
 
             elif self._reruns__executed_call_counter == 2:

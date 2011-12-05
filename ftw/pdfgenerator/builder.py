@@ -94,8 +94,8 @@ class Builder(object):
             cmd = 'pdflatex --interaction=nonstopmode %s' % latex_path
             exitcode, stdout, stderr = self._execute(cmd)
 
-            if exitcode > 0:
-                raise PDFBuildFailed(stderr)
+        if not os.path.exists(pdf_path):
+            raise PDFBuildFailed('PDF missing.')
 
         return pdf_path
 
