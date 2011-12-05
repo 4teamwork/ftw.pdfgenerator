@@ -31,6 +31,7 @@ class MakoLayoutBase(BaseLayout, MakoTemplating):
 
         args = self.get_render_arguments()
         args['content'] = content_latex
+        args['packages'] = self.get_packages_latex()
 
         return self.render_template(self.template_name,
                                     **args)
