@@ -45,7 +45,7 @@ class TestAsPDFView(MockTestCase):
                           (Interface, Interface))
         self.expect(assembler(ANY, ANY)).result(assembler)
         self.expect(assembler.build_pdf(
-                {'request': request})).result(request)
+                request=request)).result(request)
 
         self.replay()
 
@@ -61,7 +61,7 @@ class TestAsPDFView(MockTestCase):
                           (Interface, Interface))
         self.expect(assembler(ANY, ANY)).result(assembler)
         self.expect(assembler.build_latex(
-                {'request': request})).result(request)
+                request=request)).result(request)
 
         self.replay()
 
@@ -77,7 +77,7 @@ class TestAsPDFView(MockTestCase):
                           (Interface, Interface))
         self.expect(assembler(ANY, ANY)).result(assembler)
         self.expect(assembler.build_zip(
-                {'request': request})).result(request)
+                request=request)).result(request)
 
         self.replay()
 

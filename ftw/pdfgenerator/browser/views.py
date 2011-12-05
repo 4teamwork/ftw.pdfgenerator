@@ -31,13 +31,13 @@ class AsPDFView(BrowserView):
                                     IPDFAssembler)
 
         if output == 'pdf':
-            return assembler.build_pdf(self.get_build_arguments())
+            return assembler.build_pdf(**self.get_build_arguments())
 
         elif output == 'latex':
-            return assembler.build_latex(self.get_build_arguments())
+            return assembler.build_latex(**self.get_build_arguments())
 
         elif output == 'zip':
-            return assembler.build_zip(self.get_build_arguments())
+            return assembler.build_zip(**self.get_build_arguments())
 
         else:
             raise ValueError('Unkown output "%s"' % output)
