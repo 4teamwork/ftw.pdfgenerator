@@ -2,7 +2,7 @@ from ftw.pdfgenerator.interfaces import ILaTeXLayout
 from ftw.pdfgenerator.interfaces import ILaTeXView
 from ftw.pdfgenerator.interfaces import IRecursiveLaTeXView
 from ftw.pdfgenerator.templating import MakoTemplating
-from zope.component import adapts, getMultiAdapter
+from zope.component import adapts
 from zope.interface import implements, Interface
 
 
@@ -79,9 +79,9 @@ class RecursiveLaTeXView(MakoLaTeXView):
         latex = []
 
         for obj in self.context.listFolderContents():
-            view = getMultiAdapter((obj, self.request, self.layout),
-                                   ILaTeXView)
-            latex.append(view.render())
+            data = self.layout.render_latex_for(obj)
+            if data:
+                latex.append(data)
 
         return '\n'.join(latex)
 

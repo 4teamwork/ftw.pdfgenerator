@@ -21,10 +21,10 @@ class TestPDFAssembler(MockTestCase):
         self.assertEquals(obj.__class__, PDFAssembler)
 
     def test_build_latex_parameters(self):
-        view = self.mocker.mock()
-        self.expect(view.render()).result('content latex')
+        context = object()
 
         layout = self.mocker.mock()
+        self.expect(layout.render_latex_for(context)).result('content latex')
         self.expect(layout.render_latex('content latex')).result(
             'full latex')
 
@@ -33,23 +33,21 @@ class TestPDFAssembler(MockTestCase):
 
         self.replay()
 
-        obj = getMultiAdapter((object(), object()), interfaces.IPDFAssembler)
-        latex = obj.build_latex(layout=layout, view=view, builder=builder)
+        obj = getMultiAdapter((context, object()), interfaces.IPDFAssembler)
+        latex = obj.build_latex(layout=layout, builder=builder)
         self.assertEqual(latex, 'full latex')
 
     def test_build_pdf_parameters(self):
-        view = self.mocker.mock()
-        self.expect(view.render()).result('content latex')
+        context = self.mocker.mock()
+        self.expect(context.id(), 'theid')
 
         layout = self.mocker.mock()
+        self.expect(layout.render_latex_for(context)).result('content latex')
         self.expect(layout.render_latex('content latex')).result(
             'full latex')
 
         builder = self.mocker.mock()
         self.expect(builder.build('full latex')).result('the pdf')
-
-        context = self.mocker.mock()
-        self.expect(context.id(), 'theid')
 
         request = self.mocker.mock()
         response = self.mocker.mock()
@@ -60,44 +58,40 @@ class TestPDFAssembler(MockTestCase):
         self.replay()
 
         obj = getMultiAdapter((context, request), interfaces.IPDFAssembler)
-        self.assertEqual(obj.build_pdf(layout=layout, view=view,
-                                       builder=builder, request=request),
+        self.assertEqual(obj.build_pdf(layout=layout, builder=builder,
+                                       request=request),
                          request)
 
     def test_build_pdf_with_no_request_returns_data(self):
-        view = self.mocker.mock()
-        self.expect(view.render()).result('content latex')
+        context = object()
 
         layout = self.mocker.mock()
         self.expect(layout.render_latex('content latex')).result(
             'full latex')
+        self.expect(layout.render_latex_for(context)).result('content latex')
 
         builder = self.mocker.mock()
         self.expect(builder.build('full latex')).result('the pdf')
 
-        context = object()
         request = object()
 
         self.replay()
 
         obj = getMultiAdapter((context, request), interfaces.IPDFAssembler)
-        self.assertEqual(obj.build_pdf(layout=layout, view=view,
-                                       builder=builder),
+        self.assertEqual(obj.build_pdf(layout=layout, builder=builder),
                          'the pdf')
 
     def test_build_zip_parameters(self):
-        view = self.mocker.mock()
-        self.expect(view.render()).result('content latex')
+        context = self.mocker.mock()
+        self.expect(context.id(), 'theid')
 
         layout = self.mocker.mock()
+        self.expect(layout.render_latex_for(context)).result('content latex')
         self.expect(layout.render_latex('content latex')).result(
             'full latex')
 
         builder = self.mocker.mock()
         self.expect(builder.build_zip('full latex').read()).result('the zip')
-
-        context = self.mocker.mock()
-        self.expect(context.id(), 'theid')
 
         request = self.mocker.mock()
         response = self.mocker.mock()
@@ -108,29 +102,27 @@ class TestPDFAssembler(MockTestCase):
         self.replay()
 
         obj = getMultiAdapter((context, request), interfaces.IPDFAssembler)
-        self.assertEqual(obj.build_zip(layout=layout, view=view,
-                                       builder=builder, request=request),
+        self.assertEqual(obj.build_zip(layout=layout, builder=builder,
+                                       request=request),
                          request)
 
     def test_build_zip_with_no_request_returns_data(self):
-        view = self.mocker.mock()
-        self.expect(view.render()).result('content latex')
+        context = object()
 
         layout = self.mocker.mock()
+        self.expect(layout.render_latex_for(context)).result('content latex')
         self.expect(layout.render_latex('content latex')).result(
             'full latex')
 
         builder = self.mocker.mock()
         self.expect(builder.build_zip('full latex').read()).result('the zip')
 
-        context = object()
         request = object()
 
         self.replay()
 
         obj = getMultiAdapter((context, request), interfaces.IPDFAssembler)
-        self.assertEqual(obj.build_zip(layout=layout, view=view,
-                                       builder=builder),
+        self.assertEqual(obj.build_zip(layout=layout, builder=builder),
                          'the zip')
 
     def test_get_builder(self):
@@ -161,19 +153,3 @@ class TestPDFAssembler(MockTestCase):
         obj = getMultiAdapter((context, request), interfaces.IPDFAssembler)
         obj._builder = builder
         self.assertEqual(obj.get_layout(), layout)
-
-    def test_get_view(self):
-        context = self.create_dummy()
-        request = self.create_dummy()
-        layout = self.create_dummy()
-
-        view = self.mocker.mock()
-        self.mock_adapter(view, interfaces.ILaTeXView,
-                          (Interface, Interface, Interface))
-        self.expect(view(context, request, layout)).result(view)
-
-        self.replay()
-
-        obj = getMultiAdapter((context, request), interfaces.IPDFAssembler)
-        obj._layout = layout
-        self.assertEqual(obj.get_view(), view)

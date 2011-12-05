@@ -2,6 +2,7 @@
 # R0801: Similar lines in 3 files
 
 from ftw.pdfgenerator.interfaces import ILaTeXView, IRecursiveLaTeXView
+from ftw.pdfgenerator.layout.baselayout import BaseLayout
 from ftw.pdfgenerator.view import MakoLaTeXView, RecursiveLaTeXView
 from plone.mocktestcase import MockTestCase
 from zope.interface import Interface
@@ -133,11 +134,13 @@ class TestRecursiveLaTeXView(MockTestCase):
 
     def test_render_children(self):
         request = object()
-        layout = object()
+        builder = object()
 
         context = self.mocker.mock()
         obj1 = self.mocker.mock()
         obj2 = self.mocker.mock()
+
+        layout = BaseLayout(context, request, builder)
 
         self.expect(context.listFolderContents()).result([obj1, obj2])
 
@@ -146,9 +149,11 @@ class TestRecursiveLaTeXView(MockTestCase):
                           (Interface, Interface, Interface))
 
         self.expect(
-            subview(obj1, request, layout).render()).result('object one latex')
+            subview(obj1, request, layout).render()).result(
+            'object one latex')
         self.expect(
-            subview(obj2, request, layout).render()).result('object two latex')
+            subview(obj2, request, layout).render()).result(
+            'object two latex')
 
         self.replay()
 
@@ -158,7 +163,8 @@ class TestRecursiveLaTeXView(MockTestCase):
 
     def test_get_render_arguments_contains_latex_content(self):
         context = request = layout = object()
-        view = self.mocker.patch(RecursiveLaTeXView(context, request, layout))
+        view = self.mocker.patch(RecursiveLaTeXView(
+                context, request, layout))
 
         self.expect(view.render_children()).result('children latex')
 

@@ -2,7 +2,8 @@ from ftw.pdfgenerator.exceptions import ConflictingUsePackageOrder
 from ftw.pdfgenerator.interfaces import IBuilder
 from ftw.pdfgenerator.interfaces import IHTML2LaTeXConverter
 from ftw.pdfgenerator.interfaces import ILaTeXLayout
-from zope.component import adapts, getMultiAdapter
+from ftw.pdfgenerator.interfaces import ILaTeXView
+from zope.component import adapts, getMultiAdapter, queryMultiAdapter
 from zope.interface import implements, Interface
 
 
@@ -183,3 +184,27 @@ class BaseLayout(object):
                 IHTML2LaTeXConverter)
 
         return self._converter
+
+    def get_views_for(self, obj):
+        """Returns a list of `ILaTeXView`s for `obj`. If no views are
+        registered for the passed object it will return an empty list.
+        """
+        views = []
+        for name in ('pre-hook', '', 'post-hook'):
+            view = queryMultiAdapter((obj, self.request, self),
+                                     ILaTeXView,
+                                     name=name)
+            if view:
+                views.append(view)
+
+        return views
+
+    def render_latex_for(self, obj):
+        """Renders the LaTeX views registered for `obj`.
+        """
+        latex = []
+
+        for view in self.get_views_for(obj):
+            latex.append(view.render())
+
+        return '\n'.join(latex)

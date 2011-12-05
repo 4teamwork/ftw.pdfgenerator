@@ -5,11 +5,13 @@
 from ftw.pdfgenerator.exceptions import ConflictingUsePackageOrder
 from ftw.pdfgenerator.interfaces import IBuilder
 from ftw.pdfgenerator.interfaces import ILaTeXLayout
+from ftw.pdfgenerator.interfaces import ILaTeXView
 from ftw.pdfgenerator.layout.baselayout import BaseLayout
 from ftw.pdfgenerator.testing import PDFGENERATOR_ZCML_LAYER
 from plone.mocktestcase import MockTestCase
-from zope.component import adaptedBy
-from zope.interface import directlyProvides
+from zope.component import adaptedBy, provideAdapter
+from zope.interface import Interface, implements
+from zope.interface import alsoProvides, directlyProvides
 from zope.interface.verify import verifyClass
 
 
@@ -181,3 +183,43 @@ class TestBaseLayout(MockTestCase):
         self.assertNotEqual(layout.get_converter(), None)
         self.assertEqual(layout.get_converter(), layout.get_converter())
 
+    def test_get_view_rendering(self):
+        class IFoo(Interface): pass
+
+        foo = self.create_dummy()
+        alsoProvides(foo, IFoo)
+
+        class FooView(object):
+            implements(ILaTeXView)
+            data = 'foo'
+
+            def __init__(self, context, request, layout):
+                pass
+
+            def render(self):
+                return self.data
+        provideAdapter(FooView, (IFoo, Interface, Interface), name='')
+
+        class PreFooView(FooView):
+            data = 'pre'
+        provideAdapter(PreFooView, (IFoo, Interface, Interface),
+                       name='pre-hook')
+
+        class PostFooView(FooView):
+            data = 'post'
+        provideAdapter(PostFooView, (IFoo, Interface, Interface),
+                       name='post-hook')
+
+        context = self.create_dummy()
+        request = self.create_dummy()
+        builder = self.create_dummy()
+        layout = BaseLayout(context, request, builder)
+
+        views = layout.get_views_for(foo)
+        self.assertEqual(len(views), 3)
+        self.assertEqual(type(views[0]), PreFooView)
+        self.assertEqual(type(views[1]), FooView)
+        self.assertEqual(type(views[2]), PostFooView)
+
+        self.assertEqual(
+            layout.render_latex_for(foo), 'pre\nfoo\npost')
