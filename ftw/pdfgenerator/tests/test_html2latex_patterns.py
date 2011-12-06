@@ -340,3 +340,35 @@ class TestBasicPatterns(TestCase):
         # Backslashes
         self.assertEqual(self.convert(r'C:\Programs\foo').strip(),
                          r'C:\\Programs\\foo')
+
+    def test_tinymce_paste(self):
+        # cleanup problem with many _mcePaste divs.
+        html = '\n'.join((
+                '<p> </p>',
+                '<div id="_mcePaste">one</div>',
+                '<div id="_mcePaste"></div>',
+                '<div id="_mcePaste">two</div>',
+                '<div id="_mcePaste"></div>',
+                '<div id="_mcePaste">three</div>',
+                '<div id="_mcePaste"></div>',
+                '<div id="_mcePaste">four</div>',
+                '<div id="_mcePaste"></div>',
+                '<div id="_mcePaste">five</div>',
+                '<p>six<br />seven<br />eight</p>'))
+
+        self.assertNotIn('div', self.convert(html))
+        self.assertNotIn('mcePaste', self.convert(html))
+        self.assertNotIn('<', self.convert(html))
+        self.assertNotIn('>', self.convert(html))
+
+    def test_repeat_bug(self):
+        # bug was to pass re.DOTALL (which is 16) to the re.sub() function,
+        # which caused to only replace the first 16 matches.
+        times = 20
+        html = ('<b>foo</b> ' * times).strip()
+        latex = (r'{\bf foo} ' * times).strip()
+
+        result = self.convert(html)
+
+        self.assertEqual(len(result), len(latex))
+        self.assertEqual(result, latex)

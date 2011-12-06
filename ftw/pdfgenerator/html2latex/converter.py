@@ -281,10 +281,10 @@ class HTML2LatexConvertRunner(BasePatternAware):
 
             while previous_html != self.html:
                 previous_html = self.html
-                self.html = xpr.sub(replace, self.html, re.DOTALL)
+                self.html = xpr.sub(replace, self.html)
 
         else:
-            self.html = xpr.sub(replace, self.html, re.DOTALL)
+            self.html = xpr.sub(replace, self.html)
 
     def _replace_regexp_function(self, search, replace_fun):
         xpr = re.compile(search, re.DOTALL)
