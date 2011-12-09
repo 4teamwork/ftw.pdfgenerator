@@ -38,7 +38,7 @@ Links
 - Main github project repository: https://github.com/4teamwork/ftw.pdfgenerator
 - Issue tracker: https://github.com/4teamwork/ftw.pdfgenerator/issues
 - Package on pypi: http://pypi.python.org/pypi/ftw.pdfgenerator
-- Continous integration: https://jenkins.4teamwork.ch/job/ftw.pdfgenerator/
+- Continuous integration: https://jenkins.4teamwork.ch/job/ftw.pdfgenerator/
 
 
 Maintainer
