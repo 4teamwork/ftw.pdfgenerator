@@ -3,7 +3,7 @@ from ftw.pdfgenerator.interfaces import IPDFAssembler
 from zope.component import getMultiAdapter
 
 
-class AsPDFView(BrowserView):
+class ExportPDFView(BrowserView):
     """Export a PDF with default settings. If the user is a Admin (if he
     has Manage portal permission), a additional form will be shown, where
     he can selected the desired output format (PDF, LaTeX only or ZIP).

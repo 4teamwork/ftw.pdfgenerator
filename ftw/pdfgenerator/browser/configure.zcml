@@ -4,9 +4,9 @@
 
   <browser:page
       for="*"
-      name="as_pdf"
-      class=".views.AsPDFView"
-      template="aspdf.pt"
+      name="export_pdf"
+      class=".views.ExportPDFView"
+      template="export_pdf.pt"
       permission="zope2.View"
       />
 

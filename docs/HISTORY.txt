@@ -4,4 +4,5 @@ Changelog
 1.0dev (unreleased)
 -------------------
 
-- Initial release
+- Rename as_pdf view to export_pdf.
+  [jone]
