@@ -5,7 +5,6 @@ from plone.testing import Layer
 from plone.testing import zca
 from zope.component import provideUtility
 from zope.configuration import xmlconfig
-import ftw.pdfgenerator
 import os
 import shutil
 import tempfile
@@ -22,9 +21,11 @@ class PDFGeneratorZCMLLayer(Layer):
         self['configurationContext'] = zca.stackConfigurationContext(
             self.get('configurationContext'))
 
+        import ftw.pdfgenerator.tests
         xmlconfig.file('test.zcml', ftw.pdfgenerator.tests,
                        context=self['configurationContext'])
 
+        import ftw.pdfgenerator
         xmlconfig.file('configure.zcml', ftw.pdfgenerator,
                        context=self['configurationContext'])
 
