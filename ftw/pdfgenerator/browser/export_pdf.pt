@@ -36,6 +36,13 @@
             <label for="output_zip" i18n:translate="">ZIP bundle</label>
           </p>
 
+          <tal:folder_contents_selection
+              tal:condition="request/paths | nothing">
+            <input tal:repeat="path request/paths"
+                   tal:attributes="value path"
+                   name="paths:list" type="hidden" />
+          </tal:folder_contents_selection>
+
           <input type="submit" name="submitted"
                  value="Export"
                  i18n:attributes="value"
