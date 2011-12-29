@@ -133,7 +133,7 @@ class TestRecursiveLaTeXView(MockTestCase):
         self.assertEquals(obj.layout, layout)
 
     def test_render_children(self):
-        request = object()
+        request = {}
         builder = object()
 
         context = self.mocker.mock()
@@ -148,11 +148,9 @@ class TestRecursiveLaTeXView(MockTestCase):
         self.mock_adapter(subview, ILaTeXView,
                           (Interface, Interface, Interface))
 
-        self.expect(
-            subview(obj1, request, layout).render()).result(
+        self.expect(subview(obj1, request, layout).render()).result(
             'object one latex')
-        self.expect(
-            subview(obj2, request, layout).render()).result(
+        self.expect(subview(obj2, request, layout).render()).result(
             'object two latex')
 
         self.replay()
@@ -160,6 +158,43 @@ class TestRecursiveLaTeXView(MockTestCase):
         view = RecursiveLaTeXView(context, request, layout)
         self.assertEqual(view.render_children(),
                          'object one latex\nobject two latex')
+
+    def test_render_children__folder_contents_selected_objects(self):
+        request = {'paths': [
+                '/plone/parent/child1',
+                '/plone/parent/child3']}
+        builder = object()
+
+        context = self.mocker.mock(count=False)
+        child1 = self.mocker.mock(count=False)
+        child2 = self.mocker.mock(count=False)
+        child3 = self.mocker.mock(count=False)
+
+        base_path = ['', 'plone', 'parent']
+        self.expect(child1.getPhysicalPath()).result(base_path + ['child1'])
+        self.expect(child2.getPhysicalPath()).result(base_path + ['child2'])
+        self.expect(child3.getPhysicalPath()).result(base_path + ['child3'])
+
+        self.expect(context.listFolderContents()).result(
+            [child1, child2, child3])
+
+        layout = BaseLayout(context, request, builder)
+
+        subview = self.mocker.mock()
+        self.mock_adapter(subview, ILaTeXView,
+                          (Interface, Interface, Interface))
+
+        self.expect(subview(child1, request, layout).render()).result(
+            'child one latex')
+        self.expect(subview(child3, request, layout).render()).result(
+            'child three latex')
+
+        self.replay()
+
+        view = RecursiveLaTeXView(context, request, layout)
+        self.assertEqual(
+            view.render_children(),
+            'child one latex\nchild three latex')
 
     def test_get_render_arguments_contains_latex_content(self):
         context = request = layout = object()

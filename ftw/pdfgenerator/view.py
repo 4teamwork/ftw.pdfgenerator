@@ -78,7 +78,17 @@ class RecursiveLaTeXView(MakoLaTeXView):
 
         latex = []
 
+        # If the export was started on this object and "paths" are passed
+        # from folder_contents, we should only export the selected objects.
+        if self.context == self.layout.context:
+            paths = self.request.get('paths', None)
+        else:
+            paths = None
+
         for obj in self.context.listFolderContents():
+            if paths and '/'.join(obj.getPhysicalPath()) not in paths:
+                continue
+
             data = self.layout.render_latex_for(obj)
             if data:
                 latex.append(data)
