@@ -6,7 +6,6 @@
       for="*"
       name="export_pdf"
       class=".views.ExportPDFView"
-      template="export_pdf.pt"
       permission="zope2.View"
       />
 

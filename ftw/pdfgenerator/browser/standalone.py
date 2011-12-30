@@ -1,4 +1,3 @@
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from ftw.pdfgenerator.browser.views import ExportPDFView
 from ftw.pdfgenerator.interfaces import IBuilderFactory
 from ftw.pdfgenerator.layout.makolayout import MakoLayoutBase
@@ -17,8 +16,6 @@ class BaseStandalonePDFView(ExportPDFView, MakoLayoutBase, MakoLaTeXView):
     export which is not recursive. With this approach it is possible to have
     multiple, completely different PDF exports for one single context.
     """
-
-    index = ViewPageTemplateFile('export_pdf.pt')
 
     def __init__(self, context, request):
         # call init on BrowserView, which is the superclass of ExportPDFView

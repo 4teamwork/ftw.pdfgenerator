@@ -1,4 +1,5 @@
 from Products.Five import BrowserView
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from ftw.pdfgenerator.interfaces import IPDFAssembler
 from zope.component import getMultiAdapter
 
@@ -8,6 +9,8 @@ class ExportPDFView(BrowserView):
     has Manage portal permission), a additional form will be shown, where
     he can selected the desired output format (PDF, LaTeX only or ZIP).
     """
+
+    index = ViewPageTemplateFile('export_pdf.pt')
 
     def __call__(self):
         if self.allow_alternate_output():
