@@ -10,10 +10,11 @@ class ListConverter(subconverter.SubConverter):
     into latex' itemize- and enumerate-environments.
     """
 
-    pattern = r'<(ul|ol)(.*)</\1>'
+    pattern = r'<(ul|ol|dl)(.*)</\1>'
     listing_tag_mapping = {
         'ul': 'itemize',
         'ol': 'enumerate',
+        'dl': 'description',
     }
 
     def __call__(self):
@@ -35,26 +36,13 @@ class ListConverter(subconverter.SubConverter):
 
                 # iterate, because there may be multiple lists
                 begin_env, end_env = self._create_environ(node)
-
                 latex.append(begin_env)
-                for elm in node.childNodes:
 
-                    if elm.nodeType == 3:
-                        content_html = elm.toxml().strip()
+                if node.tagName.lower() in ('ol', 'ul'):
+                    latex.append(self._convert_listing_items(node))
 
-                    else:
-                        content_html = ''.join(
-                            [e.toxml() for e in elm.childNodes])
-
-                    if elm.nodeType == 1 and elm.tagName.lower() == 'li':
-                        latex.append(
-                            (r'\item %s' %
-                             self.converter.convert(content_html)).strip())
-
-                    else:
-                        data = self.converter.convert(content_html).strip()
-                        if len(data) > 0:
-                            latex.append(data)
+                else:
+                    latex.append(self._convert_description_items(node))
 
                 latex.append(end_env)
 
@@ -63,6 +51,55 @@ class ListConverter(subconverter.SubConverter):
 
         latex.append('')
         self.replace_and_lock('\n'.join(latex))
+
+    def _convert_listing_items(self, list_node):
+        latex = []
+        for elm in list_node.childNodes:
+            if elm.nodeType == 1 and elm.tagName.lower() == 'li':
+                latex.append(r'\item %s' % self._get_node_content(elm).strip())
+
+            else:
+                content_latex = self._get_node_content(elm)
+                if content_latex is not None:
+                    latex.append(content_latex)
+
+        return '\n'.join(latex)
+
+    def _convert_description_items(self, list_node):
+        latex = []
+
+        dt_node = None
+        for elm in list_node.childNodes:
+            if elm.nodeType == 1 and elm.tagName.lower() == 'dt':
+                dt_node = elm
+
+            elif elm.nodeType == 1 and elm.tagName.lower() == 'dd' and \
+                    dt_node is not None:
+                latex.append(r'\item[%s] %s' % (
+                        self._get_node_content(dt_node).strip(),
+                        self._get_node_content(elm).strip()))
+                dt_node = None
+
+            else:
+                content_latex = self._get_node_content(elm)
+                if content_latex is not None:
+                    latex.append(content_latex)
+
+        return '\n'.join(latex)
+
+    def _get_node_content(self, elm):
+        if elm.nodeType == 3:  # text node
+            content_html = elm.toxml().strip()
+
+        else:  # tag node
+            content_html = ''.join(
+                [e.toxml() for e in elm.childNodes])
+
+        if len(content_html) == 0:
+            return None
+
+        else:
+            return self.converter.convert(content_html)
 
     def _create_environ(self, list_):
         name = list_.tagName.lower()

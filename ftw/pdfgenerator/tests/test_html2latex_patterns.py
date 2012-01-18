@@ -372,3 +372,13 @@ class TestBasicPatterns(TestCase):
 
         self.assertEqual(len(result), len(latex))
         self.assertEqual(result, latex)
+
+    def XXXtest_blubb(self):
+        html = """<dl><dt>Ein Begriff</dt><dd>Mit einer Beschreibung</dd></dl>
+<p>Hier ist ein <a class="external-link" href="http://www.4teamwork.ch">Link auf www.4teamwork.ch</a>.</p>
+<blockquote class="pullquote">Und noch ein Zitat. Mit welchem man etwas sagen kann.</blockquote>
+<p class="callout">Hier noch ein Text der betont sein muss.</p>"""
+
+        result = self.convert(html)
+
+        self.assertEqual(result, 'xxx')

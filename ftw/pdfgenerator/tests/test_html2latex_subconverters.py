@@ -232,3 +232,44 @@ class TestListConverter(SubconverterTestBase):
                 r''))
 
         self.assertEqual(self.convert(html), latex)
+
+    def test_definition_list(self):
+        html = '\n'.join((
+                '<dl>',
+                '<dt>definition term</dt>',
+                '<dd>THE definition</dd>',
+                '<dt>another term</dt>',
+                '<dd>another definition</dd>',
+                '</dl>'))
+
+        latex = '\n'.join((
+                r'\begin{description}',
+                r'\item[definition term] THE definition',
+                r'\item[another term] another definition',
+                r'\end{description}',
+                r''))
+
+        self.assertEqual(self.convert(html), latex)
+
+    def test_nested_definition_list(self):
+        html = '\n'.join((
+                '<dl>',
+                '<dt>definition term</dt>',
+                '<dd>THE definition</dd>',
+                '<dt>nested</dt>',
+                '<dd><dl><dt>subterm</dt><dd>subdef</dd></dl></dd>',
+                '<dt>another term</dt>',
+                '<dd>another definition</dd>',
+                '</dl>'))
+
+        latex = '\n'.join((
+                r'\begin{description}',
+                r'\item[definition term] THE definition',
+                r'\item[nested] \begin{description}',
+                r'\item[subterm] subdef',
+                r'\end{description}',
+                r'\item[another term] another definition',
+                r'\end{description}',
+                r''))
+
+        self.assertEqual(self.convert(html), latex)

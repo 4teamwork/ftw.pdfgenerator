@@ -4,5 +4,8 @@ Changelog
 1.0dev (unreleased)
 -------------------
 
+- Implement convertion of definition lists.
+  [jone]
+
 - Rename as_pdf view to export_pdf.
   [jone]
