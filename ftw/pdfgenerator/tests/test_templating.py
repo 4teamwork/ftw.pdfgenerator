@@ -226,3 +226,12 @@ class TestMakoTemplating(TestCase):
         self.assertEqual(
             foo.get_raw_template('welcome.tex'),
             r'{\large Hello {\bf ${view.name}}!}' + '\n')
+
+    def test_get_raw_template_returns_None_if_template_not_found(self):
+        class Foo(MakoTemplating):
+            template_directories = [self.templates_foo]
+
+        foo = Foo()
+        self.assertEqual(
+            foo.get_raw_template('this-file-does-not-exist'),
+            None)
