@@ -207,3 +207,35 @@ class TestRecursiveLaTeXView(MockTestCase):
 
         self.assertEqual(view.get_render_arguments(),
                          {'latex_content': 'children latex'})
+
+    def test_paths_respected_when_not_on_context(self):
+        request = {'paths': [
+                '/plone/parent/child1']}
+        builder = object()
+
+        context = self.mocker.mock(count=False)
+        child1 = self.mocker.mock(count=False)
+        child1a = self.mocker.mock(count=False)
+
+        base_path = ['', 'plone', 'parent']
+        self.expect(child1.getPhysicalPath()).result(base_path + ['child1'])
+        self.expect(child1a.getPhysicalPath()).result(base_path + [
+                'child1', 'child1a'])
+
+        self.expect(child1.listFolderContents()).result([child1a])
+
+        layout = BaseLayout(context, request, builder)
+
+        subview = self.mocker.mock()
+        self.mock_adapter(subview, ILaTeXView,
+                          (Interface, Interface, Interface))
+
+        self.expect(subview(child1a, request, layout).render()).result(
+            'child one A latex')
+
+        self.replay()
+
+        view = RecursiveLaTeXView(child1, request, layout)
+        self.assertEqual(
+            view.render_children(),
+            'child one A latex')
