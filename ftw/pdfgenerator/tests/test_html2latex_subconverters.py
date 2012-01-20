@@ -76,6 +76,25 @@ class TestBaseSubConverter(MockTestCase):
         obj = SubConverter(converter, match, html)
         obj.replace('latex code')
 
+    def test_get_context(self):
+        context = self.mocker.mock()
+        self.expect(context.found())
+
+        class MySubConverter(SubConverter):
+            pattern = 'y'
+
+            def __call__(self):
+                self.get_context().found()
+
+        self.replay()
+
+        converter = HTML2LatexConverter(
+            context=context,
+            request=object(),
+            layout=object())
+
+        converter.convert('xyz', custom_subconverters=[MySubConverter])
+
 
 class TestHtmlentitiesConverter(SubconverterTestBase):
 

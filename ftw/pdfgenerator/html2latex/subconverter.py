@@ -34,3 +34,5 @@ class SubConverter(object):
             self.match.end(),
             latex)
 
+    def get_context(self):
+        return self.converter.converter.context
