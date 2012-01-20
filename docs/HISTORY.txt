@@ -4,6 +4,9 @@ Changelog
 1.0dev (unreleased)
 -------------------
 
+- Implement hyperlink converter.
+  [jone]
+
 - Implement convertion of definition lists.
   [jone]
 
