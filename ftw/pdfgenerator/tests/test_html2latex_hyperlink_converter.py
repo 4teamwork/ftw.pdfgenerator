@@ -21,13 +21,6 @@ class TestHyperlinkConverter(MockTestCase):
             request=object(),
             layout=self.layout)
 
-
-        self.portal_transforms = self.mocker.mock()
-        self.mock_tool(self.portal_transforms, 'portal_transforms')
-        self.expect(self.portal_transforms.convert(
-                'fck_ruid_to_url', ANY, context=self.context)).call(
-            lambda name, html, context: html).count(0, None)
-
         self.convert = self.converter.convert
 
     def tearDown(self):
@@ -61,20 +54,6 @@ class TestHyperlinkConverter(MockTestCase):
 
         html = '<a href="foo/bar">baz</a>'
         latex = r'\href{http://nohost/plone/foo/bar}{baz}'
-        self.assertEqual(self.convert(html), latex)
-
-    def test_tinymce_uid_urls(self):
-        link_html = '<a href="resolveuid/f4b3fa94">something</a>'
-        transformed_link_html = '<a href="http://nohost/plone/something">' + \
-            'something</a>'
-
-        self.expect(self.portal_transforms.convert(
-                'fck_ruid_to_url', link_html, context=self.context)).result(
-            transformed_link_html)
-
-        self.replay()
-        html = 'foo %s bar' % link_html
-        latex = r'foo \href{http://nohost/plone/something}{something} bar'
         self.assertEqual(self.convert(html), latex)
 
     def test_links_within_brackets(self):

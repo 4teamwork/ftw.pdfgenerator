@@ -1,7 +1,5 @@
-from Products.CMFCore.utils import getToolByName
 from ftw.pdfgenerator.html2latex import subconverter
 import os.path
-import re
 
 
 class HyperlinkConverter(subconverter.SubConverter):
@@ -11,12 +9,7 @@ class HyperlinkConverter(subconverter.SubConverter):
     def __call__(self):
         context = self.get_context()
 
-        portal_transforms = getToolByName(context, 'portal_transforms')
-        html = portal_transforms.convert(
-            'fck_ruid_to_url', self.get_html(), context=context)
-
-        match = re.compile(self.pattern).search(html)
-        url, label = match.groups()
+        url, label = self.match.groups()
         label = self.converter.convert(label)
 
         is_relative = '://' not in url and not url.startswith('mailto:')
