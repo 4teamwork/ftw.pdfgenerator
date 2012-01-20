@@ -372,3 +372,13 @@ class TestBasicPatterns(TestCase):
 
         self.assertEqual(len(result), len(latex))
         self.assertEqual(result, latex)
+
+    def test_callout_is_not_too_greedy(self):
+        # Bug caused the callout pattern to be too greedy, which resulted
+        # in swallowed content.
+        html = '<p>foo</p> <p class="callout">bar</p> <p>baz</p>'
+        result = self.convert(html)
+
+        self.assertIn('foo', result)
+        self.assertIn('bar', result)
+        self.assertIn('baz', result)

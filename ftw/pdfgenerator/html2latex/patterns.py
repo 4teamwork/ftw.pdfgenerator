@@ -46,7 +46,7 @@ DEFAULT_PATTERNS = ([
          r'\\subparagraph{\g<1>}\n'),
 
         # font style and text decoration
-        (MODE_REGEXP,   r'<p.*?class="callout".*?>(.*?)</p>',
+        (MODE_REGEXP,   r'<p[^>]*?class="callout"[^>]*?>(.*?)</p>',
          r'\\begin{quote}\n\g<1>\n\\end{quote}\n'),
         (MODE_REGEXP,   r'([^ ])<(b|strong|em|u|i)> ',
          r'\g<1> <\g<2>>'),
