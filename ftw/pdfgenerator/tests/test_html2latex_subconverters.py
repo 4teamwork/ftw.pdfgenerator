@@ -95,6 +95,25 @@ class TestBaseSubConverter(MockTestCase):
 
         converter.convert('xyz', custom_subconverters=[MySubConverter])
 
+    def test_get_layout(self):
+        layout = self.mocker.mock()
+        self.expect(layout.found())
+
+        class MySubConverter(SubConverter):
+            pattern = 'y'
+
+            def __call__(self):
+                self.get_layout().found()
+
+        self.replay()
+
+        converter = HTML2LatexConverter(
+            context=object(),
+            request=object(),
+            layout=layout)
+
+        converter.convert('xyz', custom_subconverters=[MySubConverter])
+
 
 class TestHtmlentitiesConverter(SubconverterTestBase):
 

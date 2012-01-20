@@ -36,3 +36,6 @@ class SubConverter(object):
 
     def get_context(self):
         return self.converter.converter.context
+
+    def get_layout(self):
+        return self.converter.converter.layout
