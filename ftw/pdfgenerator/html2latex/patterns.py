@@ -11,6 +11,8 @@ BACKSLASH_MARKER = 'THISISABACKSLASH' * 2
 
 DEFAULT_PATTERNS = ([
         (MODE_REPLACE,  '\\',                      BACKSLASH_MARKER),
+        # remove ASCII non breaking space:
+        (MODE_REPLACE,  '\xc2\xa0',                ' '),
         interfaces.HTML2LATEX_CUSTOM_PATTERN_PLACEHOLDER_TOP,
 
         # special characters

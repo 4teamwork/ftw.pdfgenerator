@@ -341,6 +341,12 @@ class TestBasicPatterns(TestCase):
         self.assertEqual(self.convert(r'C:\Programs\foo').strip(),
                          r'C:\\Programs\\foo')
 
+    def test_removes_nonbreaking_spaces(self):
+        # Non break spaces are evil. In HTML they are usually not used the
+        # way they should be used in LaTeX, so we replace them with spaces.
+        self.assertEqual(self.convert(u'Hello\xa0World'),
+                         'Hello World')
+
     def test_tinymce_paste(self):
         # cleanup problem with many _mcePaste divs.
         html = '\n'.join((

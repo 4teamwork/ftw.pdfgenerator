@@ -132,3 +132,11 @@ class TestHyperlinkConverter(MockTestCase):
         html ='<a href="http://foo">foo <b>bar</b> baz</a>'
         latex = r'\href{http://foo}{foo {\bf bar} baz}'
         self.assertEqual(self.convert(html), latex)
+
+    def test_removes_nonbreaking_spaces(self):
+        self.replay()
+        # Non break spaces are evil. In HTML they are usually not used the
+        # way they should be used in LaTeX, so we replace them with spaces.
+        html = u'<a href="http://host">Hello\xa0World</a>'.encode('utf8')
+        latex = r'\href{http://host}{Hello World}'
+        self.assertEqual(self.convert(html), latex)
