@@ -1,5 +1,6 @@
 from ftw.pdfgenerator import interfaces
 from ftw.pdfgenerator.html2latex import converter
+from ftw.pdfgenerator.html2latex import wrapper
 from ftw.pdfgenerator.html2latex import subconverter
 from ftw.pdfgenerator.layout.baselayout import BaseLayout
 from ftw.pdfgenerator.testing import PDFGENERATOR_ZCML_LAYER
@@ -21,12 +22,12 @@ class TestCustomPatternPlaceholderWrapper(TestCase):
         placeholder = interfaces.HTML2LATEX_CUSTOM_PATTERN_PLACEHOLDER_BOTTOM
         mode = interfaces.HTML2LATEX_MODE_REGEXP_FUNCTION
 
-        wrapper = converter.CustomPatternAtPlaceholderWrapper(
+        wrap = wrapper.CustomPatternAtPlaceholderWrapper(
             mode=mode,
             placeholder=placeholder)
 
-        self.assertEqual(wrapper.mode, mode)
-        self.assertEqual(wrapper.placeholder, placeholder)
+        self.assertEqual(wrap.mode, mode)
+        self.assertEqual(wrap.placeholder, placeholder)
 
 
 class TestBasePatternAware(TestCase):
@@ -68,7 +69,7 @@ class TestBasePatternAware(TestCase):
              self.pattern2])
 
         special_pattern = (
-            converter.CustomPatternAtPlaceholderWrapper(
+            wrapper.CustomPatternAtPlaceholderWrapper(
                 mode=MODE_REGEXP,
                 placeholder=top),
             r'\w{5, 7}', ' ')

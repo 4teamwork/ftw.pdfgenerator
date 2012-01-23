@@ -1,5 +1,6 @@
 from ftw.pdfgenerator import interfaces
 from ftw.pdfgenerator.html2latex.patterns import DEFAULT_PATTERNS
+from ftw.pdfgenerator.html2latex import wrapper
 from ftw.pdfgenerator.html2latex.subconverters import htmlentities
 from ftw.pdfgenerator.html2latex.subconverters import hyperlink
 from ftw.pdfgenerator.html2latex.subconverters import listing
@@ -27,18 +28,6 @@ DEFAULT_SUBCONVERTERS = (
     )
 
 
-class CustomPatternAtPlaceholderWrapper(object):
-    """
-    Used for creating a custom pattern at a specific placeholder.
-    It is used instead of a normal mode, wrapping the real mode and defining
-    where to insert the placeholder. See placeholders in interfaces module.
-    """
-
-    def __init__(self, mode, placeholder):
-        self.mode = mode
-        self.placeholder = placeholder
-
-
 class BasePatternAware(object):
     """Base class providing some functions for handling a local patterns
     list.
@@ -63,7 +52,7 @@ class BasePatternAware(object):
         of the pattern already exists, the existing pattern will is updated.
         """
 
-        if isinstance(pattern[0], CustomPatternAtPlaceholderWrapper):
+        if isinstance(pattern[0], wrapper.CustomPatternAtPlaceholderWrapper):
             pattern = list(pattern)
             modeObject = pattern[0]
             pattern[0] = modeObject.mode
