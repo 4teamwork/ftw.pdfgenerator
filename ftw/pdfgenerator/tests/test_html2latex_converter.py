@@ -101,6 +101,47 @@ class TestBasePatternAware(TestCase):
             [custom,
              DEFAULT_PLACEHOLDER])
 
+    def test_reigster_custom_pattern_with_noreplace(self):
+        obj = converter.BasePatternAware([
+                self.pattern1,
+                DEFAULT_PLACEHOLDER])
+
+        custom = list(self.pattern1)
+        custom[2] = 'foo'
+        custom = tuple(custom)
+
+        obj._insert_custom_pattern(custom, replace=False)
+
+        self.assertEqual(
+            obj.patterns,
+            [self.pattern1,
+             custom,
+             DEFAULT_PLACEHOLDER])
+
+    def test_register_wrapper_replacing(self):
+        top = interfaces.HTML2LATEX_CUSTOM_PATTERN_PLACEHOLDER_TOP
+        obj = converter.BasePatternAware(
+            [top,
+             self.pattern1,
+             DEFAULT_PLACEHOLDER])
+
+        custom = [
+            wrapper.CustomPatternAtPlaceholderWrapper(
+                mode=self.pattern1[0],
+                placeholder=top),
+            self.pattern1[1],
+            'foo']
+
+        obj.register_patterns([custom])
+
+        self.assertEqual(
+            obj.patterns,
+            [[self.pattern1[0], self.pattern1[1], 'foo'],
+             top,
+             self.pattern1,
+             DEFAULT_PLACEHOLDER])
+
+
     def test_register_subconverters(self):
         obj = converter.BasePatternAware([DEFAULT_PLACEHOLDER])
 

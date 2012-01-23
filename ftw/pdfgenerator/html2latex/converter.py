@@ -47,7 +47,8 @@ class BasePatternAware(object):
             self._register_converter(converter)
 
     def _insert_custom_pattern(self, pattern,
-                               placeholder=DEFAULT_PLACEHOLDER):
+                               placeholder=DEFAULT_PLACEHOLDER,
+                               replace=True):
         """Insert a custom pattern to the pattern list. If the search term
         of the pattern already exists, the existing pattern will is updated.
         """
@@ -57,16 +58,18 @@ class BasePatternAware(object):
             modeObject = pattern[0]
             pattern[0] = modeObject.mode
             placeholder = modeObject.placeholder
+            replace = False
 
         found = False
-        for i in range(0, len(self.patterns)):
-            if self.patterns[i] in PLACEHOLDERS:
-                continue
+        if replace:
+            for i in range(0, len(self.patterns)):
+                if self.patterns[i] in PLACEHOLDERS:
+                    continue
 
-            if pattern[1] == self.patterns[i][1]:
-                # overwrite existing pattern
-                self.patterns[i] = pattern
-                found = True
+                if pattern[1] == self.patterns[i][1]:
+                    # overwrite existing pattern
+                    self.patterns[i] = pattern
+                    found = True
 
         if not found:
             # pattern will be inserted at the configured placeholder
