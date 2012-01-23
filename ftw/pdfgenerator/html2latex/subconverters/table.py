@@ -1,12 +1,19 @@
 from BeautifulSoup import BeautifulSoup
+from ftw.pdfgenerator import interfaces
 from ftw.pdfgenerator.html2latex import subconverter
-from ftw.pdfgenerator.interfaces import HTML2LATEX_MODE_REGEXP
+from ftw.pdfgenerator.html2latex import wrapper
 from ftw.pdfgenerator.utils import html2xmlentities
 from xml.dom import minidom
 import re
 
 
 _marker = object()
+
+
+MODE_REPLACE = interfaces.HTML2LATEX_MODE_REPLACE
+MODE_REGEXP = interfaces.HTML2LATEX_MODE_REGEXP
+PLACEHOLDER_BOTTOM = interfaces.HTML2LATEX_CUSTOM_PATTERN_PLACEHOLDER_BOTTOM
+PREVENT_CHARACTER = interfaces.HTML2LATEX_PREVENT_CHARACTER
 
 
 class TableConverter(subconverter.SubConverter):
@@ -431,10 +438,18 @@ class LatexCell(object):
         content = ''.join([child.toxml() for child
                            in self.domCell.childNodes])
 
-        # carriage returns are not allowed in table cells with multicolumn
-        custom_patterns = (
-            (HTML2LATEX_MODE_REGEXP, '<br[ \W]{0,}>', ''),
-            )
+        # Carriage returns are not allowed in table cells with multicolumn.
+        # We use \newline instead, which only creates a newline if the cell
+        # width is defined, but does not fail otherwise.
+        custom_patterns = [
+            (MODE_REGEXP, r'<br[ \W]{0,}>\n*',
+             r'\%snewline ' % PREVENT_CHARACTER),
+
+            (wrapper.CustomPatternAtPlaceholderWrapper(
+                    MODE_REPLACE, PLACEHOLDER_BOTTOM), '\n', r'\newline '),
+
+            ]
+
         content = content.encode('utf8')
         latex = self.converter.convert(content,
                                        custom_patterns=custom_patterns)

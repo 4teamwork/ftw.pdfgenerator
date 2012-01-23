@@ -380,6 +380,34 @@ class TestTableConverter(MockTestCase):
 
         self.assertEqual(self.convert(html), latex)
 
+    def test_newlines(self):
+        # In LaTeX, there should not be a "\\" or "\n" in a table cell, but
+        # a "\newline". The newline only is taken in account if the cell or
+        # column is defined with a fixed width ("p{width}").
+
+        html = '\n'.join((
+                r'<table>',
+                r'  <tr>',
+                r'    <td width="50%">hello<br />world</td>',
+                r'    <td width="50%"><p>foo</p><p>bar</p></td>',
+                r'  </tr>',
+                r'</table>',
+                ))
+
+        latex = '\n'.join((
+                r'\begin{longtable}{p{0.5\linewidth}p{0.5\linewidth}}',
+
+                r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                    r'hello\newline world} & ' + \
+                    r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                    r'foo\newline \newline bar} \\',
+
+                r'\end{longtable}',
+                r''
+                ))
+
+        self.assertEqual(self.convert(html), latex)
+
 
 class TestLatexWidth(TestCase):
 
