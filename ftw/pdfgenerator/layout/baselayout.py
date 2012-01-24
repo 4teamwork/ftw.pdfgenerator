@@ -29,7 +29,7 @@ class BaseLayout(object):
 
         self._validate_package_name(packagename)
 
-        if options == '':
+        if options in ('', None):
             options = []
 
         elif type(options) in (str, unicode):

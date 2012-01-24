@@ -66,6 +66,16 @@ class TestBaseLayout(MockTestCase):
             '\\usepackage[utf8]{inputenc}\n'
             '\\usepackage{titlesec}\n')
 
+        # clear use-package list
+        layout._packages = []
+
+        layout.use_package('hyperref')
+        layout.use_package('hyperref', options='colorlinks=false')
+        layout.use_package('hyperref')
+        self.assertEqual(
+            layout.get_packages_latex(),
+            '\\usepackage[colorlinks=false]{hyperref}\n')
+
     def test_use_package_bad_package_name(self):
         layout = BaseLayout(self.create_dummy(), self.create_dummy(),
                             self.builder)
