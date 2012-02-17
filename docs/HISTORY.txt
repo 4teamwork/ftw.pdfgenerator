@@ -4,6 +4,9 @@ Changelog
 1.0dev (unreleased)
 -------------------
 
+- Added some French translations
+  [ttschanz]
+
 - Implement hyperlink converter.
   [jone]
 
