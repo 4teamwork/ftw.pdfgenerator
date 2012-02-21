@@ -5,6 +5,9 @@
 from zope.interface import Interface, Attribute
 
 
+DEBUG_MODE_SESSION_KEY = 'pdfgenerator-debug-mode'
+
+
 class IPDFAssembler(Interface):
     """The PDF assembler assembles the PDF. It puts together all LaTeX parts,
     merges them with the layout and builds it with the builder.

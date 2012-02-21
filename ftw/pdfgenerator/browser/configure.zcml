@@ -9,4 +9,11 @@
       permission="zope2.View"
       />
 
+  <browser:page
+      for="*"
+      name="debug-pdf"
+      class=".views.DebugPDFGeneratorView"
+      permission="zope2.View"
+      />
+
 </configure>

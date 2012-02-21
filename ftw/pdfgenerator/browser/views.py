@@ -1,5 +1,6 @@
 from Products.Five import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from ftw.pdfgenerator.interfaces import DEBUG_MODE_SESSION_KEY
 from ftw.pdfgenerator.interfaces import IPDFAssembler
 from zope.component import getMultiAdapter
 
@@ -27,7 +28,14 @@ class ExportPDFView(BrowserView):
         permission.
         """
         user = self.context.portal_membership.getAuthenticatedMember()
-        return user.has_permission('cmf.ManagePortal', self.context)
+        if user.has_permission('cmf.ManagePortal', self.context):
+            return True
+
+        elif self.request.SESSION.get(DEBUG_MODE_SESSION_KEY, False):
+            return True
+
+        else:
+            return False
 
     def export(self, output='pdf'):
         assembler = getMultiAdapter((self.context, self.request),
@@ -47,3 +55,19 @@ class ExportPDFView(BrowserView):
 
     def get_build_arguments(self):
         return {'request': self.request}
+
+
+class DebugPDFGeneratorView(BrowserView):
+    """This view allows to toggle the pdfgenerator debug mode.
+    When the debug mode is enabled, the user is able to select the
+    output.
+    """
+
+    def __call__(self):
+        session = self.request.SESSION
+
+        session[DEBUG_MODE_SESSION_KEY] = not session.get(
+            DEBUG_MODE_SESSION_KEY, False)
+
+        return 'PDFGenerator debug mode is now %s' % (
+            session.get(DEBUG_MODE_SESSION_KEY) and 'enabled' or 'disabled')

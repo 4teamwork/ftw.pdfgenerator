@@ -1,5 +1,6 @@
 from ftw.pdfgenerator import interfaces
 from ftw.pdfgenerator.browser.views import ExportPDFView
+from ftw.pdfgenerator.interfaces import DEBUG_MODE_SESSION_KEY
 from ftw.pdfgenerator.testing import PDFGENERATOR_ZCML_LAYER
 from mocker import ANY
 from plone.mocktestcase import MockTestCase
@@ -12,7 +13,7 @@ class TestAsPDFView(MockTestCase):
 
     layer = PDFGENERATOR_ZCML_LAYER
 
-    def mock_allow_alternate_output(self, result_value):
+    def mock_allow_alternate_output(self, result_value, debug_mode=False):
         request = self.mocker.mock()
         context = self.mocker.mock()
         user = self.mocker.mock()
@@ -21,6 +22,11 @@ class TestAsPDFView(MockTestCase):
 
         self.expect(user.has_permission('cmf.ManagePortal', context)).result(
             result_value)
+
+        session = self.mocker.mock(count=False)
+        self.expect(request.SESSION).result(session).count(0, None)
+        self.expect(session.get(DEBUG_MODE_SESSION_KEY, False)).result(
+            debug_mode)
 
         return context, request
 
@@ -118,6 +124,14 @@ class TestAsPDFView(MockTestCase):
 
         aspdf = ExportPDFView(context, request)
         self.assertEqual(aspdf.allow_alternate_output(), False)
+
+    def test_allow_alternate_output_in_debug_mode_False(self):
+        context, request = self.mock_allow_alternate_output(False, True)
+
+        self.replay()
+
+        aspdf = ExportPDFView(context, request)
+        self.assertEqual(aspdf.allow_alternate_output(), True)
 
     def test_call_renders_template_if_admin(self):
         context, request = self.mock_allow_alternate_output(True)

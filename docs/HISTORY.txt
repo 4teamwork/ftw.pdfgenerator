@@ -4,6 +4,9 @@ Changelog
 1.0dev (unreleased)
 -------------------
 
+- Added a "debug-pdf" view, enabling the pdf debug mode temporarily.
+  [jone]
+
 - Added some French translations
   [ttschanz]
 
