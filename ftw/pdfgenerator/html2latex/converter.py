@@ -168,10 +168,17 @@ class HTML2LatexConvertRunner(BasePatternAware):
         stop = False
         id = ''
         length = endPos - startPos
+
+        # use keys with a length of at least 10 chars for making them
+        # unique enought. otherwise the key generation may loop.
+        if length < 10:
+            length = 10
+
         while not stop:
             id = ''.join([choice(id_chars) for i in range(length)])
             if id not in self.lockers.keys() and id not in self.html:
                 stop = True
+
         # lock html (replace with id)
         self.lockers[id] = self.html[startPos:endPos]
         self.html = self.html[:startPos] + id + self.html[endPos:]
