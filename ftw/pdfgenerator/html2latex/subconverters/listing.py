@@ -34,17 +34,17 @@ class ListConverter(subconverter.SubConverter):
             if node.nodeType == 1 and \
                     node.tagName.lower() in self.listing_tag_mapping.keys():
 
-                # iterate, because there may be multiple lists
-                begin_env, end_env = self._create_environ(node)
-                latex.append(begin_env)
-
                 if node.tagName.lower() in ('ol', 'ul'):
-                    latex.append(self._convert_listing_items(node))
+                    nodes_latex = self._convert_listing_items(node)
 
                 else:
-                    latex.append(self._convert_description_items(node))
+                    nodes_latex = self._convert_description_items(node)
 
-                latex.append(end_env)
+                if nodes_latex:
+                    begin_env, end_env = self._create_environ(node)
+                    latex.append(begin_env)
+                    latex.append(nodes_latex)
+                    latex.append(end_env)
 
             else:
                 latex.append(self.converter.convert(node.toxml()))

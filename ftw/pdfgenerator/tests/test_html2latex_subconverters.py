@@ -311,3 +311,17 @@ class TestListConverter(SubconverterTestBase):
                 r''))
 
         self.assertEqual(self.convert(html), latex)
+
+    def test_no_list_with_no_elements(self):
+        html = '\n'.join((
+                'foo',
+                '<ul></ul>',
+                'bar',
+                '<dl>',
+                '</dl>',
+                'baz',
+                '<ol> </ol>'))
+
+        latex = 'foo  bar  baz '
+
+        self.assertEqual(self.convert(html), latex)
