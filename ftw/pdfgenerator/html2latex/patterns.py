@@ -61,9 +61,18 @@ DEFAULT_PATTERNS = ([
 
         (MODE_REGEXP,   r'<span .*?style="font-weight: bold.*?">(.*?)</span>',
          r'{\\bf \g<1>}' + interfaces.HTML2LATEX_PREVENT_CHARACTER),
-        (MODE_REGEXP,   r'<em.*?>(.*?)</em>',      r'{\\em \g<1>}'),
-        (MODE_REGEXP,   r'<u.*?>(.*?)</u>',        r'{\\em \g<1>}'),
-        (MODE_REGEXP,   r'<i.*?>(.*?)</i>',        r'{\\it \g<1>}'),
+
+        # <em> / <u> -> {\em}
+        (MODE_REGEXP,   r'<(em|u)(>| [^>]*>)([^<\1]*)</(\1)>([^\s])',
+         r'{\\em \g<3>}\/\g<5>'),
+        (MODE_REGEXP,   r'<(em|u)(>| [^>]*>)([^<\1]*)</(\1)>',
+         r'{\\em \g<3>}'),
+        # <i> -> {\it}
+        (MODE_REGEXP,   r'<(i)(>| [^>]*>)([^<\1]*)</(\1)>([^\s])',
+         r'{\\it \g<3>}\/\g<5>'),
+        (MODE_REGEXP,   r'<(i)(>| [^>]*>)([^<\1]*)</(\1)>',
+         r'{\\it \g<3>}'),
+
         (MODE_REGEXP,   r'<sup.*?>(.*?)</sup>',
          r'\\textsuperscript{\g<1>}'),
 

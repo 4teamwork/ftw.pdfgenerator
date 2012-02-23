@@ -33,13 +33,22 @@ class TestBasicPatterns(TestCase):
                          'Hello {\\bf World}!')
 
         self.assertEqual(self.convert('Hello <u>World</u>!'),
-                         'Hello {\\em World}!')
+                         'Hello {\\em World}\\/!')
+
+        self.assertEqual(self.convert('Hello <u id="foo">World</u>!'),
+                         'Hello {\\em World}\\/!')
 
         self.assertEqual(self.convert('Hello <em>World</em>!'),
-                         'Hello {\\em World}!')
+                         'Hello {\\em World}\\/!')
+
+        self.assertEqual(self.convert('Hello <em id="foo">World</em>!'),
+                         'Hello {\\em World}\\/!')
 
         self.assertEqual(self.convert('Hello <i>World</i>!'),
-                         'Hello {\\it World}!')
+                         'Hello {\\it World}\\/!')
+
+        self.assertEqual(self.convert('Hello <i id="foo">World</i>!'),
+                         'Hello {\\it World}\\/!')
 
         self.assertEqual(self.convert('capacity: 55 m<sup>3</sup>'),
                          'capacity: 55 m\\textsuperscript{3}')
@@ -190,7 +199,7 @@ class TestBasicPatterns(TestCase):
                          'a {\\it b} c')
 
         self.assertEqual(self.convert('a<i>b</i>c'),
-                         'a{\\it b}c')
+                         'a{\\it b}\\/c')
 
     def test_links(self):
         # Blank links should be stripped
@@ -388,3 +397,52 @@ class TestBasicPatterns(TestCase):
         self.assertIn('foo', result)
         self.assertIn('bar', result)
         self.assertIn('baz', result)
+
+    def test_space_after_italic(self):
+        html = 'foo <em>bar</em> baz'
+        latex = r'foo {\em bar} baz'
+        self.assertEqual(self.convert(html), latex)
+
+        html = 'foo <u>bar</u> baz'
+        latex = r'foo {\em bar} baz'
+        self.assertEqual(self.convert(html), latex)
+
+        html = 'foo <i>bar</i> baz'
+        latex = r'foo {\it bar} baz'
+        self.assertEqual(self.convert(html), latex)
+
+        html = 'foo (<em>bar</em>) baz'
+        latex = r'foo ({\em bar}\/) baz'
+        self.assertEqual(self.convert(html), latex)
+
+        html = 'foo (<u>bar</u>) baz'
+        latex = r'foo ({\em bar}\/) baz'
+        self.assertEqual(self.convert(html), latex)
+
+        html = 'foo (<i>bar</i>) baz'
+        latex = r'foo ({\it bar}\/) baz'
+        self.assertEqual(self.convert(html), latex)
+
+        html = 'foo <em>bar</em>-baz'
+        latex = r'foo {\em bar}\/-baz'
+        self.assertEqual(self.convert(html), latex)
+
+        html = 'foo <u>bar</u>-baz'
+        latex = r'foo {\em bar}\/-baz'
+        self.assertEqual(self.convert(html), latex)
+
+        html = 'foo <i>bar</i>-baz'
+        latex = r'foo {\it bar}\/-baz'
+        self.assertEqual(self.convert(html), latex)
+
+        html = 'foo <em>bar</em>'
+        latex = r'foo {\em bar}'
+        self.assertEqual(self.convert(html), latex)
+
+        html = 'foo <u>bar</u>'
+        latex = r'foo {\em bar}'
+        self.assertEqual(self.convert(html), latex)
+
+        html = 'foo <i>bar</i>'
+        latex = r'foo {\it bar}'
+        self.assertEqual(self.convert(html), latex)
