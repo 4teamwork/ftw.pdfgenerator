@@ -14,25 +14,26 @@ msgstr ""
 
 #: ./ftw/pdfgenerator/browser/aspdf.pt:39
 msgid "Export"
-msgstr ""
+msgstr "Exporter"
 
 #: ./ftw/pdfgenerator/browser/aspdf.pt:13
 msgid "Export PDF"
-msgstr ""
+msgstr "Exporter PDF"
 
 #: ./ftw/pdfgenerator/browser/aspdf.pt:30
 msgid "LaTeX code"
-msgstr ""
+msgstr "Code LaTeX"
 
 #: ./ftw/pdfgenerator/browser/aspdf.pt:20
 msgid "Output"
-msgstr ""
+msgstr "Output"
 
 #: ./ftw/pdfgenerator/browser/aspdf.pt:24
 msgid "PDF"
-msgstr ""
+msgstr "PDF"
 
 #: ./ftw/pdfgenerator/browser/aspdf.pt:36
 msgid "ZIP bundle"
-msgstr ""
+msgstr "Archives ZIP"
+
 
