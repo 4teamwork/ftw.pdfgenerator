@@ -167,6 +167,85 @@ class TestBaseLayout(MockTestCase):
             str(cm.exception),
             'Conflicting order: bar after baz after foo after bar.')
 
+    def test_use_babel_with_linguaplone(self):
+        context = self.mocker.mock()
+        self.expect(context.getLanguage).result(lambda: 'pt-br')
+
+        self.replay()
+
+        layout = BaseLayout(context, self.create_dummy(),
+                            self.builder)
+        self.assertEqual(layout.get_packages_latex(), '')
+
+        layout.use_babel()
+        self.assertEqual(layout.get_packages_latex(),
+                         '\\usepackage[brazilian]{babel}\n')
+
+    def test_use_babel_with_preferred_language(self):
+        ltool = self.mocker.mock()
+        self.mock_tool(ltool, 'portal_languages')
+        self.expect(ltool.getPreferredLanguage()).result('en-gb')
+
+        self.replay()
+
+        layout = BaseLayout(self.create_dummy(), self.create_dummy(),
+                            self.builder)
+        self.assertEqual(layout.get_packages_latex(), '')
+
+        layout.use_babel()
+        self.assertEqual(layout.get_packages_latex(),
+                         '\\usepackage[british]{babel}\n')
+
+    def test_use_babel_with_particular_option(self):
+        layout = BaseLayout(self.create_dummy(), self.create_dummy(),
+                            self.builder)
+        self.assertEqual(layout.get_packages_latex(), '')
+
+        layout.use_babel('british')
+        self.assertEqual(layout.get_packages_latex(),
+                         '\\usepackage[british]{babel}\n')
+
+    def test_use_babel_with_multiple_languages(self):
+        layout = BaseLayout(self.create_dummy(), self.create_dummy(),
+                            self.builder)
+        self.assertEqual(layout.get_packages_latex(), '')
+
+        layout.use_babel(['british', 'french', 'latin'])
+        self.assertEqual(layout.get_packages_latex(),
+                         '\\usepackage[latin, french, british]{babel}\n')
+
+    def test_use_babel_with_unsupported_language(self):
+        ltool = self.mocker.mock()
+        self.mock_tool(ltool, 'portal_languages')
+        self.expect(ltool.getPreferredLanguage()).result('unknown')
+
+        self.replay()
+
+        layout = BaseLayout(self.create_dummy(), self.create_dummy(),
+                            self.builder)
+        self.assertEqual(layout.get_packages_latex(), '')
+
+        layout.use_babel()
+        self.assertEqual(layout.get_packages_latex(),
+                         '\\usepackage{babel}\n')
+
+    def test_use_babel_passes_keyword_args(self):
+        layout = BaseLayout(self.create_dummy(), self.create_dummy(),
+                            self.builder)
+        self.assertEqual(layout.get_packages_latex(), '')
+
+        layout.use_package('babel', options='foo')
+        self.assertEqual(layout.get_packages_latex(),
+                         '\\usepackage[foo]{babel}\n')
+
+        layout.use_babel('bar')
+        self.assertEqual(layout.get_packages_latex(),
+                         '\\usepackage[bar]{babel}\n')
+
+        layout.use_babel('baz', append_options=True)
+        self.assertEqual(layout.get_packages_latex(),
+                         '\\usepackage[bar, baz]{babel}\n')
+
     def test_render_latex_raises_not_implemented(self):
         # The BaseLayout does not specify how to render the LaTeX.
         layout = BaseLayout(self.create_dummy(), self.create_dummy(),

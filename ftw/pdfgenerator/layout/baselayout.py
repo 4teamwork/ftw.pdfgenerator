@@ -1,3 +1,4 @@
+from ftw.pdfgenerator.babel import get_preferred_babel_option_for_context
 from ftw.pdfgenerator.exceptions import ConflictingUsePackageOrder
 from ftw.pdfgenerator.interfaces import IBuilder
 from ftw.pdfgenerator.interfaces import IHTML2LaTeXConverter
@@ -87,6 +88,31 @@ class BaseLayout(object):
             latex.append(pkg_latex)
 
         return ''.join(latex)
+
+    def use_babel(self, options=None, append_options=False, **kwargs):
+        """Use the "babel" package. This adds a use_package with the
+        language option for this context.
+        By default, the language option is guessed from the context (if
+        linguaplone is used) or from the preferred language of the user.
+        This behavior can be changed by passing the `options` argument,
+        with either the language option as string or a list of language
+        options, where the first option is the primary language.
+        """
+
+        if options is None:
+            option = get_preferred_babel_option_for_context(self.context)
+            if option:
+                options = [option]
+
+        elif isinstance(options, (str, unicode)):
+            options = [options]
+
+        elif hasattr(options, '__iter__'):
+            options.reverse()
+
+        kwargs['append_options'] = append_options
+        kwargs['options'] = options
+        self.use_package('babel', **kwargs)
 
     def render_latex(self, content_latex):
         """Renders the layout with the `content_latex` embedded.
