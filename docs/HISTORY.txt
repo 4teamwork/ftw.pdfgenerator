@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.0b3 (unreleased)
+1.0.1 (2012-03-05)
 ------------------
 
 - Add use_babel function to layout, enabling the preferred language.
