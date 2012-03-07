@@ -1,8 +1,10 @@
 Introduction
 ============
 
-The ``ftw.pdfgenerator`` provides tools and utilities for generating PDFs out of plone
-objects.
+`ftw.pdfgenerator` is meant to be used for generating PDFs from structured
+data using pre defined `LaTeX`_ views. It is not useful for converting
+full-html pages into `LaTeX` / PDFs, although it is able to convert small HTML
+parts into `LaTeX`_.
 
 
 Requirements
@@ -197,11 +199,13 @@ Links
 - Package on pypi: http://pypi.python.org/pypi/ftw.pdfgenerator
 - Continuous integration: https://jenkins.4teamwork.ch/job/ftw.pdfgenerator/
 
+Copyright
+=========
 
-Maintainer
-==========
+This package is copyright by `4teamwork <http://www.4teamwork.ch/>`_.
 
-This package is produced and maintained by `4teamwork <http://www.4teamwork.ch/>`_ company.
+`ftw.pdfgenerator` is licensed under GNU General Public License, version 2.
+
 
 .. _MacTeX: http://www.tug.org/mactex/2011/
 .. _Tex Live: http://www.tug.org/texlive/
