@@ -131,8 +131,14 @@ class ILaTeXLayout(Interface):
         """Returns the LaTeX code of the `\usepackage` commands.
         """
 
-    def get_builder():
-        """Returns the builder instance.
+    def use_babel(options=None, append_options=False, **kwargs):
+        """Use the "babel" package. This adds a use_package with the
+        language option for this context.
+        By default, the language option is guessed from the context (if
+        linguaplone is used) or from the preferred language of the user.
+        This behavior can be changed by passing the `options` argument,
+        with either the language option as string or a list of language
+        options, where the first option is the primary language.
         """
 
     def render_latex(content_latex):
@@ -140,6 +146,10 @@ class ILaTeXLayout(Interface):
 
         Arguments:
         `content_latex` -- LaTeX code of the rendered view.
+        """
+
+    def get_builder():
+        """Returns the builder instance.
         """
 
     def get_converter():
