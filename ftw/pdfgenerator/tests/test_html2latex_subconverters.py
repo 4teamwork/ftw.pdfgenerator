@@ -335,3 +335,33 @@ class TestListConverter(SubconverterTestBase):
         latex = 'foo  bar  baz '
 
         self.assertEqual(self.convert(html), latex)
+
+    def test_bad_nested_unordered_listings(self):
+        html = '\n'.join((
+                'foo',
+                '<ul>',
+                '<ul>',
+                '<li>bar</li>',
+                '</ul>',
+                '</ul>',
+                'bar'))
+
+        latex = 'foo \\begin{itemize}\n\\item bar\n\\end{itemize}\n bar'
+
+        self.assertEqual(self.convert(html), latex)
+
+    def test_bad_nested_definition_listings(self):
+        html = '\n'.join((
+                'foo',
+                '<dl>',
+                '<dl>',
+                '<dt>bar</dt>',
+                '<dd>baz</dd>',
+                '</dl>',
+                '</dl>',
+                'bar'))
+
+        latex = 'foo \\begin{description}\n' + \
+            '\\item[bar] baz\n\\end{description}\n bar'
+
+        self.assertEqual(self.convert(html), latex)

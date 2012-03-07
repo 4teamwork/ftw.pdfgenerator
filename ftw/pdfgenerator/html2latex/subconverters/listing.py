@@ -56,7 +56,12 @@ class ListConverter(subconverter.SubConverter):
         latex = []
         for elm in list_node.childNodes:
             if elm.nodeType == 1 and elm.tagName.lower() == 'li':
-                latex.append(r'\item %s' % self._get_node_content(elm).strip())
+                latex.append(r'\item %s' % (
+                        self._get_node_content(elm).strip()))
+
+            elif elm.nodeType == 1 and \
+                    elm.tagName.lower() in self.listing_tag_mapping.keys():
+                latex.append(self._convert_listing_items(elm))
 
             else:
                 content_latex = self._get_node_content(elm)
@@ -79,6 +84,10 @@ class ListConverter(subconverter.SubConverter):
                         self._get_node_content(dt_node).strip(),
                         self._get_node_content(elm).strip()))
                 dt_node = None
+
+            elif elm.nodeType == 1 and \
+                    elm.tagName.lower() in self.listing_tag_mapping.keys():
+                latex.append(self._convert_description_items(elm))
 
             else:
                 content_latex = self._get_node_content(elm)

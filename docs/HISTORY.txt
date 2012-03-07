@@ -4,6 +4,10 @@ Changelog
 1.0.3 (unreleased)
 ------------------
 
+- Listing converter: cleanup bad html in case when lists are nested without list items.
+  FCKEditor somehow produces that sometimes.
+  [jone]
+
 - Implement customizable layouts.
   [jone]
 
