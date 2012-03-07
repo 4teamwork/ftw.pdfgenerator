@@ -184,8 +184,8 @@ which is optimized for the common WYSIWYG-Editors used in Plone.
 
 The converter can be used:
 
- - in views, using ``self.convert(html)``
- - in layouts, using ``self.get_converter().convert(html)``
+- in views, using ``self.convert(html)``
+- in layouts, using ``self.get_converter().convert(html)``
 
 It uses regular expressions for the simple conversions and python
 subconverters for the more complicated conversions. The converter is heavily
