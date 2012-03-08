@@ -38,6 +38,18 @@ Usage
 The pdfgenerator uses LaTeX for generating the PDF. You need to provide a
 layout and a view for your context for beeing able to create a PDF.
 
+
+Real world examples
+-------------------
+
+Some packages using ``ftw.pdfgenerator``:
+
+- ``ftw.meeting`` has a PDF export of the meeting protocol:
+  https://github.com/4teamwork/ftw.meeting/tree/master/ftw/meeting/latex
+- ``ftw.book`` produces a PDF of the book recursively:
+  https://github.com/4teamwork/ftw.book/tree/master/ftw/book/latex
+
+
 Defining a layout
 -----------------
 
