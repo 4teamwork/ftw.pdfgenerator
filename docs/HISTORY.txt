@@ -4,6 +4,9 @@ Changelog
 1.0.2 (unreleased)
 ------------------
 
+- Table converter: add css classes for aligning cells ("right", "center", "left").
+  [jone]
+
 - Table converter: add cell-border functionality, using css classes "border-right",
   "border-left", "border-top" and "border-bottom".
   [jone]

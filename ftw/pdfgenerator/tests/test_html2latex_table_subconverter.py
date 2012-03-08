@@ -758,6 +758,46 @@ class TestTableConverter(MockTestCase):
 
         self.assertEqual(self.convert(html), latex)
 
+    def test_alignment_classes(self):
+        html = '\n'.join((
+                r'without width:',
+                r'<table class="no-page-break">',
+                r' <tr><td class="left">left</td></tr>',
+                r' <tr><td class="center">center</td></tr>',
+                r' <tr><td class="right">right</td></tr>',
+                r'</table>',
+
+                r'with width:',
+                r'<table class="no-page-break">',
+                r' <colgroup>',
+                r'  <col width="100%" />',
+                r' </colgroup>',
+                r' <tr><td class="left">left</td></tr>',
+                r' <tr><td class="center">center</td></tr>',
+                r' <tr><td class="right">right</td></tr>',
+                r' </tr>',
+                r'</table>',
+                ))
+
+        latex = '\n'.join((
+                r'without width: '
+                r'\begin{tabular}{l}',
+                r'\multicolumn{1}{l}{left} \\',
+                r'\multicolumn{1}{c}{center} \\',
+                r'\multicolumn{1}{r}{right} \\',
+                r'\end{tabular}',
+
+                r' with width: '
+                r'\begin{tabular}{p{1.0\linewidth}}',
+                r'\multicolumn{1}{p{1.0\linewidth}}{\raggedright left} \\',
+                r'\multicolumn{1}{p{1.0\linewidth}}{' + \
+                    r'\center\vspace{-1.5em}center} \\',
+                r'\multicolumn{1}{p{1.0\linewidth}}{\raggedleft right} \\',
+                r'\end{tabular}',
+                r''
+                ))
+
+        self.assertEqual(self.convert(html, count=2), latex)
 
 class TestLatexWidth(TestCase):
 

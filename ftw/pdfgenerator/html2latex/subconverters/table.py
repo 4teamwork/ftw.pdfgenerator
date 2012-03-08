@@ -327,7 +327,7 @@ class LatexColumn(object):
     def get_align(self):
         if self._align == _marker:
             if self.dom_col:
-                self._align = self.dom_col.getAttribute('align')
+                self._align = get_alignment(self.dom_col)
             else:
                 self._align = None
         return self._align
@@ -624,7 +624,7 @@ class LatexCell(object):
             self._align = None
 
             if self.dom_cell:
-                self._align = self.dom_cell.getAttribute('align')
+                self._align = get_alignment(self.dom_cell)
 
             if not self._align and self.get_colspan() == 1:
                 self._align = self.columns[0].get_align()
@@ -860,3 +860,17 @@ def apply_borders_to_format(element, format_):
         format_ = '%s|' % format_
 
     return format_
+
+
+def get_alignment(node):
+    """Returns the alignment of a XML node.
+    """
+
+    alignment_classes = ('left', 'right', 'center')
+    classes = node.getAttribute('class').strip().split(' ')
+
+    for cls in alignment_classes:
+        if cls in classes:
+            return cls
+
+    return node.getAttribute('align')
