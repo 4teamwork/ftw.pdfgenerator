@@ -348,6 +348,59 @@ class TestTableConverter(MockTestCase):
 
         self.assertEqual(self.convert(html), latex)
 
+    def test_complex_rowspan_colspan(self):
+        html = '\n'.join((
+                r'<table>',
+                r'  <colgroup>',
+                r'    <col width="25%" />',
+                r'    <col width="25%" />',
+                r'    <col width="25%" />',
+                r'    <col width="25%" />',
+                r'  </colgroup>',
+                r'  <tr>',
+                r'    <td>A1</td>',
+                r'    <td rowspan="2">B1-B2</td>',
+                r'    <td>C1</td>',
+                r'    <td>D1</td>',
+                r'  </tr>',
+                r'  <tr>',
+                r'    <td>A2</td>',
+                r'    <td rowspan="2">C2-C3</td>',
+                r'    <td>D2</td>',
+                r'  </tr>',
+                r'  <tr>',
+                r'    <td colspan="2">A3-B3</td>',
+                r'    <td colspan="2">D3-E3</td>',
+                r'  </tr>',
+                r'</table>',
+                ))
+
+        latex = '\n'.join((
+                r'\begin{tabular}{p{0.25\linewidth}p{0.25\linewidth}' + \
+                    r'p{0.25\linewidth}p{0.25\linewidth}l}',
+
+                # row 1
+                r'\multicolumn{1}{p{0.25\linewidth}}{A1} & ' + \
+                    r'\multirow{2}{0.25\textwidth}{B1-B2} & ' + \
+                    r'\multicolumn{1}{p{0.25\linewidth}}{C1} & ' + \
+                    r'\multicolumn{1}{p{0.25\linewidth}}{D1} \\',
+
+                # row 2
+                r'\multicolumn{1}{p{0.25\linewidth}}{A2} & ' + \
+                    r' & '
+                    r'\multirow{2}{0.25\textwidth}{C2-C3} & ' + \
+                    r'\multicolumn{1}{p{0.25\linewidth}}{D2} \\',
+
+                # row 3
+                r'\multicolumn{2}{p{0.5\linewidth}}{A3-B3} & ' + \
+                    r' & '
+                    r'\multicolumn{2}{l}{D3-E3} \\',
+
+                r'\end{tabular}',
+                r''))
+
+        self.assertEqual(self.convert(html), latex)
+
     def test_gridborder(self):
 
         html = '\n'.join((

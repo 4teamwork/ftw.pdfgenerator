@@ -187,19 +187,6 @@ class TableConverter(subconverter.SubConverter):
         for domTr in self.dom.getElementsByTagName('tr'):
             row, columnIndex = self._parse_tr_dom(domTr, multiRowCache)
 
-            antiEndlessLoopCounter = 1000
-            while len(multiRowCache) > 0:
-                if columnIndex in multiRowCache.keys():
-                    multiRowCache[columnIndex][0].registerRow(row)
-                    multiRowCache[columnIndex][1] -= 1
-                    if multiRowCache[columnIndex][1] == 0:
-                        del multiRowCache[columnIndex]
-
-                columnIndex += 1
-                antiEndlessLoopCounter -= 1
-                if antiEndlessLoopCounter < 0:
-                    break
-
     def _parse_tr_dom(self, domTr, multiRowCache):
         row = self.createLatexRow(domTr=domTr)
         self.rows.append(row)
