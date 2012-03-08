@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2011-11-22 09:44+0000\n"
+"POT-Creation-Date: 2012-03-08 15:31+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -12,27 +12,27 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: DOMAIN\n"
 
-#: ./ftw/pdfgenerator/browser/aspdf.pt:39
+#: ./ftw/pdfgenerator/browser/export_pdf.pt:46
 msgid "Export"
 msgstr "Exporter"
 
-#: ./ftw/pdfgenerator/browser/aspdf.pt:13
+#: ./ftw/pdfgenerator/browser/export_pdf.pt:13
 msgid "Export PDF"
 msgstr "Exporter PDF"
 
-#: ./ftw/pdfgenerator/browser/aspdf.pt:30
+#: ./ftw/pdfgenerator/browser/export_pdf.pt:30
 msgid "LaTeX code"
 msgstr "Code LaTeX"
 
-#: ./ftw/pdfgenerator/browser/aspdf.pt:20
+#: ./ftw/pdfgenerator/browser/export_pdf.pt:20
 msgid "Output"
 msgstr "Output"
 
-#: ./ftw/pdfgenerator/browser/aspdf.pt:24
+#: ./ftw/pdfgenerator/browser/export_pdf.pt:24
 msgid "PDF"
 msgstr "PDF"
 
-#: ./ftw/pdfgenerator/browser/aspdf.pt:36
+#: ./ftw/pdfgenerator/browser/export_pdf.pt:36
 msgid "ZIP bundle"
 msgstr "Archives ZIP"
 
