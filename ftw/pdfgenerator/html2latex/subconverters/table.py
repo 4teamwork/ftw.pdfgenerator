@@ -31,6 +31,7 @@ class TableConverter(subconverter.SubConverter):
         self.rows = []
         self.columns = []
         self._css_classes = None
+        self._environment = None
 
     def __call__(self):
         html = self.get_html()
@@ -43,7 +44,7 @@ class TableConverter(subconverter.SubConverter):
 
         # parse DOM
         self.dom = minidom.parseString(html)
-        self.parseDom()
+        self.parse_dom()
 
         # render table
         latex = self.render()
@@ -60,9 +61,9 @@ class TableConverter(subconverter.SubConverter):
     @property
     def environment(self):
         if getattr(self, '_environment', None) is None:
-            if 'page-break' in self.getCssClasses():
+            if 'page-break' in self.get_css_classes():
                 self._environment = 'longtable'
-            elif 'no-page-break' in self.getCssClasses():
+            elif 'no-page-break' in self.get_css_classes():
                 self._environment = 'tabular'
             elif len(self.rows) > LONGTABLE_ROWS_THRESHOLD:
                 self._environment = 'longtable'
@@ -71,7 +72,7 @@ class TableConverter(subconverter.SubConverter):
 
         return self._environment
 
-    def getCssClasses(self):
+    def get_css_classes(self):
         if self._css_classes is None:
             self._css_classes = []
             domTable = self.dom.getElementsByTagName('table')[0]
@@ -79,53 +80,53 @@ class TableConverter(subconverter.SubConverter):
             self._css_classes = classes.split(' ')
         return self._css_classes
 
-    def getBorder(self):
+    def get_border(self):
         domTable = self.dom.getElementsByTagName('table')[0]
         if (domTable.hasAttribute('border')):
             return int(domTable.getAttribute('border')) > 0
         return False
 
     def render(self):
-        hline = self.getBorder() and '\n\\hline' or ''
+        hline = self.get_border() and '\n\\hline' or ''
         latex = '\\begin{%s}{%s}%s\n' % (
-            self.environment, self.getTableFormat(), hline)
-        captionCommand, insertCaptionAtTop = self.renderCaption()
-        if captionCommand and insertCaptionAtTop:
-            latex += captionCommand
+            self.environment, self.get_table_format(), hline)
+        caption_command, insert_caption_at_top = self.render_caption()
+        if caption_command and insert_caption_at_top:
+            latex += caption_command
 
-        latex += self.renderRows()
-        if captionCommand and not insertCaptionAtTop:
-            latex += captionCommand
+        latex += self.render_rows()
+        if caption_command and not insert_caption_at_top:
+            latex += caption_command
         latex += '\\end{%s}\n' % self.environment
         return latex
 
-    def renderRows(self):
-        headRows = []
-        bodyRows = []
+    def render_rows(self):
+        head_rows = []
+        body_rows = []
 
         for row in self.rows:
             rowLatex = row.render()
-            if row.containsHeadCells():
-                headRows.append(rowLatex)
+            if row.contains_head_cells():
+                head_rows.append(rowLatex)
             else:
-                bodyRows.append(rowLatex)
+                body_rows.append(rowLatex)
 
-        headLatex = ''
-        if len(headRows) > 0:
-            headLatex = ''.join(headRows)
-        bodyLatex = ''
+        head_latex = ''
+        if len(head_rows) > 0:
+            head_latex = ''.join(head_rows)
+        body_latex = ''
 
-        if len(bodyRows) > 0:
-            bodyLatex = ''.join(bodyRows)
+        if len(body_rows) > 0:
+            body_latex = ''.join(body_rows)
 
-        if len(headRows) > 0 and self.environment == 'longtable':
-            return '%s\\endhead\n%s' % (headLatex, bodyLatex)
-        elif len(headRows) > 0:
-            return headLatex + bodyLatex
+        if len(head_rows) > 0 and self.environment == 'longtable':
+            return '%s\\endhead\n%s' % (head_latex, body_latex)
+        elif len(head_rows) > 0:
+            return head_latex + body_latex
         else:
-            return bodyLatex
+            return body_latex
 
-    def renderCaption(self):
+    def render_caption(self):
         """
         If the HTML-Table contains a <caption>-Tag, this method
         returns the LaTeX-Command for the caption and weather the
@@ -133,9 +134,9 @@ class TableConverter(subconverter.SubConverter):
         the table.
 
         Example:
-        captionCommand, insertAtTop = self.renderCaption()
-        captionCommand : \caption{My Table}
-        insertAtTop : True
+        caption_command, insert_at_top = self.render_caption()
+        caption_command : \caption{My Table}
+        insert_at_top : True
 
         If there is no command, it will return
         None, False
@@ -143,10 +144,10 @@ class TableConverter(subconverter.SubConverter):
 
         caption = self.dom.getElementsByTagName('caption')
         if len(caption) > 0:
-            captionTag = caption[0]
-            siblings = captionTag.parentNode.childNodes
-            insertAtTop = len(siblings) / float(2) > (
-                siblings.index(captionTag) + 1)
+            caption_tag = caption[0]
+            siblings = caption_tag.parentNode.childNodes
+            insert_at_top = len(siblings) / float(2) > (
+                siblings.index(caption_tag) + 1)
 
             content = ''.join([child.toxml() for child
                                in caption[0].childNodes])
@@ -155,40 +156,40 @@ class TableConverter(subconverter.SubConverter):
             latexContent = self.converter.convert(content)
 
             return '\\caption%s{%s} \\\\\n' % (
-                ('notListed' in self.getCssClasses() and '*' or ''),
+                ('notListed' in self.get_css_classes() and '*' or ''),
                 latexContent,
-                ), insertAtTop
+                ), insert_at_top
         else:
             return None, False
 
-    def getTableFormat(self):
-        columnFormat = []
+    def get_table_format(self):
+        column_format = []
         for col in self.columns:
-            columnFormat.append(col.getFormat())
-        return ''.join(columnFormat)
+            column_format.append(col.get_format())
+        return ''.join(column_format)
 
-    def parseDom(self):
+    def parse_dom(self):
         # create colum objects
-        domColList = self.dom.getElementsByTagName('col')
-        amount = self.getAmountOfColumns()
-        amount = amount > len(domColList) and amount or len(domColList)
+        dom_col_list = self.dom.getElementsByTagName('col')
+        amount = self.get_amount_of_columns()
+        amount = amount > len(dom_col_list) and amount or len(dom_col_list)
 
         for c in range(amount):
-            col = self.createLatexColumn()
-            if len(domColList) > c:
-                col.setDomCol(domColList[c])
+            col = self.create_latex_column()
+            if len(dom_col_list) > c:
+                col.set_dom_col(dom_col_list[c])
             self.columns.append(col)
 
         # create rows / cells
-        multiRowCache = {
+        multi_row_cache = {
             # columnIndex : [Cell, DecrementingRowspan],
             }
 
         for domTr in self.dom.getElementsByTagName('tr'):
-            row, columnIndex = self._parse_tr_dom(domTr, multiRowCache)
+            self._parse_tr_dom(domTr, multi_row_cache)
 
-    def _parse_tr_dom(self, domTr, multiRowCache):
-        row = self.createLatexRow(domTr=domTr)
+    def _parse_tr_dom(self, domTr, multi_row_cache):
+        row = self.create_latex_row(domTr=domTr)
         self.rows.append(row)
 
         # .. cells
@@ -199,45 +200,44 @@ class TableConverter(subconverter.SubConverter):
         cells.sort(lambda a, b: cmp(a.parentNode.childNodes.index(a),
                                     b.parentNode.childNodes.index(b)))
         columnIndex = 0
-        cellIndex = 0
+        cell_index = 0
 
-        while len(cells) > cellIndex:
-            if columnIndex in multiRowCache.keys():
-                multiRowCache[columnIndex][0].registerRow(row)
-                multiRowCache[columnIndex][1] -= 1
-                if multiRowCache[columnIndex][1] == 0:
-                    del multiRowCache[columnIndex]
+        while len(cells) > cell_index:
+            if columnIndex in multi_row_cache.keys():
+                multi_row_cache[columnIndex][0].register_row(row)
+                multi_row_cache[columnIndex][1] -= 1
+                if multi_row_cache[columnIndex][1] == 0:
+                    del multi_row_cache[columnIndex]
                 columnIndex += 1
 
             else:
-                domCell = cells[cellIndex]
-                cellIndex += 1
-                cell = self.createLatexCell(domCell=domCell, row=row)
+                dom_cell = cells[cell_index]
+                cell_index += 1
+                cell = self.create_latex_cell(dom_cell=dom_cell, row=row)
                 # rowspan?
-                if cell.getRowspan() > 1:
-                    multiRowCache[columnIndex] = [
+                if cell.get_rowspan() > 1:
+                    multi_row_cache[columnIndex] = [
                         cell,
-                        cell.getRowspan() - 1]
+                        cell.get_rowspan() - 1]
 
                 # colspan / find and register columns
                 # find and register columns
                 try:
-                    colspan = int(domCell.getAttribute('colspan'))
+                    colspan = int(dom_cell.getAttribute('colspan'))
                 except ValueError:
                     colspan = 1
 
                 for cid in range(columnIndex, columnIndex + colspan):
                     while len(self.columns) <= cid:
-                        col = self.createLatexColumn()
+                        col = self.create_latex_column()
                         self.columns.append(col)
-                    cell.registerColumn(self.columns[cid])
+                    cell.register_column(self.columns[cid])
                 # move columnIndex to right
                 columnIndex += colspan
 
         return row, columnIndex
 
-
-    def getAmountOfColumns(self):
+    def get_amount_of_columns(self):
         columns = 0
         # by <colgroup>-Tag
         colgroups = self.dom.getElementsByTagName('colgroup')
@@ -251,25 +251,25 @@ class TableConverter(subconverter.SubConverter):
 
         # by <td>- and <th>-Tags
         for tr in self.dom.getElementsByTagName('tr'):
-            trColumns = 0
+            tr_columns = 0
             cells = tr.getElementsByTagName('td') + \
                 tr.getElementsByTagName('th')
             for cell in cells:
                 try:
-                    trColumns += int(cell.getAttribute('colspan'))
+                    tr_columns += int(cell.getAttribute('colspan'))
                 except (ValueError, TypeError):
-                    trColumns += 1
-            if trColumns > columns:
-                columns = trColumns
+                    tr_columns += 1
+            if tr_columns > columns:
+                columns = tr_columns
         return columns
 
-    def createLatexColumn(self, *args, **kwargs):
+    def create_latex_column(self, *args, **kwargs):
         return LatexColumn(self.converter, self, *args, **kwargs)
 
-    def createLatexRow(self, *args, **kwargs):
+    def create_latex_row(self, *args, **kwargs):
         return LatexRow(self.converter, self, *args, **kwargs)
 
-    def createLatexCell(self, *args, **kwargs):
+    def create_latex_cell(self, *args, **kwargs):
         return LatexCell(self.converter, self, *args, **kwargs)
 
 
@@ -279,70 +279,70 @@ class LatexColumn(object):
     """
 
     converter = None
-    tableConverter = None
-    domCol = None
+    table_converter = None
+    dom_col = None
     cells = []
 
-    def __init__(self, converter, tableConverter):
+    def __init__(self, converter, table_converter):
         self.converter = converter
-        self.domCol = None
-        self.tableConverter = tableConverter
+        self.dom_col = None
+        self.table_converter = table_converter
         self.cells = []
         self._width = _marker
         self._align = _marker
 
-    def setDomCol(self, domCol):
-        self.domCol = domCol
+    def set_dom_col(self, dom_col):
+        self.dom_col = dom_col
 
-    def registerCell(self, cell):
+    def register_cell(self, cell):
         self.cells.append(cell)
 
-    def getWidth(self):
+    def get_width(self):
         if self._width == _marker:
             self._width = None
             # use <col> definition, if existing
-            if self.domCol:
+            if self.dom_col:
                 try:
                     self._width = LatexWidth.convert(
-                        self.domCol.getAttribute('width'))
+                        self.dom_col.getAttribute('width'))
                 except ValueError:
                     pass
 
             # .. otherwise try to get width of a cell
             if not self._width:
                 for cell in self.cells:
-                    w = cell.getWidth()
-                    if cell.getColspan() == 1 and w:
+                    w = cell.get_width()
+                    if cell.get_colspan() == 1 and w:
                         self._width = w
                         break
         return self._width
 
-    def getAlign(self):
+    def get_align(self):
         if self._align == _marker:
-            if self.domCol:
-                self._align = self.domCol.getAttribute('align')
+            if self.dom_col:
+                self._align = self.dom_col.getAttribute('align')
             else:
                 self._align = None
         return self._align
 
-    def getFormat(self):
+    def get_format(self):
         format_ = ''
-        if self.getWidth():
-            format_ = 'p{%s}' % str(self.getWidth())
+        if self.get_width():
+            format_ = 'p{%s}' % str(self.get_width())
 
-        elif self.getAlign():
+        elif self.get_align():
             mapping = {
                 'left': 'l',
                 'right': 'r',
                 'center': 'c',
                 }
-            format_ = mapping[self.getAlign()]
+            format_ = mapping[self.get_align()]
 
         else:
             format_ = 'l'
 
-        if self.tableConverter.getBorder():
-            if self.tableConverter.columns.index(self) == 0:
+        if self.table_converter.get_border():
+            if self.table_converter.columns.index(self) == 0:
                 format_ = '|' + format_
             format_ += '|'
         return format_
@@ -354,27 +354,27 @@ class LatexRow(object):
     """
 
     converter = None
-    tableConverter = None
+    table_converter = None
     domTr = None
     cells = []
 
-    def __init__(self, converter, tableConverter, domTr):
+    def __init__(self, converter, table_converter, domTr):
         self.converter = converter
-        self.tableConverter = tableConverter
+        self.table_converter = table_converter
         self.domTr = domTr
         self.cells = []
 
-    def registerCell(self, cell):
+    def register_cell(self, cell):
         self.cells.append(cell)
 
-    def containsHeadCells(self):
+    def contains_head_cells(self):
         for cell in self.cells:
-            if cell.isHeadCell():
+            if cell.is_head_cell():
                 return True
         return False
 
     def render(self):
-        hline = self.tableConverter.getBorder() and '\n\\hline' or ''
+        hline = self.table_converter.get_border() and '\n\\hline' or ''
         latexCells = []
         for cell in self.cells:
             tex = cell.render(self)
@@ -391,15 +391,15 @@ class LatexCell(object):
     """
 
     converter = None
-    tableConverter = None
-    domCell = None
+    table_converter = None
+    dom_cell = None
     rows = []
     columns = []
 
-    def __init__(self, converter, tableConverter, domCell, row):
+    def __init__(self, converter, table_converter, dom_cell, row):
         self.converter = converter
-        self.tableConverter = tableConverter
-        self.domCell = domCell
+        self.table_converter = table_converter
+        self.dom_cell = dom_cell
         self.rows = []
         self.columns = []
         self._parentNodes = None
@@ -408,41 +408,41 @@ class LatexCell(object):
         self._rowspan = None
         self._align = _marker
         self._css_classes = None
-        self.registerRow(row)
+        self.register_row(row)
 
-    def registerRow(self, row):
-        row.registerCell(self)
+    def register_row(self, row):
+        row.register_cell(self)
         self.rows.append(row)
 
-    def registerColumn(self, column):
+    def register_column(self, column):
         self.columns.append(column)
-        column.registerCell(self)
+        column.register_cell(self)
 
     def render(self, row):
         # only render it in first occuring row (if rowspan > 1)
-        if self.getRowspan() > 1 and self.rows.index(row) > 0:
+        if self.get_rowspan() > 1 and self.rows.index(row) > 0:
             return None
         # render it
-        if self.getRowspan() > 1:
-            span = str(self.getRowspan())
+        if self.get_rowspan() > 1:
+            span = str(self.get_rowspan())
             latex = '\\multirow{%s}{%s}{%s}' % (
                 span,
-                str(self.getCalculatedWidth()).replace(r'\linewidth',
+                str(self.get_calculated_width()).replace(r'\linewidth',
                                                        r'\textwidth'),
-                self.renderContent(),
+                self.render_content(),
                 )
         else:
-            span = str(self.getColspan())
+            span = str(self.get_colspan())
             latex = '\\multicolumn{%s}{%s}{%s}' % (
                 span,
-                self.getFormat(),
-                self.renderContent(),
+                self.get_format(),
+                self.render_content(),
                 )
         return latex
 
-    def renderContent(self):
+    def render_content(self):
         content = ''.join([child.toxml() for child
-                           in self.domCell.childNodes])
+                           in self.dom_cell.childNodes])
 
         # Carriage returns are not allowed in table cells with multicolumn.
         # We use \newline instead, which only creates a newline if the cell
@@ -460,7 +460,7 @@ class LatexCell(object):
         latex = self.converter.convert(content,
                                        custom_patterns=custom_patterns)
 
-        if self.getCalculatedWidth() and self.getAlign():
+        if self.get_calculated_width() and self.get_align():
             # if a width and align is defined, we need to set
             # aligenement in content part with a command
             mapping = {
@@ -469,28 +469,28 @@ class LatexCell(object):
                 'center': r'\center\vspace{-1.5em}',
                 }
 
-            if self.getAlign() in mapping.keys():
-                latex = mapping[self.getAlign()] + latex
+            if self.get_align() in mapping.keys():
+                latex = mapping[self.get_align()] + latex
         return latex
 
-    def isHeadCell(self):
-        if 'thead' in [p.tagName.lower() for p in self.getParentNodes()]:
+    def is_head_cell(self):
+        if 'thead' in [p.tagName.lower() for p in self.get_parent_nodes()]:
             # cell is within a <thead>
             return True
-        if self.domCell.tagName.lower() == 'th':
+        if self.dom_cell.tagName.lower() == 'th':
             # cell is a <th>
             return True
         else:
             # not a head cell
             return False
 
-    def getParentNodes(self):
+    def get_parent_nodes(self):
         """
         Returns a list of all parent nodes (and their parent nodes etc).
         """
         if self._parentNodes is None:
             self._parentNodes = []
-            node = self.domCell
+            node = self.dom_cell
 
             while node.parentNode and \
                     node.parentNode.__class__ != minidom.Document:
@@ -498,85 +498,85 @@ class LatexCell(object):
                 self._parentNodes.append(node)
         return self._parentNodes
 
-    def getWidth(self):
+    def get_width(self):
         if self._width == _marker:
             try:
                 self._width = LatexWidth.convert(
-                    self.domCell.getAttribute('width'))
+                    self.dom_cell.getAttribute('width'))
             except ValueError:
                 self._width = None
         return self._width
 
-    def getColspan(self):
+    def get_colspan(self):
         if self._colspan is None:
             try:
-                self._colspan = int(self.domCell.getAttribute('colspan'))
+                self._colspan = int(self.dom_cell.getAttribute('colspan'))
             except (AttributeError, ValueError):
                 self._colspan = 1
         return self._colspan
 
-    def getRowspan(self):
+    def get_rowspan(self):
         if self._rowspan is None:
             try:
-                self._rowspan = int(self.domCell.getAttribute('rowspan'))
+                self._rowspan = int(self.dom_cell.getAttribute('rowspan'))
             except (AttributeError, ValueError):
                 self._rowspan = 1
         return self._rowspan
 
-    def getCalculatedWidth(self):
-        if self.getWidth():
-            return self.getWidth()
+    def get_calculated_width(self):
+        if self.get_width():
+            return self.get_width()
 
-        elif self.getColspan() == 1:
-            return self.columns[0].getWidth()
+        elif self.get_colspan() == 1:
+            return self.columns[0].get_width()
 
-        elif self.getColspan() > 1:
-            width = self.columns[0].getWidth()
+        elif self.get_colspan() > 1:
+            width = self.columns[0].get_width()
             for i in range(1, len(self.columns)):
                 try:
-                    width += self.columns[i].getWidth()
+                    width += self.columns[i].get_width()
                 except ValueError:
                     # one of the columns has no or invalid width (not addable)
                     return None
             return width
 
-    def getAlign(self):
+    def get_align(self):
         if self._align == _marker:
             self._align = None
 
-            if self.domCell:
-                self._align = self.domCell.getAttribute('align')
+            if self.dom_cell:
+                self._align = self.dom_cell.getAttribute('align')
 
-            if not self._align and self.getColspan() == 1:
-                self._align = self.columns[0].getAlign()
+            if not self._align and self.get_colspan() == 1:
+                self._align = self.columns[0].get_align()
         return self._align
 
-    def getFormat(self):
+    def get_format(self):
         format_ = 'l'
-        if self.getCalculatedWidth():
-            format_ = 'p{%s}' % str(self.getCalculatedWidth())
-        elif self.getAlign():
+        if self.get_calculated_width():
+            format_ = 'p{%s}' % str(self.get_calculated_width())
+        elif self.get_align():
             mapping = {
                 'left': 'l',
                 'right': 'r',
                 'center': 'c',
                 }
-            format_ = mapping[self.getAlign()]
+            format_ = mapping[self.get_align()]
 
         # use column definition
-        elif self.getColspan() == 1:
-            format_ = self.columns[0].getFormat()
+        elif self.get_colspan() == 1:
+            format_ = self.columns[0].get_format()
 
-        if self.tableConverter.getBorder():
+        if self.table_converter.get_border():
             format_ += '|'
-            if self.columns[0] == self.tableConverter.columns[0]:
+            if self.columns[0] == self.table_converter.columns[0]:
                 format_ = '|%s' % format_
         return format_
 
-    def getCssClasses(self):
+    def get_css_classes(self):
         if self._css_classes is None:
-            if self.domCell:
-                classes = self.domCell.getAttribute('class').strip()
+            if self.dom_cell:
+                classes = self.dom_cell.getAttribute('class').strip()
                 self._css_classes = classes.split(' ')
 
             else:
