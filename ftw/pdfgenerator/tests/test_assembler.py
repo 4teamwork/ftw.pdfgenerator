@@ -39,7 +39,7 @@ class TestPDFAssembler(MockTestCase):
 
     def test_build_pdf_parameters(self):
         context = self.mocker.mock()
-        self.expect(context.id, 'theid')
+        self.expect(context.id).result('theid')
 
         layout = self.mocker.mock()
         self.expect(layout.render_latex_for(context)).result('content latex')
@@ -52,7 +52,10 @@ class TestPDFAssembler(MockTestCase):
         request = self.mocker.mock()
         response = self.mocker.mock()
         self.expect(request.RESPONSE).result(response)
-        self.expect(response.setHeader(ARGS)).count(1, None)
+        self.expect(response.setHeader(
+                'Content-Type', 'application/pdf; charset=utf-8'))
+        self.expect(response.setHeader(
+                'Content-disposition', 'attachment; filename="theid.pdf"'))
         self.expect(response.write('the pdf'))
 
         self.replay()

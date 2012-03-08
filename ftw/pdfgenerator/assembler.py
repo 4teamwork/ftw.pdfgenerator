@@ -80,8 +80,6 @@ class PDFAssembler(object):
         response = request.RESPONSE
         response.setHeader('Content-Type',
                            'application/%s; charset=utf-8' % extension)
-        response.setHeader('Content-disposition',
-                           'attachment; filename=%s' % filename)
 
         response.setHeader(
             'Content-disposition',
