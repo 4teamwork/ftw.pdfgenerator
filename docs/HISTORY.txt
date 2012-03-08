@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.0.2 (unreleased)
+1.0.2 (2012-03-08)
 ------------------
 
 - Table converter: add css classes for aligning cells ("right", "center", "left").
