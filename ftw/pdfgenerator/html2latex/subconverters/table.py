@@ -500,15 +500,11 @@ class LatexCell(object):
 
     def getWidth(self):
         if self._width == _marker:
-            if not self.domCell:
+            try:
+                self._width = LatexWidth.convert(
+                    self.domCell.getAttribute('width'))
+            except ValueError:
                 self._width = None
-
-            else:
-                try:
-                    self._width = LatexWidth.convert(
-                        self.domCell.getAttribute('width'))
-                except ValueError:
-                    self._width = None
         return self._width
 
     def getColspan(self):
@@ -543,7 +539,6 @@ class LatexCell(object):
                     # one of the columns has no or invalid width (not addable)
                     return None
             return width
-        return None
 
     def getAlign(self):
         if self._align == _marker:

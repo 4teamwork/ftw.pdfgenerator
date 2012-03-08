@@ -125,6 +125,32 @@ class TestTableConverter(MockTestCase):
 
         self.assertEqual(self.convert(html), latex)
 
+    def test_colgroup_with_invalid_width(self):
+        html = '\n'.join((
+                r'<table>',
+                r'    <colgroup>',
+                r'        <col width="30%" />',
+                r'        <col width="bad value" align="right" />',
+                r'    </colgroup>',
+                r'    <tbody>',
+                r'        <tr>',
+                r'            <td>test1</td>',
+                r'            <td>test2</td>',
+                r'        </tr>',
+                r'    </tbody>',
+                r'</table>'))
+
+        latex = '\n'.join((
+                r'\begin{tabular}{p{0.3\linewidth}r}',
+
+                r'\multicolumn{1}{p{0.3\linewidth}}{test1} & '
+                r'\multicolumn{1}{r}{test2} \\',
+
+                r'\end{tabular}',
+                r''))
+
+        self.assertEqual(self.convert(html), latex)
+
     def test_col_and_cell_have_widths(self):
         # Colgroup sizes should work even if the alignment is defined
         # on the cell
