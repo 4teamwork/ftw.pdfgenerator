@@ -717,6 +717,47 @@ class TestTableConverter(MockTestCase):
 
         self.assertEqual(self.convert(html), latex)
 
+    def test_border_classes(self):
+        html = '\n'.join((
+                r'<table class="no-page-break">',
+                r' <thead>',
+                r'  <tr>',
+                r'   <th class="border-right">A1</th>',
+                r'   <th class="border-top">B1</th>',
+                r'   <th class="border-left border-bottom">C1</th>',
+                r'  </tr>',
+                r' </thead>',
+                r' <tbody>',
+                r'  <tr>',
+                r'   <td class="border-right">A2</td>',
+                r'   <td class="border-top border-bottom">B2</td>',
+                r'   <td class="border-left border-bottom">C2</td>',
+                r'  </tr>',
+                r' </tbody>',
+                r'</table>'
+                ))
+
+
+        latex = '\n'.join((
+                r'\begin{tabular}{lll}',
+
+                r'\cline{2-2}',
+                r'\multicolumn{1}{l|}{A1} & ' + \
+                    r'\multicolumn{1}{l}{B1} & ' + \
+                    r'\multicolumn{1}{|l}{C1} \\',
+
+                r'\cline{2-3}',
+                r'\multicolumn{1}{l|}{A2} & ' + \
+                    r'\multicolumn{1}{l}{B2} & ' + \
+                    r'\multicolumn{1}{|l}{C2} \\',
+                r'\cline{2-3}',
+
+                r'\end{tabular}',
+                r''
+                ))
+
+        self.assertEqual(self.convert(html), latex)
+
 
 class TestLatexWidth(TestCase):
 

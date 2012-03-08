@@ -4,6 +4,10 @@ Changelog
 1.0.2 (unreleased)
 ------------------
 
+- Table converter: add cell-border functionality, using css classes "border-right",
+  "border-left", "border-top" and "border-bottom".
+  [jone]
+
 - Table converter: improve grid border, add classes "border-grid" and "listing" for enabling grid borders.
   [jone]
 

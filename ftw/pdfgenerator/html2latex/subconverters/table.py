@@ -95,9 +95,8 @@ class TableConverter(subconverter.SubConverter):
             return False
 
     def render(self):
-        hline = self.get_border() and '\n\\hline' or ''
-        latex = '\\begin{%s}{%s}%s\n' % (
-            self.environment, self.get_table_format(), hline)
+        latex = '\\begin{%s}{%s}\n' % (
+            self.environment, self.get_table_format())
         caption_command, insert_caption_at_top = self.render_caption()
         if caption_command and insert_caption_at_top:
             latex += caption_command
@@ -391,16 +390,78 @@ class LatexRow(object):
                 return True
         return False
 
+    def is_first_row(self):
+        return self.table_converter.rows.index(self) == 0
+
+    def get_next_row(self):
+        rows = self.table_converter.rows
+        next_row_index = rows.index(self)
+        try:
+            return rows[next_row_index]
+        except IndexError:
+            return None
+
     def render(self):
-        hline = self.table_converter.get_border() and '\n\\hline' or ''
-        latexCells = []
+        latex = []
+
+        if self.is_first_row():
+            line_latex = self.get_horizontal_line_latex([], self)
+            if line_latex:
+                latex.append(line_latex)
+
+        latex_cells = []
         for cell in self.cells:
             tex = cell.render(self)
             if tex:
-                latexCells.append(tex)
+                latex_cells.append(tex)
             else:
-                latexCells.append('')
-        return '%s \\\\%s\n' % (' & '.join(latexCells), hline)
+                latex_cells.append('')
+
+        latex.append('%s \\\\' % ' & '.join(latex_cells))
+        line_latex = self.get_horizontal_line_latex(self, self.get_next_row())
+        if line_latex:
+            latex.append(line_latex)
+
+        return '\n'.join(latex) + '\n'
+
+    def get_horizontal_line_latex(self, top_row, bottom_row):
+        lined_column_indexes = set()
+
+        if top_row:
+            index = 1
+            for cell in top_row.cells:
+                if cell.has_bottom_border_in_row(top_row):
+                    for i in range(index, index + cell.get_colspan()):
+                        lined_column_indexes.add(i)
+                index += cell.get_colspan()
+
+        if bottom_row:
+            index = 1
+            for cell in bottom_row.cells:
+                if cell.has_top_border_in_row(bottom_row):
+                    for i in range(index, index + cell.get_colspan()):
+                        lined_column_indexes.add(i)
+                index += cell.get_colspan()
+
+        if len(lined_column_indexes) == len(self.table_converter.columns):
+            return r'\hline'
+
+        latex = []
+        start = -1
+        end = -1
+        for index in sorted(lined_column_indexes):
+            if start == -1:
+                start = end = index
+            elif end + 1 < index:
+                latex.append(r'\cline{%s-%s}' % (start, end))
+                start = end = index
+            else:
+                end = index
+
+        if start != -1:
+            latex.append(r'\cline{%s-%s}' % (start, end))
+
+        return ''.join(latex)
 
 
 class LatexCell(object):
@@ -573,6 +634,9 @@ class LatexCell(object):
         if self.columns[0].has_left_border():
             return True
 
+        if 'border-left' in self.get_css_classes():
+            return True
+
         left_cell = self.get_left_cell()
         if left_cell and left_cell.get_rowspan() > 1 and \
                 left_cell.has_right_border():
@@ -582,6 +646,9 @@ class LatexCell(object):
 
     def has_right_border(self):
         if self.columns[-1].has_right_border():
+            return True
+
+        if 'border-right' in self.get_css_classes():
             return True
 
         right_cell = self.get_right_cell()
@@ -600,6 +667,30 @@ class LatexCell(object):
             return row_cells[left_cell_index]
         except IndexError:
             return None
+
+    def has_bottom_border_in_row(self, row):
+        if self.rows[-1] != row:
+            return False
+
+        if self.table_converter.get_border():
+            return True
+
+        if 'border-bottom' in self.get_css_classes():
+            return True
+
+        return False
+
+    def has_top_border_in_row(self, row):
+        if self.rows[0] != row:
+            return False
+
+        if self.table_converter.get_border():
+            return True
+
+        if 'border-top' in self.get_css_classes():
+            return True
+
+        return False
 
     def get_right_cell(self, row_index=0):
         """Get the next cell at the right side of this cell or None.
