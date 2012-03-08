@@ -82,9 +82,17 @@ class TableConverter(subconverter.SubConverter):
 
     def get_border(self):
         domTable = self.dom.getElementsByTagName('table')[0]
-        if (domTable.hasAttribute('border')):
-            return int(domTable.getAttribute('border')) > 0
-        return False
+
+        border = domTable.hasAttribute('border')
+        if border and int(border) > 0:
+            return True
+
+        elif 'border-grid' in self.get_css_classes() or \
+                'listing' in self.get_css_classes():
+            return True
+
+        else:
+            return False
 
     def render(self):
         hline = self.get_border() and '\n\\hline' or ''
@@ -341,11 +349,21 @@ class LatexColumn(object):
         else:
             format_ = 'l'
 
-        if self.table_converter.get_border():
-            if self.table_converter.columns.index(self) == 0:
-                format_ = '|' + format_
-            format_ += '|'
+        format_ = apply_borders_to_format(self, format_)
         return format_
+
+    def has_left_border(self):
+        return self.table_converter.get_border()
+
+    def has_right_border(self):
+        if self.table_converter.get_border() and self.is_last_column():
+            return True
+
+        return False
+
+    def is_last_column(self):
+        columns = self.table_converter.columns
+        return columns[-1] == self
 
 
 class LatexRow(object):
@@ -551,10 +569,53 @@ class LatexCell(object):
                 self._align = self.columns[0].get_align()
         return self._align
 
+    def has_left_border(self):
+        if self.columns[0].has_left_border():
+            return True
+
+        left_cell = self.get_left_cell()
+        if left_cell and left_cell.get_rowspan() > 1 and \
+                left_cell.has_right_border():
+            return True
+
+        return False
+
+    def has_right_border(self):
+        if self.columns[-1].has_right_border():
+            return True
+
+        right_cell = self.get_right_cell()
+        if right_cell and right_cell.get_rowspan() > 1 and \
+                right_cell.has_left_border():
+            return True
+
+        return False
+
+    def get_left_cell(self, row_index=0):
+        """Get the next cell at the left side of this cell or None.
+        """
+        row_cells = self.rows[row_index].cells
+        left_cell_index = row_cells.index(self) - 1
+        try:
+            return row_cells[left_cell_index]
+        except IndexError:
+            return None
+
+    def get_right_cell(self, row_index=0):
+        """Get the next cell at the right side of this cell or None.
+        """
+        row_cells = self.rows[row_index].cells
+        right_cell_index = row_cells.index(self) + 1
+        try:
+            return row_cells[right_cell_index]
+        except IndexError:
+            return None
+
     def get_format(self):
         format_ = 'l'
         if self.get_calculated_width():
             format_ = 'p{%s}' % str(self.get_calculated_width())
+
         elif self.get_align():
             mapping = {
                 'left': 'l',
@@ -567,10 +628,7 @@ class LatexCell(object):
         elif self.get_colspan() == 1:
             format_ = self.columns[0].get_format()
 
-        if self.table_converter.get_border():
-            format_ += '|'
-            if self.columns[0] == self.table_converter.columns[0]:
-                format_ = '|%s' % format_
+        format_ = apply_borders_to_format(self, format_)
         return format_
 
     def get_css_classes(self):
@@ -693,3 +751,21 @@ class LatexWidth(object):
 
         else:
             return a, b
+
+
+def apply_borders_to_format(element, format_):
+    """Apply the border information to a column / cell format if necessary
+    and return the new format.
+
+    Arguments:
+    `element` -- Cell or column object.
+    `format_` -- LaTeX format definiton.
+    """
+
+    if element.has_left_border() and not format_.startswith('|'):
+        format_ = '|%s' % format_
+
+    if element.has_right_border() and not format_.endswith('|'):
+        format_ = '%s|' % format_
+
+    return format_

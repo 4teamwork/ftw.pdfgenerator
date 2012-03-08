@@ -450,13 +450,13 @@ class TestTableConverter(MockTestCase):
                 r'\begin{tabular}{|p{0.3\linewidth}|p{0.7\linewidth}|}',
                 r'\hline',
 
-                r'\multicolumn{1}{|p{0.3\linewidth}|}{test1} & '
-                r'\multicolumn{1}{p{0.7\linewidth}|}{test2} \\',
+                r'\multicolumn{1}{|p{0.3\linewidth}}{test1} & '
+                r'\multicolumn{1}{|p{0.7\linewidth}|}{test2} \\',
 
                 r'\hline',
 
-                r'\multicolumn{1}{|p{0.3\linewidth}|}{test3} & '
-                r'\multicolumn{1}{p{0.7\linewidth}|}{test4} \\',
+                r'\multicolumn{1}{|p{0.3\linewidth}}{test3} & '
+                r'\multicolumn{1}{|p{0.7\linewidth}|}{test4} \\',
 
                 r'\hline',
                 r'\end{tabular}',
@@ -623,6 +623,99 @@ class TestTableConverter(MockTestCase):
         latex = self.convert(html)
 
         self.assertNotIn(r'\endhead', latex)
+
+    def test_simple_grid_css_class(self):
+        html = '\n'.join((
+                r'<table class="no-page-break border-grid">',
+                r' <thead>',
+                r'  <tr>',
+                r'   <th>heading A</th>',
+                r'   <th>heading B</th>',
+                r'  </tr>',
+                r' </thead>',
+                r' <tbody>',
+                r'  <tr>',
+                r'   <td>content 1A</td>',
+                r'   <td>content 1B</td>',
+                r'  </tr>',
+                r'  <tr>',
+                r'   <td>content 2A</td>',
+                r'   <td>content 2B</td>',
+                r'  </tr>',
+                r' </tbody>',
+                r'</table>'))
+
+        latex = '\n'.join((
+                r'\begin{tabular}{|l|l|}',
+                r'\hline',
+
+                r'\multicolumn{1}{|l}{heading A} & ' + \
+                    r'\multicolumn{1}{|l|}{heading B} \\',
+                r'\hline',
+
+                r'\multicolumn{1}{|l}{content 1A} & ' + \
+                    r'\multicolumn{1}{|l|}{content 1B} \\',
+                r'\hline',
+
+                r'\multicolumn{1}{|l}{content 2A} & ' + \
+                    r'\multicolumn{1}{|l|}{content 2B} \\',
+                r'\hline',
+
+                r'\end{tabular}',
+                r''
+                ))
+
+        self.assertEqual(self.convert(html), latex)
+
+    def test_complex_grid_css_class(self):
+        html = '\n'.join((
+                r'<table class="no-page-break listing">',
+                r' <colgroup>',
+                r'  <col width="50%" />'
+                r'  <col width="25%" />'
+                r'  <col width="25%" />'
+                r' </colgroup>',
+                r' <thead>',
+                r'  <tr>',
+                r'   <th colspan="3">heading</th>',
+                r'  </tr>',
+                r' </thead>',
+                r' <tbody>',
+                r'  <tr>',
+                r'   <td>content 1A</td>',
+                r'   <td rowspan="2">content 1/2 B</td>',
+                r'   <td>content 1C</td>',
+                r'  </tr>',
+                r'  <tr>',
+                r'   <td>content 2A</td>',
+                r'   <td>content 2C</td>',
+                r'  </tr>',
+                r' </tbody>',
+                r'</table>'))
+
+        latex = '\n'.join((
+                r'\begin{tabular}{|p{0.5\linewidth}|p{0.25\linewidth}|' + \
+                    'p{0.25\linewidth}|}',
+                r'\hline',
+
+                r'\multicolumn{3}{|p{1.0\linewidth}|}{heading} \\',
+                r'\hline',
+
+                r'\multicolumn{1}{|p{0.5\linewidth}|}{content 1A} & ' + \
+                    r'\multirow{2}{0.25\textwidth}{content 1/2 B} & ' + \
+                    r'\multicolumn{1}{|p{0.25\linewidth}|}{content 1C} \\',
+                r'\hline',
+
+                r'\multicolumn{1}{|p{0.5\linewidth}|}{content 2A} & ' + \
+                    r' & '
+                    r'\multicolumn{1}{|p{0.25\linewidth}|}{content 2C} \\',
+                r'\hline',
+
+                r'\end{tabular}',
+                r''
+                ))
+
+        self.assertEqual(self.convert(html), latex)
 
 
 class TestLatexWidth(TestCase):

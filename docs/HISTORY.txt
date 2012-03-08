@@ -4,6 +4,9 @@ Changelog
 1.0.2 (unreleased)
 ------------------
 
+- Table converter: improve grid border, add classes "border-grid" and "listing" for enabling grid borders.
+  [jone]
+
 - Table converter: use "tabular" for small tables. #3
   [jone]
 
