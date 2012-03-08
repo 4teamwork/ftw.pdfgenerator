@@ -4,7 +4,8 @@ Changelog
 1.0.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Table converter: use "tabular" for small tables. #3
+  [jone]
 
 
 1.0.1 (2012-03-05)

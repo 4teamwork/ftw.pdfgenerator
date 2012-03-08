@@ -14,6 +14,7 @@ MODE_REPLACE = interfaces.HTML2LATEX_MODE_REPLACE
 MODE_REGEXP = interfaces.HTML2LATEX_MODE_REGEXP
 PLACEHOLDER_BOTTOM = interfaces.HTML2LATEX_CUSTOM_PATTERN_PLACEHOLDER_BOTTOM
 PREVENT_CHARACTER = interfaces.HTML2LATEX_PREVENT_CHARACTER
+LONGTABLE_ROWS_THRESHOLD = 15
 
 
 class TableConverter(subconverter.SubConverter):
@@ -51,9 +52,24 @@ class TableConverter(subconverter.SubConverter):
         self.replace_and_lock(latex)
 
         # register packages
-        self.converter.converter.layout.use_package('longtable')
+        if self.environment == 'longtable':
+            self.converter.converter.layout.use_package('longtable')
         self.converter.converter.layout.use_package('multirow')
         self.converter.converter.layout.use_package('multicol')
+
+    @property
+    def environment(self):
+        if getattr(self, '_environment', None) is None:
+            if 'page-break' in self.getCssClasses():
+                self._environment = 'longtable'
+            elif 'no-page-break' in self.getCssClasses():
+                self._environment = 'tabular'
+            elif len(self.rows) > LONGTABLE_ROWS_THRESHOLD:
+                self._environment = 'longtable'
+            else:
+                self._environment = 'tabular'
+
+        return self._environment
 
     def getCssClasses(self):
         if self._css_classes is None:
@@ -71,7 +87,8 @@ class TableConverter(subconverter.SubConverter):
 
     def render(self):
         hline = self.getBorder() and '\n\\hline' or ''
-        latex = '\\begin{longtable}{%s}%s\n' % (self.getTableFormat(), hline)
+        latex = '\\begin{%s}{%s}%s\n' % (
+            self.environment, self.getTableFormat(), hline)
         captionCommand, insertCaptionAtTop = self.renderCaption()
         if captionCommand and insertCaptionAtTop:
             latex += captionCommand
@@ -79,7 +96,7 @@ class TableConverter(subconverter.SubConverter):
         latex += self.renderRows()
         if captionCommand and not insertCaptionAtTop:
             latex += captionCommand
-        latex += '\\end{longtable}\n'
+        latex += '\\end{%s}\n' % self.environment
         return latex
 
     def renderRows(self):
@@ -101,8 +118,10 @@ class TableConverter(subconverter.SubConverter):
         if len(bodyRows) > 0:
             bodyLatex = ''.join(bodyRows)
 
-        if len(headRows) > 0:
+        if len(headRows) > 0 and self.environment == 'longtable':
             return '%s\\endhead\n%s' % (headLatex, bodyLatex)
+        elif len(headRows) > 0:
+            return headLatex + bodyLatex
         else:
             return bodyLatex
 
@@ -363,7 +382,7 @@ class LatexRow(object):
 
     def containsHeadCells(self):
         for cell in self.cells:
-            if cell.isCellWithinThead():
+            if cell.isHeadCell():
                 return True
         return False
 
@@ -477,12 +496,6 @@ class LatexCell(object):
         else:
             # not a head cell
             return False
-
-    def isCellWithinThead(self):
-        """
-        Returns True if the cell is within a <thead> tag.
-        """
-        return 'thead' in [p.tagName.lower() for p in self.getParentNodes()]
 
     def getParentNodes(self):
         """

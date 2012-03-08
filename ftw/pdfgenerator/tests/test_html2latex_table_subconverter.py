@@ -12,8 +12,15 @@ class TestTableConverter(MockTestCase):
             count = kwargs['count']
             del kwargs['count']
 
+        if 'longtable' in kwargs:
+            longtable = kwargs['longtable']
+            del kwargs['longtable']
+        else:
+            longtable = False
+
         layout = self.mocker.mock()
-        self.expect(layout.use_package('longtable')).count(count)
+        if longtable:
+            self.expect(layout.use_package('longtable')).count(count)
         self.expect(layout.use_package('multirow')).count(count)
         self.expect(layout.use_package('multicol')).count(count)
 
@@ -36,7 +43,7 @@ class TestTableConverter(MockTestCase):
             table.TableConverter,
             converter.get_default_subconverters())
 
-    def test_table_converted_to_longtable(self):
+    def test_table_converted(self):
         html = '\n'.join((
                 r'<table>',
                 r'    <thead>',
@@ -47,11 +54,10 @@ class TestTableConverter(MockTestCase):
                 r'</table>'))
 
         latex = '\n'.join((
-                r'\begin{longtable}{l}',
+                r'\begin{tabular}{l}',
                 r'\multicolumn{1}{l}{My Head} \\',
-                r'\endhead',
                 r'\multicolumn{1}{l}{My Body} \\',
-                r'\end{longtable}',
+                r'\end{tabular}',
                 r''))
 
         self.assertEqual(self.convert(html), latex)
@@ -78,12 +84,11 @@ class TestTableConverter(MockTestCase):
                 r'</table>'))
 
         latex = '\n'.join((
-                r'\begin{longtable}{ll}',
+                r'\begin{tabular}{ll}',
                 r'\multicolumn{1}{l}{headA} & \multicolumn{1}{l}{headB} \\',
-                r'\endhead',
                 r'\multicolumn{1}{l}{1A} & \multicolumn{1}{l}{1B} \\',
                 r'\multicolumn{1}{l}{2A} & \multicolumn{1}{l}{2B} \\',
-                r'\end{longtable}',
+                r'\end{tabular}',
                 r''))
 
         self.assertEqual(self.convert(html), latex)
@@ -107,7 +112,7 @@ class TestTableConverter(MockTestCase):
                 r'</table>'))
 
         latex = '\n'.join((
-                r'\begin{longtable}{p{0.3\linewidth}p{0.7\linewidth}}',
+                r'\begin{tabular}{p{0.3\linewidth}p{0.7\linewidth}}',
 
                 r'\multicolumn{1}{p{0.3\linewidth}}{test1} & '
                 r'\multicolumn{1}{p{0.7\linewidth}}{test2} \\',
@@ -115,7 +120,7 @@ class TestTableConverter(MockTestCase):
                 r'\multicolumn{1}{p{0.3\linewidth}}{test3} & '
                 r'\multicolumn{1}{p{0.7\linewidth}}{test4} \\',
 
-                r'\end{longtable}',
+                r'\end{tabular}',
                 r''))
 
         self.assertEqual(self.convert(html), latex)
@@ -142,7 +147,7 @@ class TestTableConverter(MockTestCase):
                 r'</table>'))
 
         latex = '\n'.join((
-                r'\begin{longtable}{p{0.3\linewidth}p{0.7\linewidth}}',
+                r'\begin{tabular}{p{0.3\linewidth}p{0.7\linewidth}}',
 
                 r'\multicolumn{1}{p{0.3\linewidth}}{'
                 r'\raggedleft test1} & \multicolumn{1}{'
@@ -151,7 +156,7 @@ class TestTableConverter(MockTestCase):
                 r'\multicolumn{1}{p{0.3\linewidth}}{\center\vspace{-1.5em}'
                 r'test3} & \multicolumn{1}{p{0.7\linewidth}}{test4} \\',
 
-                r'\end{longtable}',
+                r'\end{tabular}',
                 r''))
 
         self.assertEqual(self.convert(html), latex)
@@ -166,10 +171,10 @@ class TestTableConverter(MockTestCase):
                 r'</table>'))
 
         latex = '\n'.join((
-                r'\begin{longtable}{l}',
+                r'\begin{tabular}{l}',
                 r'\caption{Testtabelle} \\',
                 r'\multicolumn{1}{l}{test} \\',
-                r'\end{longtable}',
+                r'\end{tabular}',
                 r''))
 
         self.assertEqual(self.convert(html), latex)
@@ -185,10 +190,10 @@ class TestTableConverter(MockTestCase):
                 r'</table>'))
 
         latex = '\n'.join((
-                r'\begin{longtable}{l}',
+                r'\begin{tabular}{l}',
                 r'\caption*{NotIndexedCaption} \\',
                 r'\multicolumn{1}{l}{foo} \\',
-                r'\end{longtable}',
+                r'\end{tabular}',
                 r''))
 
         self.assertEqual(self.convert(html), latex)
@@ -204,10 +209,10 @@ class TestTableConverter(MockTestCase):
                 r'</table>'))
 
         latex = '\n'.join((
-                r'\begin{longtable}{l}',
+                r'\begin{tabular}{l}',
                 r'\multicolumn{1}{l}{foo} \\',
                 r'\caption{My Table} \\',
-                r'\end{longtable}',
+                r'\end{tabular}',
                 r''))
 
         self.assertEqual(self.convert(html), latex)
@@ -219,12 +224,12 @@ class TestTableConverter(MockTestCase):
             r'<table><tr><td>test2</td></tr></table>'
 
         latex = '\n'.join((
-                r'\begin{longtable}{l}',
+                r'\begin{tabular}{l}',
                 r'\multicolumn{1}{l}{test1} \\',
-                r'\end{longtable}',
-                r'\begin{longtable}{l}',
+                r'\end{tabular}',
+                r'\begin{tabular}{l}',
                 r'\multicolumn{1}{l}{test2} \\',
-                r'\end{longtable}',
+                r'\end{tabular}',
                 r''))
 
         self.assertEqual(self.convert(html, count=2), latex)
@@ -235,9 +240,9 @@ class TestTableConverter(MockTestCase):
         html = r'<table><tr><td><b>Hello</b> <i>World</i></td></tr></table>'
 
         latex = '\n'.join((
-                r'\begin{longtable}{l}',
+                r'\begin{tabular}{l}',
                 r'\multicolumn{1}{l}{{\bf Hello} {\it World}} \\',
-                r'\end{longtable}',
+                r'\end{tabular}',
                 r''))
 
         self.assertEqual(self.convert(html), latex)
@@ -252,9 +257,9 @@ class TestTableConverter(MockTestCase):
 
         latex = '\n'.join((
                 r'This {\it is} a {\bf Table}:\\',
-                r' \begin{longtable}{l}',
+                r' \begin{tabular}{l}',
                 r'\multicolumn{1}{l}{test} \\',
-                r'\end{longtable}',
+                r'\end{tabular}',
                 r' {\bf yeah}'))
 
         self.assertEqual(self.convert(html), latex)
@@ -270,10 +275,10 @@ class TestTableConverter(MockTestCase):
                 r'</table>'))
 
         latex = '\n'.join((
-                r'\begin{longtable}{l}',
+                r'\begin{tabular}{l}',
                 r'\multicolumn{1}{l}{2>1} \\',
                 '\\multicolumn{1}{l}{X\xc3\xa4Y} \\\\',
-                r'\end{longtable}',
+                r'\end{tabular}',
                 r''))
 
         self.assertEqual(self.convert(html), latex)
@@ -299,7 +304,7 @@ class TestTableConverter(MockTestCase):
                 r'</table>'))
 
         latex = '\n'.join((
-                r'\begin{longtable}{p{0.33\linewidth}p{0.33\linewidth}'
+                r'\begin{tabular}{p{0.33\linewidth}p{0.33\linewidth}'
                 r'p{0.34\linewidth}}',
 
                 r'\multicolumn{1}{p{0.33\linewidth}}{one} & '
@@ -309,7 +314,7 @@ class TestTableConverter(MockTestCase):
                 r'\multicolumn{2}{p{0.66\linewidth}}{one and two} & '
                 r'\multicolumn{1}{p{0.34\linewidth}}{three} \\',
 
-                r'\end{longtable}',
+                r'\end{tabular}',
                 r''))
 
         self.assertEqual(self.convert(html), latex)
@@ -332,13 +337,13 @@ class TestTableConverter(MockTestCase):
                 r'</table>'))
 
         latex = '\n'.join((
-                r'\begin{longtable}{p{0.5\linewidth}p{0.5\linewidth}}',
+                r'\begin{tabular}{p{0.5\linewidth}p{0.5\linewidth}}',
 
                 r'\multirow{2}{0.5\textwidth}{one} & \multicolumn{1}'
                 r'{p{0.5\linewidth}}{two} \\',
 
                 r' & \multicolumn{1}{p{0.5\linewidth}}{three} \\',
-                r'\end{longtable}',
+                r'\end{tabular}',
                 r''))
 
         self.assertEqual(self.convert(html), latex)
@@ -363,7 +368,7 @@ class TestTableConverter(MockTestCase):
                 r'</table>'))
 
         latex = '\n'.join((
-                r'\begin{longtable}{|p{0.3\linewidth}|p{0.7\linewidth}|}',
+                r'\begin{tabular}{|p{0.3\linewidth}|p{0.7\linewidth}|}',
                 r'\hline',
 
                 r'\multicolumn{1}{|p{0.3\linewidth}|}{test1} & '
@@ -375,7 +380,7 @@ class TestTableConverter(MockTestCase):
                 r'\multicolumn{1}{p{0.7\linewidth}|}{test4} \\',
 
                 r'\hline',
-                r'\end{longtable}',
+                r'\end{tabular}',
                 r''))
 
         self.assertEqual(self.convert(html), latex)
@@ -395,18 +400,150 @@ class TestTableConverter(MockTestCase):
                 ))
 
         latex = '\n'.join((
-                r'\begin{longtable}{p{0.5\linewidth}p{0.5\linewidth}}',
+                r'\begin{tabular}{p{0.5\linewidth}p{0.5\linewidth}}',
 
                 r'\multicolumn{1}{p{0.5\linewidth}}{' + \
                     r'hello\newline world} & ' + \
                     r'\multicolumn{1}{p{0.5\linewidth}}{' + \
                     r'foo\newline \newline bar} \\',
 
-                r'\end{longtable}',
+                r'\end{tabular}',
                 r''
                 ))
 
         self.assertEqual(self.convert(html), latex)
+
+    def test_tabular_environment_depends_on_table_size(self):
+        # For big tables we use the "tabular" environment, allowing a table
+        # to be splitted up over multiple pages, but for short tables we use
+        # the longtable environment.
+
+        tabular_html = '\n'.join((
+                r'<table>',
+                r'  <tr>',
+                r'    <td width="50%">foo</td>',
+                r'    <td width="50%">bar</td>',
+                r'  </tr>',
+                r'</table>',
+                ))
+
+        tabular_latex = '\n'.join((
+                r'\begin{tabular}{p{0.5\linewidth}p{0.5\linewidth}}',
+
+                r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                    r'foo} & ' + \
+                    r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                    r'bar} \\',
+
+                r'\end{tabular}',
+                r''
+                ))
+
+        self.assertEqual(self.convert(tabular_html), tabular_latex)
+
+    def test_longtable_environment_depends_on_table_size(self):
+        # For big tables we use the "tabular" environment, allowing a table
+        # to be splitted up over multiple pages, but for short tables we use
+        # the longtable environment.
+
+        longtable_html = '\n'.join((
+                r'<table>',
+                40 * r'<tr><td>foo</td></tr>',
+                r'</table>',
+                ))
+
+        longtable_latex = '\n'.join((
+                r'\begin{longtable}{l}',
+                (40 * '\\multicolumn{1}{l}{foo} \\\\\n').strip(),
+                r'\end{longtable}',
+                r''
+                ))
+
+        self.assertEqual(self.convert(longtable_html, longtable=True),
+                         longtable_latex)
+
+    def test_longtable_environment_enforcable_by_cssclass(self):
+        longtable_html = '\n'.join((
+                r'<table class="page-break">',
+                r'  <tr>',
+                r'    <td width="50%">foo</td>',
+                r'    <td width="50%">bar</td>',
+                r'  </tr>',
+                r'</table>',
+                ))
+
+        longtable_latex = '\n'.join((
+                r'\begin{longtable}{p{0.5\linewidth}p{0.5\linewidth}}',
+
+                r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                    r'foo} & ' + \
+                    r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                    r'bar} \\',
+
+                r'\end{longtable}',
+                r''
+                ))
+
+        self.assertEqual(self.convert(longtable_html, longtable=True),
+                         longtable_latex)
+
+    def test_tabular_environment_enforcable_by_cssclass(self):
+        tabular_html = '\n'.join((
+                r'<table class="no-page-break">',
+                20 * r'<tr><td>foo</td></tr>',
+                r'</table>',
+                ))
+
+        tabular_latex = '\n'.join((
+                r'\begin{tabular}{l}',
+                (20 * '\\multicolumn{1}{l}{foo} \\\\\n').strip(),
+                r'\end{tabular}',
+                r''
+                ))
+
+        self.assertEqual(self.convert(tabular_html), tabular_latex)
+
+    def test_longtable_uses_endhead_for_ths(self):
+        html = '\n'.join((
+                r'<table>',
+                r'<tr><th>heading</th></tr>',
+                20 * r'<tr><td>content</td></tr>',
+                r'</table>'))
+
+        latex = self.convert(html, longtable=True)
+
+        self.assertIn(r'\endhead', latex)
+
+    def test_longtable_uses_endhead_for_thead_cells(self):
+        html = '\n'.join((
+                r'<table>',
+                r' <thead>'
+                r'  <tr><td>heading1</td></tr>',
+                r'  <tr><td>heading2</td></tr>',
+                r' </thead>',
+                r' <tbody>',
+                20 * r'<tr><td>content</td></tr>',
+                r' </tbody>',
+                r'</table>'))
+
+        latex = self.convert(html, longtable=True)
+
+        self.assertIn(r'\endhead', latex)
+
+    def test_tabular_uses_no_endhead(self):
+        html = '\n'.join((
+                r'<table class="no-page-break">',
+                r' <thead>',
+                r'  <tr><th>heading</th></tr>',
+                r' </thead>',
+                r' <tbody>',
+                r'  <tr><td>content</td></tr>',
+                r' </tbody>',
+                r'</table>'))
+
+        latex = self.convert(html)
+
+        self.assertNotIn(r'\endhead', latex)
 
 
 class TestLatexWidth(TestCase):
