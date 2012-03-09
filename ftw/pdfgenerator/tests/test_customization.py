@@ -7,12 +7,13 @@ from ftw.pdfgenerator.interfaces import ICustomizableLayout
 from ftw.pdfgenerator.interfaces import ILayoutCustomization
 from ftw.pdfgenerator.templating import BaseTemplating
 from ftw.pdfgenerator.testing import PDFGENERATOR_ZCML_LAYER
+from ftw.pdfgenerator.tests.example import ExampleCustomizableLayout
+from ftw.pdfgenerator.tests.example import ExampleCustomization
 from plone.mocktestcase import MockTestCase
 from zope.component import adaptedBy
 from zope.interface import Interface
 from zope.interface.verify import verifyClass
 import os.path
-
 
 
 testdata_basedir = os.path.join(os.path.dirname(__file__),
@@ -28,18 +29,19 @@ class TestLayoutCustomization(MockTestCase):
 
     layer = PDFGENERATOR_ZCML_LAYER
 
-    def setUp(self):
-        self.context = self.create_dummy()
-        self.request = self.create_dummy()
-        self.layout = self.create_dummy(
-            get_template_directories=lambda: [])
+    def setUp(self, context=None, request=None, builder=None):
+        self.context = context or self.create_dummy()
+        self.request = request or self.create_dummy()
+        self.builder = builder or self.create_dummy()
+        self.layout = ExampleCustomizableLayout(
+            self.context, self.request, self.builder)
 
     def test_implements_interface(self):
         self.assertTrue(ILayoutCustomization.implementedBy(
                 self.adapter_class))
         verifyClass(ILayoutCustomization, self.adapter_class)
 
-    def test_adapt_correctly(self):
+    def test_adapts_correct(self):
         descriminators = adaptedBy(self.adapter_class)
 
         self.assertEqual(len(descriminators), 3)
@@ -87,10 +89,18 @@ class TestLayoutCustomization(MockTestCase):
         self.assertIn(templates_bar, directories)
 
 
-class ExampleCustomization(LayoutCustomization):
-    template_directories = [templates_baz]
-    template_name = 'example_customization.tex'
-
-
 class TestExampleCustomization(TestLayoutCustomization):
     adapter_class = ExampleCustomization
+
+    def test_add_template_file_from_customization_directory(self):
+        layout = self.mocker.mock()
+        self.expect(layout.get_template_directories()).result(
+            [templates_foo])
+        self.expect(layout.template_name).result('welcome.tex')
+
+        self.expect(layout.builder.add_file('three.txt', data='bar three\n'))
+
+        self.replay()
+
+        adapter = ExampleCustomization(object(), object(), layout)
+        adapter.add_raw_template_file('three.txt')

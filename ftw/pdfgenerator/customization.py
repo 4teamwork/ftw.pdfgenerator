@@ -31,6 +31,21 @@ class LayoutCustomization(MakoTemplating):
         return args
 
     def get_template_directories(self):
-        dirs = self.layout.get_template_directories()
-        dirs += super(LayoutCustomization, self).get_template_directories()
+        dirs = super(LayoutCustomization, self).get_template_directories()
+        dirs += self.layout.get_template_directories()
         return dirs
+
+    @property
+    def template_lookup(self):
+        if getattr(self, '_mako_template_lookup', None) is None:
+            lookup = super(LayoutCustomization, self).template_lookup
+            lookup.put_template(
+                'original_layout',
+                lookup.get_template(self.layout.template_name))
+
+        return super(LayoutCustomization, self).template_lookup
+
+    def add_raw_template_file(self, name):
+        """Adds the contents of a file to the builder without parsing it.
+        """
+        self.layout.builder.add_file(name, data=self.get_raw_template(name))

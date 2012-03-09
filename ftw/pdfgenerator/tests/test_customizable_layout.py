@@ -1,0 +1,114 @@
+from ftw.pdfgenerator.customization import LayoutCustomization
+from ftw.pdfgenerator.tests.example import ExampleCustomizableLayout
+from ftw.pdfgenerator.interfaces import ICustomizableLayout
+from ftw.pdfgenerator.interfaces import ILayoutCustomization
+from ftw.pdfgenerator.layout.customizable import CustomizableLayout
+from ftw.pdfgenerator.testing import PDFGENERATOR_ZCML_LAYER
+from plone.mocktestcase import MockTestCase
+from zope.interface import Interface
+from zope.interface.verify import verifyClass
+import os.path
+
+
+testdata_basedir = os.path.join(os.path.dirname(__file__),
+                                'templates')
+templates_bar = os.path.join(testdata_basedir, 'bar')
+templates_baz = os.path.join(testdata_basedir, 'baz')
+
+
+class TestCustomizableLayout(MockTestCase):
+
+    layout_class = CustomizableLayout
+
+    layer = PDFGENERATOR_ZCML_LAYER
+
+    def test_implements_interface(self):
+        self.assertTrue(ICustomizableLayout.implementedBy(self.layout_class))
+        verifyClass(ICustomizableLayout, self.layout_class)
+
+    def test_template_defines_slots(self):
+        layout = self.layout_class(object(), object(), object())
+
+        if not layout.template_name:
+            return
+
+        required_slots = [
+            'documentclass',
+            'usePackages',
+            'beneathPackages',
+            'aboveDocument',
+            'documentTop',
+            'documentBottom',
+            ]
+
+        template = layout.get_raw_template(layout.template_name)
+        self.assertNotEqual(template, None)
+
+        for slot in required_slots:
+            self.assertIn('<%%block name="%s"' % slot, template)
+
+    def test_logo_in_template(self):
+        layout = self.layout_class(object(), object(), object())
+
+        if not layout.template_name:
+            return
+
+        template = layout.get_raw_template(layout.template_name)
+        self.assertNotEqual(template, None)
+        self.assertIn('${logo}', template)
+
+    def test_rendering_without_customization(self):
+        class Layout(self.layout_class):
+            template_directories = [templates_baz]
+            template_name = 'example_layout.tex'
+
+        layout = Layout(object(), object(), object())
+        latex = layout.render_latex('CONTENT')
+
+        self.assertIn(r'\begin{document}', latex)
+        self.assertNotIn('my branding', latex)
+
+    def test_rendering_with_customization_and_template(self):
+        class Layout(self.layout_class):
+            template_directories = [templates_baz]
+            template_name = 'example_layout.tex'
+
+        class Customization(LayoutCustomization):
+            template_directories = [templates_bar]
+            template_name = 'example_customization.tex'
+
+        self.mock_adapter(Customization, ILayoutCustomization,
+                          (Interface, Interface, Interface))
+
+        layout = Layout(object(), object(), object())
+        latex = layout.render_latex('CONTENT')
+
+        self.assertIn(r'\begin{document}', latex)
+        self.assertIn('my branding', latex)
+
+    def test_rendering_with_customization_without_template(self):
+        class Layout(self.layout_class):
+            template_directories = [templates_baz]
+            template_name = 'example_layout.tex'
+
+        class Customization(LayoutCustomization):
+            template_directories = [templates_bar]
+            template_name = None
+
+            def get_render_arguments(self, args):
+                args['logo'] = 'THE-LOGO'
+                return args
+
+        self.mock_adapter(Customization, ILayoutCustomization,
+                          (Interface, Interface, Interface))
+
+        layout = Layout(object(), object(), object())
+        latex = layout.render_latex('CONTENT')
+
+        self.assertIn(r'\begin{document}', latex)
+        self.assertNotIn('my branding', latex)
+        self.assertIn('THE-LOGO', latex)
+
+
+class TestExampleCustomizableLayout(TestCustomizableLayout):
+    layout_class = ExampleCustomizableLayout
