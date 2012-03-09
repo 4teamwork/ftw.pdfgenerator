@@ -100,6 +100,9 @@ class TestCustomizableLayout(MockTestCase):
             template_directories = [templates_bar]
             template_name = None
 
+            def before_render_hook(self):
+                self.layout.use_package('otherpkg')
+
             def get_render_arguments(self, args):
                 args['logo'] = 'THE-LOGO'
                 return args
@@ -113,6 +116,7 @@ class TestCustomizableLayout(MockTestCase):
         self.assertIn(r'\begin{document}', latex)
         self.assertNotIn('my branding', latex)
         self.assertIn('THE-LOGO', latex)
+        self.assertIn(r'\usepackage{otherpkg}', latex)
 
 
 class TestExampleCustomizableLayout(TestCustomizableLayout):

@@ -21,6 +21,10 @@ class CustomizableLayout(MakoLayoutBase):
             return self.render_template(self.template_name, **args)
 
         customization.before_render_hook()
+
+        # we need to re-generate the packages, since the before_render_hook
+        # may have changed the packages.
+        args['packages'] = self.get_packages_latex()
         args = customization.get_render_arguments(args)
 
         if not customization.template_name:
