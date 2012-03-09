@@ -61,15 +61,15 @@ easily define a new layout using the `mako`_ templating engine
 
     >>> from example.conference.session import ISession
     >>> from ftw.pdfgenerator.interfaces import IBuilder
-    >>> from ftw.pdfgenerator.interfaces import ILaTeXLayout
-    >>> from ftw.pdfgenerator.layout.makolayout import MakoLayoutBase
+    >>> from ftw.pdfgenerator.interfaces import ICustomizableLayout
+    >>> from ftw.pdfgenerator.layout.customizable import CustomizableLayout
     >>> from zope.component import adapts
     >>> from zope.interface import Interface
     >>> from zope.interface import implements
 
     >>> class SessionLayout(MakoLayoutBase):
     ...     adapts(ISession, Interface, IBuilder)
-    ...     implements(ILaTeXLayout)
+    ...     implements(ICustomizableLayout)
     ...
     ...     template_directories = ['session_templates']
     ...     template_name = 'layout.tex'
@@ -99,17 +99,35 @@ Create a template as defined in ``SessionLayout.template_name``
 
 ::
 
-    >>> <%block name="documentclass">
-    ...   \documentclass[a4paper,10pt]{article}
-    ... </%block>
-    ...
-    ... <%block name="usePackages">
-    ...  ${packages}
-    ... </%block>
-    ...
-    ... \begin{document}
-    ... ${content}
-    ... \end{document}
+    <%block name="documentclass">
+    \documentclass[a4paper,10pt]{article}
+    </%block>
+
+    <%block name="usePackages">
+      ${packages}
+    </%block>
+
+    <%block name="beneathPackages">
+    </%block>
+
+
+    <%block name="aboveDocument">
+    </%block>
+
+    \begin{document}
+
+    <%block name="documentTop">
+      % if logo:
+        ${logo}
+      % endif
+    </%block>
+
+    ${content}
+
+    <%block name="documentBottom">
+    </%block>
+
+    \end{document}
 
 
 There are more methods on the layout, see the definition in
@@ -166,11 +184,11 @@ Create a template with the name defined in the class
 
 ::
 
-    >>> \section*{${title}}
-    ... % if description:
-    ...   \small ${description}
-    ... % endif
-    ... \normalsize ${details}
+    \section*{${title}}
+    % if description:
+      \small ${description}
+    % endif
+    \normalsize ${details}
 
 
 Generating a PDF
@@ -202,6 +220,54 @@ The converter can be used:
 It uses regular expressions for the simple conversions and python
 subconverters for the more complicated conversions. The converter is heavily
 customizable.
+
+
+Customizable layouts
+--------------------
+
+When using multiple, independent addon packages using ``ftw.pdfgenerator``,
+every package may implement a new, specific layout. This can be painful when
+there is a need to customize all layouts and add a logo image for example.
+
+For making that easier all customizable layouts can be customized with one
+single adapter. This only works for layouts subclassing
+``ftw.pdfgenerator.layout.customizable.CustomizableLayout``. Those layouts
+need to follow certain concepts and provide inheritable blocks in the `mako`_
+template. Ensure you follow the standards by subclassing and running the
+tests from
+``ftw.pdfgenerator.tests.test_customizable_layout.TestCustomizableLayout``.
+
+Implementing customization adapter is very simple when customizable layouts
+are used. For example we change the logo image (which is at
+``custom/mylogo.png``):
+
+::
+
+    >>> from ftw.pdfgenerator.customization import LayoutCustomization
+    >>> from ftw.pdfgenerator.interfaces import ILayoutCustomization
+    >>> from zope.interface import implements
+    >>>
+    >>> class MyCustomization(LayoutCustomization):
+    ...     implements(ILayoutCustomization)
+    ...
+    ...     template_directories = ['custom']
+    ...     template_name = 'layout_customization.tex'
+    ...
+    ...     def get_render_arguments(self, args):
+    ...         self.add_raw_template_file('mylogo.png')
+    ...         args['logo'] = r'\includegraphics{mylogo.png}'
+
+It is also possible to change the template and fill predefined slots
+(example: ``custom/layout_customization.tex``):
+
+    <%inherit file="original_layout" />
+    <%block name="documentTop">
+      my branding
+    </%block>
+
+The layout customization adapter adapts `context`, `request` and the original
+`layout`.
+
 
 
 Links
