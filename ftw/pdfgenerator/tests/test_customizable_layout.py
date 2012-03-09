@@ -22,12 +22,17 @@ class TestCustomizableLayout(MockTestCase):
 
     layer = PDFGENERATOR_ZCML_LAYER
 
+    def setUp(self, context=None, request=None, builder=None):
+        self.context = context or self.create_dummy()
+        self.request = request or self.create_dummy()
+        self.builder = builder or self.create_dummy()
+
     def test_implements_interface(self):
         self.assertTrue(ICustomizableLayout.implementedBy(self.layout_class))
         verifyClass(ICustomizableLayout, self.layout_class)
 
     def test_template_defines_slots(self):
-        layout = self.layout_class(object(), object(), object())
+        layout = self.layout_class(self.context, self.request, self.builder)
 
         if not layout.template_name:
             return
@@ -48,7 +53,7 @@ class TestCustomizableLayout(MockTestCase):
             self.assertIn('<%%block name="%s"' % slot, template)
 
     def test_logo_in_template(self):
-        layout = self.layout_class(object(), object(), object())
+        layout = self.layout_class(self.context, self.request, self.builder)
 
         if not layout.template_name:
             return
@@ -62,7 +67,7 @@ class TestCustomizableLayout(MockTestCase):
             template_directories = [templates_baz]
             template_name = 'example_layout.tex'
 
-        layout = Layout(object(), object(), object())
+        layout = Layout(self.context, self.request, self.builder)
         latex = layout.render_latex('CONTENT')
 
         self.assertIn(r'\begin{document}', latex)
@@ -80,7 +85,7 @@ class TestCustomizableLayout(MockTestCase):
         self.mock_adapter(Customization, ILayoutCustomization,
                           (Interface, Interface, Interface))
 
-        layout = Layout(object(), object(), object())
+        layout = Layout(self.context, self.request, self.builder)
         latex = layout.render_latex('CONTENT')
 
         self.assertIn(r'\begin{document}', latex)
@@ -102,7 +107,7 @@ class TestCustomizableLayout(MockTestCase):
         self.mock_adapter(Customization, ILayoutCustomization,
                           (Interface, Interface, Interface))
 
-        layout = Layout(object(), object(), object())
+        layout = Layout(self.context, self.request, self.builder)
         latex = layout.render_latex('CONTENT')
 
         self.assertIn(r'\begin{document}', latex)
