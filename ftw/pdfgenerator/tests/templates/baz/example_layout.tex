@@ -1,0 +1,29 @@
+<%block name="documentclass">
+\documentclass[a4paper,10pt]{article}
+</%block>
+
+<%block name="usePackages">
+  ${packages}
+</%block>
+
+<%block name="beneathPackages">
+</%block>
+
+
+<%block name="aboveDocument">
+</%block>
+
+\begin{document}
+
+<%block name="documentTop">
+  % if logo:
+    ${logo}
+  % endif
+</%block>
+
+${content}
+
+<%block name="documentBottom">
+</%block>
+
+\end{document}

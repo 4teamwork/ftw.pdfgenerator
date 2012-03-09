@@ -166,6 +166,24 @@ class ILaTeXLayout(Interface):
         """
 
 
+class ICustomizableLayout(ILaTeXLayout):
+    """Marks a mako layout as customizable. The template of a customizable
+    layout has to insert ``${logo}`` somewhere, which may contain a
+    ``\includegraphics{}`` command.
+    It also has to define some mako blocks which can be filled by a
+    layout customization adapter:
+
+    ``documentclass``: contains the document class definition
+    ``usePackages``: contains the use_packages statements (usually
+    contains ${packages})
+    ``beneathPackages``: empty block beneath ``usePackages```
+    ``aboveDocument``: empty block right before ``\begin{document)``
+    ``documentTop``: empty block right after ``\begin{document}``
+    ``documentBottom``: empty block at the end of the document,
+    before ``\end{document}``
+    """
+
+
 class ITemplating(Interface):
     """The `ITemplating` interface is used for mixin classes enabling
     template support for any inheriting class.
@@ -201,6 +219,31 @@ class ITemplating(Interface):
 
     def render_template(filename, **kwargs):
         """Renders a template and returns the result.
+        """
+
+
+class ILayoutCustomization(ITemplating):
+    """Adapter interface for multi adapters adapting
+    ``context, request, layout``. This adapter allows us to customize
+    multiple distinct layouts defined by multiple packages without
+    customizing every single layout.
+
+    The adapter implements the ``ITemplating`` interface and has to inherit
+    from ``original_layout``, which is an alias for the original layout
+    template name.
+    """
+
+    def before_render_hook():
+        """This hook is called before rendering the template and can be used
+        for defining additional ``self.use_package()`` statements or other
+        customizations.
+        """
+
+    def get_render_arguments(args):
+        """With this method it is possible to add additional arguments passed
+        to the template. The ``args`` argument is a dict containing the
+        template arguments defined by the original layout template and my be
+        extended. The method should return the modified ``args`` dict.
         """
 
 

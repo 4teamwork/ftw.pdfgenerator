@@ -33,8 +33,10 @@ class MakoLayoutBase(BaseLayout, MakoTemplating):
         args['content'] = content_latex
         args['packages'] = self.get_packages_latex()
 
-        return self.render_template(self.template_name,
-                                    **args)
+        return self.render_layout_template(args)
+
+    def render_layout_template(self, args):
+        return self.render_template(self.template_name, **args)
 
     def get_render_arguments(self):
         """Returns a dict of arguments passed to the default template.
