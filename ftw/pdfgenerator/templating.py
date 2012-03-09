@@ -101,7 +101,6 @@ class MakoTemplating(BaseTemplating):
     def get_raw_template(self, name):
         """Returns the contents of a template file without parsing it.
         """
-        # XXX make faster!!
         uri = re.sub(r'^\/+', '', name)
         for dir_ in self.template_lookup.directories:
             srcfile = posixpath.normpath(posixpath.join(dir_, uri))
