@@ -260,13 +260,23 @@ class TestListConverter(SubconverterTestBase):
                 '<ul>',
                 '<li>foo</li>',
                 'bar',
-                '</ul>'))
+                '</ul>',
+                'baz',
+                '<dl>',
+                '<dt>foo</dt>',
+                '<dd>bar</dd>',
+                'baz',
+                '</dl>'))
 
         latex = '\n'.join((
                 r'\begin{itemize}',
                 r'\item foo',
                 r'bar',
                 r'\end{itemize}',
+                r' baz \begin{description}',
+                r'\item[foo] bar',
+                r'baz',
+                r'\end{description}',
                 r''))
 
         self.assertEqual(self.convert(html), latex)

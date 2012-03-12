@@ -237,7 +237,7 @@ class TestBuilder(MockTestCase):
 
         self.replay()
 
-        builder._build_pdf('The latex')
+        builder._build_pdf(u'The latex')
 
     def test_maximum_reruns(self):
         builder = getUtility(IBuilderFactory)()
