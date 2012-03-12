@@ -73,6 +73,9 @@ class TestLayoutCustomization(MockTestCase):
                       template)
 
     def test_get_template_directories_merges_layout_dirs(self):
+        # pylint: disable=W0223
+        # W0223: Method 'render_template' is abstract in
+        # class 'BaseTemplating' but is not overridden
         class Layout(BaseTemplating):
             template_directories = [templates_foo]
 

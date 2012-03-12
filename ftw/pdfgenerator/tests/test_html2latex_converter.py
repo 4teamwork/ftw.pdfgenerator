@@ -1,3 +1,7 @@
+# pylint: disable=W0212, W0201
+# W0212: Access to a protected member of a client class
+# W0201: Attribute defined outside __init__
+
 from ftw.pdfgenerator import interfaces
 from ftw.pdfgenerator.html2latex import converter
 from ftw.pdfgenerator.html2latex import wrapper
@@ -141,13 +145,15 @@ class TestBasePatternAware(TestCase):
              self.pattern1,
              DEFAULT_PLACEHOLDER])
 
-
     def test_register_subconverters(self):
         obj = converter.BasePatternAware([DEFAULT_PLACEHOLDER])
 
         class Foo(subconverter.SubConverter):
             pattern = 'foo'
             placeholder = DEFAULT_PLACEHOLDER
+
+            def __call__(self):
+                return ''
 
         obj.register_subconverters([Foo])
 

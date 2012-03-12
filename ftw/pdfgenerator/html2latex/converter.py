@@ -133,6 +133,7 @@ class HTML2LatexConvertRunner(BasePatternAware):
         You can use convert() on this instance, it will be proxied to the
         HTML2LatexConverter instance.
         """
+        BasePatternAware.__init__(self, patterns)
 
         if not interfaces.IHTML2LaTeXConverter.providedBy(converter):
             raise ValueError(
@@ -166,7 +167,7 @@ class HTML2LatexConvertRunner(BasePatternAware):
         # generate new id with same length
         id_chars = 'abcdefghijklmnopqrstuvwxyz0123456789'
         stop = False
-        id = ''
+        id_ = ''
         length = endPos - startPos
 
         # use keys with a length of at least 10 chars for making them
@@ -175,14 +176,14 @@ class HTML2LatexConvertRunner(BasePatternAware):
             length = 10
 
         while not stop:
-            id = ''.join([choice(id_chars) for i in range(length)])
-            if id not in self.lockers.keys() and id not in self.html:
+            id_ = ''.join([choice(id_chars) for i in range(length)])
+            if id_ not in self.lockers.keys() and id_ not in self.html:
                 stop = True
 
         # lock html (replace with id)
-        self.lockers[id] = self.html[startPos:endPos]
-        self.html = self.html[:startPos] + id + self.html[endPos:]
-        return id
+        self.lockers[id_] = self.html[startPos:endPos]
+        self.html = self.html[:startPos] + id_ + self.html[endPos:]
+        return id_
 
     def replace(self, startPos, endPos, text):
         """
@@ -211,9 +212,9 @@ class HTML2LatexConvertRunner(BasePatternAware):
         Unlocks previously locked HTML (see lockChars()). This method is
         automatically called by _convert() after converting HTML to Latex.
         """
-        for id in self.lockers.keys():
-            value = self.lockers[id]
-            self.html = self.html.replace(id, value)
+        for id_ in self.lockers.keys():
+            value = self.lockers[id_]
+            self.html = self.html.replace(id_, value)
 
     def convert(self, html, custom_patterns=None, custom_subconverters=None,
                 trim=True):

@@ -21,11 +21,10 @@ class PDFGeneratorZCMLLayer(Layer):
         self['configurationContext'] = zca.stackConfigurationContext(
             self.get('configurationContext'))
 
-        import ftw.pdfgenerator.tests
+        import ftw.pdfgenerator
         xmlconfig.file('test.zcml', ftw.pdfgenerator.tests,
                        context=self['configurationContext'])
 
-        import ftw.pdfgenerator
         xmlconfig.file('configure.zcml', ftw.pdfgenerator,
                        context=self['configurationContext'])
 

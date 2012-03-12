@@ -19,6 +19,8 @@ class BaseStandalonePDFView(ExportPDFView, MakoLayoutBase, MakoLaTeXView):
 
     def __init__(self, context, request):
         # call init on BrowserView, which is the superclass of ExportPDFView
+        # pylint: disable=E1003
+        # E1003: Bad first argument 'ExportPDFView' given to super class
         super(ExportPDFView, self).__init__(context, request)
 
         # initialize layout, but with an emty builder. It will be set

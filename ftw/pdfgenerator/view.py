@@ -17,6 +17,7 @@ class MakoLaTeXView(MakoTemplating):
     template_name = None
 
     def __init__(self, context, request, layout):
+        super(MakoLaTeXView, self).__init__()
         self.context = context
         self.request = request
         self.layout = layout

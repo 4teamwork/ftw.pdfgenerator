@@ -273,7 +273,8 @@ class TestBaseLayout(MockTestCase):
         self.assertEqual(layout.get_converter(), layout.get_converter())
 
     def test_get_view_rendering(self):
-        class IFoo(Interface): pass
+        class IFoo(Interface):
+            pass
 
         foo = self.create_dummy()
         alsoProvides(foo, IFoo)

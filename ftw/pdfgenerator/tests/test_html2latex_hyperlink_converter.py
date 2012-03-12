@@ -1,3 +1,7 @@
+# pylint: disable=W0212, W0201
+# W0212: Access to a protected member of a client class
+# W0201: Attribute defined outside __init__
+
 from Products import CMFCore
 from ftw.pdfgenerator.html2latex.converter import HTML2LatexConverter
 from mocker import ANY
@@ -129,7 +133,7 @@ class TestHyperlinkConverter(MockTestCase):
 
     def test_label_is_converted(self):
         self.replay()
-        html ='<a href="http://foo">foo <b>bar</b> baz</a>'
+        html = '<a href="http://foo">foo <b>bar</b> baz</a>'
         latex = r'\href{http://foo}{foo {\bf bar} baz}'
         self.assertEqual(self.convert(html), latex)
 
