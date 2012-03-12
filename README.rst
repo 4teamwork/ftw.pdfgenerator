@@ -84,14 +84,14 @@ Register the layout with zcml (example: ``configure.zcml``):
 
 ::
 
-    >>> <configure
-    ...     xmlns="http://namespaces.zope.org/zope"
-    ...     xmlns:browser="http://namespaces.zope.org/browser">
-    ...
-    ...     <adapter factory=".layout.SessionLayout"
-    ...              provides="ftw.pdfgenerator.interfaces.ILaTeXLayout" />
-    ...
-    ... </configure>
+    <configure
+        xmlns="http://namespaces.zope.org/zope"
+        xmlns:browser="http://namespaces.zope.org/browser">
+
+        <adapter factory=".layout.SessionLayout"
+                 provides="ftw.pdfgenerator.interfaces.ILaTeXLayout" />
+
+    </configure>
 
 
 Create a template as defined in ``SessionLayout.template_name``
@@ -169,14 +169,14 @@ Register the view with zcml (example: ``configure.zcml``):
 
 ::
 
-    >>> <configure
-    ...     xmlns="http://namespaces.zope.org/zope"
-    ...     xmlns:browser="http://namespaces.zope.org/browser">
-    ...
-    ...     <adapter factory=".views.SessionLaTeXView"
-    ...              provides="ftw.pdfgenerator.interfaces.ILaTeXView" />
-    ...
-    ... </configure>
+    <configure
+        xmlns="http://namespaces.zope.org/zope"
+        xmlns:browser="http://namespaces.zope.org/browser">
+
+        <adapter factory=".views.SessionLaTeXView"
+                 provides="ftw.pdfgenerator.interfaces.ILaTeXView" />
+
+    </configure>
 
 
 Create a template with the name defined in the class
@@ -238,7 +238,7 @@ tests from
 ``ftw.pdfgenerator.tests.test_customizable_layout.TestCustomizableLayout``.
 
 Implementing customization adapter is very simple when customizable layouts
-are used. For example we change the logo image (which is at
+are used. For example we change the logo image (assume the logo is at
 ``custom/mylogo.png``):
 
 ::
@@ -253,20 +253,26 @@ are used. For example we change the logo image (which is at
     ...     template_directories = ['custom']
     ...     template_name = 'layout_customization.tex'
     ...
-    ...     def get_render_arguments(self, args):
+    ...     def before_render_hook(self):
     ...         self.add_raw_template_file('mylogo.png')
+    ...         self.layout.use_package('graphicx')
+    ...
+    ...     def get_render_arguments(self, args):
     ...         args['logo'] = r'\includegraphics{mylogo.png}'
+    ...         return args
 
 It is also possible to change the template and fill predefined slots
 (example: ``custom/layout_customization.tex``):
+
+::
 
     <%inherit file="original_layout" />
     <%block name="documentTop">
       my branding
     </%block>
 
-The layout customization adapter adapts `context`, `request` and the original
-`layout`.
+The layout customization adapter adapts ``context``, ``request`` and the original
+``layout``.
 
 
 
