@@ -28,10 +28,12 @@ class TestCustomizableLayout(MockTestCase):
         self.builder = builder or self.create_dummy()
 
     def test_implements_interface(self):
+        self.replay()
         self.assertTrue(ICustomizableLayout.implementedBy(self.layout_class))
         verifyClass(ICustomizableLayout, self.layout_class)
 
     def test_template_defines_slots(self):
+        self.replay()
         layout = self.layout_class(self.context, self.request, self.builder)
 
         if not layout.template_name:
@@ -53,6 +55,7 @@ class TestCustomizableLayout(MockTestCase):
             self.assertIn('<%%block name="%s"' % slot, template)
 
     def test_logo_in_template(self):
+        self.replay()
         layout = self.layout_class(self.context, self.request, self.builder)
 
         if not layout.template_name:
@@ -63,6 +66,7 @@ class TestCustomizableLayout(MockTestCase):
         self.assertIn('${logo}', template)
 
     def test_rendering_without_customization(self):
+        self.replay()
         class Layout(self.layout_class):
             template_directories = [templates_baz]
             template_name = 'example_layout.tex'
@@ -74,6 +78,7 @@ class TestCustomizableLayout(MockTestCase):
         self.assertNotIn('my branding', latex)
 
     def test_rendering_with_customization_and_template(self):
+        self.replay()
         class Layout(self.layout_class):
             template_directories = [templates_baz]
             template_name = 'example_layout.tex'
@@ -92,6 +97,7 @@ class TestCustomizableLayout(MockTestCase):
         self.assertIn('my branding', latex)
 
     def test_rendering_with_customization_without_template(self):
+        self.replay()
         class Layout(self.layout_class):
             template_directories = [templates_baz]
             template_name = 'example_layout.tex'
