@@ -12,17 +12,14 @@ class TestTableConverter(MockTestCase):
             count = kwargs['count']
             del kwargs['count']
 
-        if 'longtable' in kwargs:
-            longtable = kwargs['longtable']
-            del kwargs['longtable']
-        else:
-            longtable = False
-
         layout = self.mocker.mock()
-        if longtable:
-            self.expect(layout.use_package('longtable')).count(count)
         self.expect(layout.use_package('multirow')).count(count)
         self.expect(layout.use_package('multicol')).count(count)
+
+        if 'use_packages' in kwargs:
+            for pkg in kwargs['use_packages']:
+                self.expect(layout.use_package(pkg)).count(count)
+            del kwargs['use_packages']
 
         self.replay()
 
@@ -538,7 +535,8 @@ class TestTableConverter(MockTestCase):
                 r''
                 ))
 
-        self.assertEqual(self.convert(longtable_html, longtable=True),
+        self.assertEqual(self.convert(longtable_html,
+                                      use_packages=['longtable']),
                          longtable_latex)
 
     def test_longtable_environment_enforcable_by_cssclass(self):
@@ -563,7 +561,8 @@ class TestTableConverter(MockTestCase):
                 r''
                 ))
 
-        self.assertEqual(self.convert(longtable_html, longtable=True),
+        self.assertEqual(self.convert(longtable_html,
+                                      use_packages=['longtable']),
                          longtable_latex)
 
     def test_tabular_environment_enforcable_by_cssclass(self):
@@ -589,7 +588,7 @@ class TestTableConverter(MockTestCase):
                 20 * r'<tr><td>content</td></tr>',
                 r'</table>'))
 
-        latex = self.convert(html, longtable=True)
+        latex = self.convert(html, use_packages=['longtable'])
 
         self.assertIn(r'\endhead', latex)
 
@@ -605,7 +604,7 @@ class TestTableConverter(MockTestCase):
                 r' </tbody>',
                 r'</table>'))
 
-        latex = self.convert(html, longtable=True)
+        latex = self.convert(html, use_packages=['longtable'])
 
         self.assertIn(r'\endhead', latex)
 
@@ -798,6 +797,152 @@ class TestTableConverter(MockTestCase):
                 ))
 
         self.assertEqual(self.convert(html, count=2), latex)
+
+    def test_indent2_class(self):
+        html = '\n'.join((
+                r'<table>',
+                r'  <tr>',
+                r'    <td width="50%" class="indent2">foo</td>',
+                r'    <td width="50%">bar</td>',
+                r'  </tr>',
+                r'</table>',
+                ))
+
+        latex = '\n'.join((
+                r'\begin{tabular}{p{0.5\linewidth}p{0.5\linewidth}}',
+
+                r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                    r'\hangindent 0.2cm\hspace{0.2cm} foo} & ' + \
+                    r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                    r'bar} \\',
+
+                r'\end{tabular}',
+                r''
+                ))
+
+        self.assertEqual(self.convert(html), latex)
+
+    def test_indent10_class(self):
+        html = '\n'.join((
+                r'<table>',
+                r'  <tr>',
+                r'    <td width="50%" class="indent10">foo</td>',
+                r'    <td width="50%">bar</td>',
+                r'  </tr>',
+                r'</table>',
+                ))
+
+        latex = '\n'.join((
+                r'\begin{tabular}{p{0.5\linewidth}p{0.5\linewidth}}',
+
+                r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                    r'\hangindent 1cm\hspace{1cm} foo} & ' + \
+                    r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                    r'bar} \\',
+
+                r'\end{tabular}',
+                r''
+                ))
+
+        self.assertEqual(self.convert(html), latex)
+
+    def test_bold_class(self):
+        html = '\n'.join((
+                r'<table>',
+                r'  <tr>',
+                r'    <td width="50%" class="bold">foo</td>',
+                r'    <td width="50%" class="bold indent10">bar</td>',
+                r'  </tr>',
+                r'</table>',
+                ))
+
+        latex = '\n'.join((
+                r'\begin{tabular}{p{0.5\linewidth}p{0.5\linewidth}}',
+
+                r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                    r'\textbf{foo}} & ' + \
+                    r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                    r'\hangindent 1cm\hspace{1cm} \textbf{bar}} \\',
+
+                r'\end{tabular}',
+                r''
+                ))
+
+        self.assertEqual(self.convert(html), latex)
+
+    def test_grey_class(self):
+        html = '\n'.join((
+                r'<table>',
+                r'  <tr>',
+                r'    <td width="50%" class="grey">foo</td>',
+                r'    <td width="50%">bar</td>',
+                r'  </tr>',
+                r'</table>',
+                ))
+
+        latex = '\n'.join((
+                r'\begin{tabular}{p{0.5\linewidth}p{0.5\linewidth}}',
+
+                r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                    r'\textcolor{gray}{foo}} & ' + \
+                    r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                    r'bar} \\',
+
+                r'\end{tabular}',
+                r''
+                ))
+
+        self.assertEqual(self.convert(html, use_packages=['xcolor']),
+                         latex)
+
+    def test_footnotesize_class(self):
+        html = '\n'.join((
+                r'<table>',
+                r'  <tr>',
+                r'    <td width="50%" class="footnotesize">foo</td>',
+                r'    <td width="50%">bar</td>',
+                r'  </tr>',
+                r'</table>',
+                ))
+
+        latex = '\n'.join((
+                r'\begin{tabular}{p{0.5\linewidth}p{0.5\linewidth}}',
+
+                r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                    r'\footnotesize foo} & ' + \
+                    r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                    r'bar} \\',
+
+                r'\end{tabular}',
+                r''
+                ))
+
+        self.assertEqual(self.convert(html), latex)
+
+    def test_scriptsize_class(self):
+        html = '\n'.join((
+                r'<table>',
+                r'  <tr>',
+                r'    <td width="50%" class="scriptsize">foo</td>',
+                r'    <td width="50%">bar</td>',
+                r'  </tr>',
+                r'</table>',
+                ))
+
+        latex = '\n'.join((
+                r'\begin{tabular}{p{0.5\linewidth}p{0.5\linewidth}}',
+
+                r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                    r'\scriptsize foo} & ' + \
+                    r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                    r'bar} \\',
+
+                r'\end{tabular}',
+                r''
+                ))
+
+        self.assertEqual(self.convert(html), latex)
+
 
 class TestLatexWidth(TestCase):
 

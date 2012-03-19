@@ -4,6 +4,15 @@ Changelog
 1.0.3 (unreleased)
 ------------------
 
+- Add table converter css classes:
+  indent2 -> indent the content 0.2cm
+  indent10 -> indent the content 1cm
+  bold -> display content with bold font
+  grey -> Display cell content with grey text color.
+  footnotesize -> Display cell content with smaller font size.
+  scriptsize -> Display cell content with smaller font size.
+  [jone]
+
 - Listing converter: cleanup bad html in case when lists are nested without list items.
   FCKEditor somehow produces that sometimes.
   [jone]
