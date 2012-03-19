@@ -553,6 +553,8 @@ class LatexCell(object):
 
         if 'indent2' in self.get_css_classes():
             latex = r'\hangindent 0.2cm\hspace{0.2cm} %s' % latex
+        elif 'indent10' in self.get_css_classes():
+            latex = r'\hangindent 1cm\hspace{1cm} %s' % latex
 
         return latex
 

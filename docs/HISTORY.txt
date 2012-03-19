@@ -6,6 +6,7 @@ Changelog
 
 - Add table converter css classes:
   indent2 -> indent the content 0.2cm
+  indent10 -> indent the content 1cm
   [jone]
 
 - Listing converter: cleanup bad html in case when lists are nested without list items.

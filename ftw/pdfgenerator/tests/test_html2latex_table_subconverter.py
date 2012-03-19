@@ -823,6 +823,30 @@ class TestTableConverter(MockTestCase):
 
         self.assertEqual(self.convert(html), latex)
 
+    def test_indent10_class(self):
+        html = '\n'.join((
+                r'<table>',
+                r'  <tr>',
+                r'    <td width="50%" class="indent10">foo</td>',
+                r'    <td width="50%">bar</td>',
+                r'  </tr>',
+                r'</table>',
+                ))
+
+        latex = '\n'.join((
+                r'\begin{tabular}{p{0.5\linewidth}p{0.5\linewidth}}',
+
+                r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                    r'\hangindent 1cm\hspace{1cm} foo} & ' + \
+                    r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                    r'bar} \\',
+
+                r'\end{tabular}',
+                r''
+                ))
+
+        self.assertEqual(self.convert(html), latex)
+
 class TestLatexWidth(TestCase):
 
     def test_failing_convertion(self):

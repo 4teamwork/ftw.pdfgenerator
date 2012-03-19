@@ -333,6 +333,9 @@ CSS classes:
 ``indent2`` (<td>, <th>)
   Indent the content by 0.2 cm.
 
+``indent10`` (<td>, <th>)
+  Indent the content by 1 cm.
+
 
 
 Links
