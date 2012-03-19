@@ -24,4 +24,6 @@ class HyperlinkConverter(subconverter.SubConverter):
         self.replace_and_lock(self.latex_link(url, label))
 
     def latex_link(self, url, label):
-        return r'\href{%s}{%s}' % (url, label)
+        href = r'\href{%s}{%s}'
+        footnote = r'\footnote{%s}' % href % (url, url)
+        return href % (url, label + footnote)

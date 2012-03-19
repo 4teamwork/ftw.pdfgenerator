@@ -8,6 +8,9 @@ from mocker import ANY
 from plone.mocktestcase import MockTestCase
 
 
+LATEX_HREF = r'\href{%(url)s}{%(label)s\footnote{\href{%(url)s}{%(url)s}}}'
+
+
 class TestHyperlinkConverter(MockTestCase):
 
     def setUp(self):
@@ -47,69 +50,83 @@ class TestHyperlinkConverter(MockTestCase):
     def test_converts_urls(self):
         self.replay()
         html = '<a href="http://www.google.com/">guugel</a>'
-        latex = r'\href{http://www.google.com/}{guugel}'
+        latex = LATEX_HREF % {'label': 'guugel',
+                              'url': 'http://www.google.com/'}
         self.assertEqual(self.convert(html), latex)
 
     def test_relative_urls(self):
         self.replay()
         html = '<a href="./foo/bar">baz</a>'
-        latex = r'\href{http://nohost/plone/./foo/bar}{baz}'
+        latex = LATEX_HREF % {'label': 'baz',
+                              'url': 'http://nohost/plone/./foo/bar'}
         self.assertEqual(self.convert(html), latex)
 
         html = '<a href="foo/bar">baz</a>'
-        latex = r'\href{http://nohost/plone/foo/bar}{baz}'
+        latex = LATEX_HREF % {'label': 'baz',
+                              'url': 'http://nohost/plone/foo/bar'}
         self.assertEqual(self.convert(html), latex)
 
     def test_links_within_brackets(self):
         self.replay()
         html = 'foo (<a href="http://google.com">bar</a>) baz'
-        latex = r'foo (\href{http://google.com}{bar}) baz'
+        latex = r'foo (%s) baz' % LATEX_HREF % {
+            'label': 'bar',
+            'url': 'http://google.com'}
         self.assertEqual(self.convert(html), latex)
 
     def test_hyphens_in_links(self):
         self.replay()
         html = '<a href="http://my-page.com">foo</a>'
-        latex = r'\href{http://my-page.com}{foo}'
+        latex = LATEX_HREF % {'label': 'foo',
+                              'url': 'http://my-page.com'}
         self.assertEqual(self.convert(html), latex)
 
     def test_mailto_links(self):
         self.replay()
         html = '<a href="mailto:info@google.com">foo</a>'
-        latex = r'\href{mailto:info@google.com}{foo}'
+        latex = LATEX_HREF % {'label': 'foo',
+                              'url': 'mailto:info@google.com'}
         self.assertEqual(self.convert(html), latex)
 
     def test_spaces_in_links(self):
         self.replay()
         html = '<a href="http://foo/foo%20bar%20baz">foo</a>'
-        latex = r'\href{http://foo/foo\%20bar\%20baz}{foo}'
+        latex = LATEX_HREF % {'label': 'foo',
+                              'url': 'http://foo/foo\%20bar\%20baz'}
         self.assertEqual(self.convert(html), latex)
 
         html = '<a href="mailto:info@google.com?subject=foo%20bar%20baz">' +\
             'foo</a>'
-        latex = r'\href{mailto:info@google.com?subject=foo\%20bar\%20baz}' +\
-            r'{foo}'
+        latex = LATEX_HREF % {'label': 'foo',
+                              'url': 'mailto:info@google.com?subject=' + \
+                                  'foo\%20bar\%20baz'}
         self.assertEqual(self.convert(html), latex)
 
         html = '<a href="mailto:info@google.com?subject=foo bar baz">foo</a>'
-        latex = r'\href{mailto:info@google.com?subject=foo\%20bar\%20baz}' +\
-            r'{foo}'
+        latex = LATEX_HREF % {'label': 'foo',
+                              'url': 'mailto:info@google.com?subject=' + \
+                                  'foo\%20bar\%20baz'}
         self.assertEqual(self.convert(html), latex)
 
     def test_ampersand_in_links(self):
         self.replay()
         html = '<a href="http://host.com/?foo=1&amp;bar=2">baz</a>'
-        latex = r'\href{http://host.com/?foo=1&bar=2}{baz}'
+        latex = LATEX_HREF % {'label': 'baz',
+                              'url': 'http://host.com/?foo=1&bar=2'}
         self.assertEqual(self.convert(html), latex)
 
         html = '<a href="http://host.com/?foo=1&bar=2">baz</a>'
-        latex = r'\href{http://host.com/?foo=1&bar=2}{baz}'
+        latex = LATEX_HREF % {'label': 'baz',
+                              'url': 'http://host.com/?foo=1&bar=2'}
         self.assertEqual(self.convert(html), latex)
 
     def test_additional_parameters(self):
         self.replay()
         html = 'foo <a color="red" href="http://nohost/bar" class="link">' + \
             'bar</a> baz'
-        latex = r'foo \href{http://nohost/bar}{bar} baz'
+        latex = r'foo %s baz' % LATEX_HREF % {
+            'label': 'bar',
+            'url': 'http://nohost/bar'}
 
         self.assertEqual(self.convert(html), latex)
 
@@ -117,8 +134,17 @@ class TestHyperlinkConverter(MockTestCase):
         self.replay()
         html = '<a href="http://foo">foo</a> <a href="http://bar">bar</a> ' +\
             '<a href="http://baz">baz</a>'
-        latex = r'\href{http://foo}{foo} \href{http://bar}{bar} ' + \
-            r'\href{http://baz}{baz}'
+
+        link1 = LATEX_HREF % {'label': 'foo',
+                              'url': 'http://foo'}
+
+        link2 = LATEX_HREF % {'label': 'bar',
+                              'url': 'http://bar'}
+
+        link3 = LATEX_HREF % {'label': 'baz',
+                              'url': 'http://baz'}
+
+        latex = ' '.join((link1, link2, link3))
 
         self.assertEqual(self.convert(html), latex)
 
@@ -128,13 +154,15 @@ class TestHyperlinkConverter(MockTestCase):
 
         for protocol in protocols:
             html = '<a href="%s://foo/bar">baz</a>' % protocol
-            latex = r'\href{%s://foo/bar}{baz}' % protocol
+            latex = LATEX_HREF % {'label': 'baz',
+                                  'url': '%s://foo/bar' % protocol}
             self.assertEqual(self.convert(html), latex)
 
     def test_label_is_converted(self):
         self.replay()
         html = '<a href="http://foo">foo <b>bar</b> baz</a>'
-        latex = r'\href{http://foo}{foo {\bf bar} baz}'
+        latex = LATEX_HREF % {'label': r'foo {\bf bar} baz',
+                              'url': 'http://foo'}
         self.assertEqual(self.convert(html), latex)
 
     def test_removes_nonbreaking_spaces(self):
@@ -142,5 +170,6 @@ class TestHyperlinkConverter(MockTestCase):
         # Non break spaces are evil. In HTML they are usually not used the
         # way they should be used in LaTeX, so we replace them with spaces.
         html = u'<a href="http://host">Hello\xa0World</a>'.encode('utf8')
-        latex = r'\href{http://host}{Hello World}'
+        latex = LATEX_HREF % {'label': 'Hello World',
+                              'url': 'http://host'}
         self.assertEqual(self.convert(html), latex)
