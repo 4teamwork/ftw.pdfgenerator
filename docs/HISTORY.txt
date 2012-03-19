@@ -9,6 +9,7 @@ Changelog
   indent10 -> indent the content 1cm
   bold -> display content with bold font
   grey -> Display cell content with grey text color.
+  footnotesize -> Display cell content with smaller font size.
   [jone]
 
 - Listing converter: cleanup bad html in case when lists are nested without list items.

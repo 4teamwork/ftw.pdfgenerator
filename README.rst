@@ -342,6 +342,9 @@ CSS classes:
 ``grey`` (<td>, <th>)
   Display cell content with grey text color.
 
+``footnotesize`` (<td>, <th>)
+  Display cell content with smaller font size (``\footnotesize``).
+
 
 
 Links

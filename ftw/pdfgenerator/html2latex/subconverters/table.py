@@ -555,6 +555,9 @@ class LatexCell(object):
             self.converter.converter.layout.use_package('xcolor')
             latex = r'\textcolor{gray}{%s}' % latex
 
+        if 'footnotesize' in self.get_css_classes():
+            latex = r'\footnotesize %s' % latex
+
         if 'bold' in self.get_css_classes():
             latex = r'\textbf{%s}' % latex
 
