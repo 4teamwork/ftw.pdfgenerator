@@ -558,6 +558,9 @@ class LatexCell(object):
         if 'footnotesize' in self.get_css_classes():
             latex = r'\footnotesize %s' % latex
 
+        if 'scriptsize' in self.get_css_classes():
+            latex = r'\scriptsize %s' % latex
+
         if 'bold' in self.get_css_classes():
             latex = r'\textbf{%s}' % latex
 

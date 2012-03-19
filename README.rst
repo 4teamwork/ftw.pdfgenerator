@@ -345,6 +345,9 @@ CSS classes:
 ``footnotesize`` (<td>, <th>)
   Display cell content with smaller font size (``\footnotesize``).
 
+``scriptsize`` (<td>, <th>)
+  Display cell content with smaller font size (``\scriptsize``).
+
 
 
 Links
