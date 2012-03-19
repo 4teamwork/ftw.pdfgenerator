@@ -336,6 +336,9 @@ CSS classes:
 ``indent10`` (<td>, <th>)
   Indent the content by 1 cm.
 
+``bold`` (<td>, <th>)
+  Display cell contents in bold font.
+
 
 
 Links
