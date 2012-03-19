@@ -12,17 +12,14 @@ class TestTableConverter(MockTestCase):
             count = kwargs['count']
             del kwargs['count']
 
-        if 'longtable' in kwargs:
-            longtable = kwargs['longtable']
-            del kwargs['longtable']
-        else:
-            longtable = False
-
         layout = self.mocker.mock()
-        if longtable:
-            self.expect(layout.use_package('longtable')).count(count)
         self.expect(layout.use_package('multirow')).count(count)
         self.expect(layout.use_package('multicol')).count(count)
+
+        if 'use_packages' in kwargs:
+            for pkg in kwargs['use_packages']:
+                self.expect(layout.use_package(pkg)).count(count)
+            del kwargs['use_packages']
 
         self.replay()
 
@@ -538,7 +535,8 @@ class TestTableConverter(MockTestCase):
                 r''
                 ))
 
-        self.assertEqual(self.convert(longtable_html, longtable=True),
+        self.assertEqual(self.convert(longtable_html,
+                                      use_packages=['longtable']),
                          longtable_latex)
 
     def test_longtable_environment_enforcable_by_cssclass(self):
@@ -563,7 +561,8 @@ class TestTableConverter(MockTestCase):
                 r''
                 ))
 
-        self.assertEqual(self.convert(longtable_html, longtable=True),
+        self.assertEqual(self.convert(longtable_html,
+                                      use_packages=['longtable']),
                          longtable_latex)
 
     def test_tabular_environment_enforcable_by_cssclass(self):
@@ -589,7 +588,7 @@ class TestTableConverter(MockTestCase):
                 20 * r'<tr><td>content</td></tr>',
                 r'</table>'))
 
-        latex = self.convert(html, longtable=True)
+        latex = self.convert(html, use_packages=['longtable'])
 
         self.assertIn(r'\endhead', latex)
 
@@ -605,7 +604,7 @@ class TestTableConverter(MockTestCase):
                 r' </tbody>',
                 r'</table>'))
 
-        latex = self.convert(html, longtable=True)
+        latex = self.convert(html, use_packages=['longtable'])
 
         self.assertIn(r'\endhead', latex)
 
