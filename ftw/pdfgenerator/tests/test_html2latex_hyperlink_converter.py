@@ -30,6 +30,9 @@ class TestHyperlinkConverter(MockTestCase):
 
         self.convert = self.converter.convert
 
+        self.reference_catalog = self.mocker.mock(count=False)
+        self.mock_tool(self.reference_catalog, 'reference_catalog')
+
     def tearDown(self):
         if self._getToolByName_mock is not None:
             CMFCore.utils.getToolByName = self._ori_getToolByName
@@ -172,4 +175,16 @@ class TestHyperlinkConverter(MockTestCase):
         html = u'<a href="http://host">Hello\xa0World</a>'.encode('utf8')
         latex = LATEX_HREF % {'label': 'Hello World',
                               'url': 'http://host'}
+        self.assertEqual(self.convert(html), latex)
+
+    def test_resolveuid_links_are_resolved(self):
+        obj = self.context.stub()
+        self.expect(obj.absolute_url()).result('http://nohost/theobj')
+
+        self.expect(self.reference_catalog.lookupObject('THEUID')).result(obj)
+        self.replay()
+
+        html = '<a href="./resolveuid/THEUID">The Obj</a>'
+        latex = LATEX_HREF % {'label': 'The Obj',
+                              'url': 'http://nohost/theobj'}
         self.assertEqual(self.convert(html), latex)
