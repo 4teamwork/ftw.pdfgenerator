@@ -551,6 +551,10 @@ class LatexCell(object):
             if self.get_align() in mapping.keys():
                 latex = mapping[self.get_align()] + latex
 
+        if 'grey' in self.get_css_classes():
+            self.converter.converter.layout.use_package('xcolor')
+            latex = r'\textcolor{gray}{%s}' % latex
+
         if 'bold' in self.get_css_classes():
             latex = r'\textbf{%s}' % latex
 

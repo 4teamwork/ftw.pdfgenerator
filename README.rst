@@ -339,6 +339,9 @@ CSS classes:
 ``bold`` (<td>, <th>)
   Display cell contents in bold font.
 
+``grey`` (<td>, <th>)
+  Display cell content with grey text color.
+
 
 
 Links
