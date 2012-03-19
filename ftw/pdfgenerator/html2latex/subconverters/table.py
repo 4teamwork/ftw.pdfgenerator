@@ -550,6 +550,10 @@ class LatexCell(object):
 
             if self.get_align() in mapping.keys():
                 latex = mapping[self.get_align()] + latex
+
+        if 'indent2' in self.get_css_classes():
+            latex = r'\hangindent 0.2cm\hspace{0.2cm} %s' % latex
+
         return latex
 
     def is_head_cell(self):

@@ -330,6 +330,9 @@ CSS classes:
 ``center`` (<td>, <th>)
   Center the content of the cell.
 
+``indent2`` (<td>, <th>)
+  Indent the content by 0.2 cm.
+
 
 
 Links
