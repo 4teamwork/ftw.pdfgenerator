@@ -275,6 +275,62 @@ The layout customization adapter adapts ``context``, ``request`` and the origina
 ``layout``.
 
 
+Tables
+======
+
+``ftw.pdfgenerator`` is able to convert HTML-Tables to LaTeX. Since HTML and LaTeX
+have completely different presentation concepts the convertion is limitted.
+
+For getting the best results theese rules should be followed:
+
+- Define the width of every column. The table will be streched to the text width in
+  the defined proportions. Without defining the widths LaTeX is unable to insert
+  newlines dynamically.
+
+- Use relative widths (%).
+
+- Define table headings using ``<thead>`` for long tables which may be splitted over
+  multiple pages.
+
+CSS classes:
+
+``page-break`` (<table>)
+  Force the ``longtable`` environment, allowing LaTeX to split up the table over
+  multiple pages.
+
+``no-page-break`` (<table>)
+  Force the ``tabular`` environment, prohibiting LaTeX from splitting the table up
+  over multiple pages. If the table is longer than the page it is truncated - content
+  may be missing in this case.
+
+``border-grid`` / ``listing`` (<table>)
+  Display the table in a grid: every cell has a border on every side.
+
+``notListed`` (<table>)
+  When using a ``<caption>``, do not list the table in the list of tables.
+
+``border-left`` (<td>, <th>)
+  Display a border on the left side of the cell.
+
+``border-right`` (<td>, <th>)
+  Display a border on the right side of the cell.
+
+``border-top`` (<td>, <th>)
+  Display a border on the top side of the cell.
+
+``border-bottom`` (<td>, <th>)
+  Display a border on the bottom side of the cell.
+
+``right`` (<td>, <th>)
+  Right align the content of the cell.
+
+``left`` (<td>, <th>)
+  Left align the content of the cell.
+
+``center`` (<td>, <th>)
+  Center the content of the cell.
+
+
 
 Links
 =====
