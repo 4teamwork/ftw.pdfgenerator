@@ -4,7 +4,7 @@
 from ftw.pdfgenerator.interfaces import ILaTeXView, IRecursiveLaTeXView
 from ftw.pdfgenerator.layout.baselayout import BaseLayout
 from ftw.pdfgenerator.view import MakoLaTeXView, RecursiveLaTeXView
-from plone.mocktestcase import MockTestCase
+from ftw.testing import MockTestCase
 from zope.interface import Interface
 from zope.interface.verify import verifyClass
 import os

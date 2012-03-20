@@ -1,35 +1,24 @@
 from ftw.pdfgenerator.config import DefaultConfig
 from ftw.pdfgenerator.interfaces import IConfig
+from ftw.testing.layer import ComponentRegistryLayer
 from mocker import Mocker, expect
 from plone.testing import Layer
-from plone.testing import zca
 from zope.component import provideUtility
-from zope.configuration import xmlconfig
 import os
 import shutil
 import tempfile
 
 
-class PDFGeneratorZCMLLayer(Layer):
+class PDFGeneratorZCMLLayer(ComponentRegistryLayer):
     """A layer which only sets up the zcml, but does not start a zope
     instance.
     """
 
-    defaultBases = (zca.ZCML_DIRECTIVES,)
-
-    def testSetUp(self):
-        self['configurationContext'] = zca.stackConfigurationContext(
-            self.get('configurationContext'))
-
+    def setUp(self):
+        super(PDFGeneratorZCMLLayer, self).setUp()
         import ftw.pdfgenerator
-        xmlconfig.file('test.zcml', ftw.pdfgenerator.tests,
-                       context=self['configurationContext'])
-
-        xmlconfig.file('configure.zcml', ftw.pdfgenerator,
-                       context=self['configurationContext'])
-
-    def testTearDown(self):
-        del self['configurationContext']
+        self.load_zcml_file('test.zcml', ftw.pdfgenerator.tests)
+        self.load_zcml_file('configure.zcml', ftw.pdfgenerator)
 
 
 PDFGENERATOR_ZCML_LAYER = PDFGeneratorZCMLLayer()

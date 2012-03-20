@@ -8,7 +8,7 @@ from ftw.pdfgenerator.interfaces import ILaTeXLayout
 from ftw.pdfgenerator.interfaces import ILaTeXView
 from ftw.pdfgenerator.layout.baselayout import BaseLayout
 from ftw.pdfgenerator.testing import PDFGENERATOR_ZCML_LAYER
-from plone.mocktestcase import MockTestCase
+from ftw.testing import MockTestCase
 from zope.component import adaptedBy, provideAdapter
 from zope.interface import Interface, implements
 from zope.interface import alsoProvides, directlyProvides

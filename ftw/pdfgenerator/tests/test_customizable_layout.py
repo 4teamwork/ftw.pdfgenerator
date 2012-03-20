@@ -1,10 +1,10 @@
 from ftw.pdfgenerator.customization import LayoutCustomization
-from ftw.pdfgenerator.tests.example import ExampleCustomizableLayout
 from ftw.pdfgenerator.interfaces import ICustomizableLayout
 from ftw.pdfgenerator.interfaces import ILayoutCustomization
 from ftw.pdfgenerator.layout.customizable import CustomizableLayout
 from ftw.pdfgenerator.testing import PDFGENERATOR_ZCML_LAYER
-from plone.mocktestcase import MockTestCase
+from ftw.pdfgenerator.tests.example import ExampleCustomizableLayout
+from ftw.testing import MockTestCase
 from zope.interface import Interface
 from zope.interface.verify import verifyClass
 import os.path

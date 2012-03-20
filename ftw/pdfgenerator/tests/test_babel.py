@@ -1,5 +1,5 @@
 from ftw.pdfgenerator import babel
-from plone.mocktestcase import MockTestCase
+from ftw.testing import MockTestCase
 
 
 class TestBabel(MockTestCase):

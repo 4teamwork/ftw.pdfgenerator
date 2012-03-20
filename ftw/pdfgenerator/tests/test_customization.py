@@ -9,7 +9,7 @@ from ftw.pdfgenerator.templating import BaseTemplating
 from ftw.pdfgenerator.testing import PDFGENERATOR_ZCML_LAYER
 from ftw.pdfgenerator.tests.example import ExampleCustomizableLayout
 from ftw.pdfgenerator.tests.example import ExampleCustomization
-from plone.mocktestcase import MockTestCase
+from ftw.testing import MockTestCase
 from zope.component import adaptedBy
 from zope.interface import Interface
 from zope.interface.verify import verifyClass

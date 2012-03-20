@@ -6,8 +6,8 @@ from ftw.pdfgenerator.builder import Builder
 from ftw.pdfgenerator.exceptions import BuildTerminated, PDFBuildFailed
 from ftw.pdfgenerator.interfaces import IBuilder, IBuilderFactory
 from ftw.pdfgenerator.testing import PREDEFINED_BUILD_DIRECTORY_LAYER
+from ftw.testing import MockTestCase
 from mocker import MATCH, ANY
-from plone.mocktestcase import MockTestCase
 from zipfile import ZipFile
 from zope.component import getUtility
 from zope.interface.verify import verifyClass

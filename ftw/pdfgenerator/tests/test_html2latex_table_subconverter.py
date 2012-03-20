@@ -1,6 +1,6 @@
 from ftw.pdfgenerator.html2latex.converter import HTML2LatexConverter
 from ftw.pdfgenerator.html2latex.subconverters import table
-from plone.mocktestcase import MockTestCase
+from ftw.testing import MockTestCase
 from unittest2 import TestCase
 
 

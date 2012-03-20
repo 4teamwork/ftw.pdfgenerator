@@ -3,7 +3,7 @@ from ftw.pdfgenerator.html2latex.subconverter import SubConverter
 from ftw.pdfgenerator.html2latex.subconverters import htmlentities
 from ftw.pdfgenerator.html2latex.subconverters import listing
 from ftw.pdfgenerator.interfaces import ISubConverter
-from plone.mocktestcase import MockTestCase
+from ftw.testing import MockTestCase
 from unittest2 import TestCase
 from zope.interface.verify import verifyClass
 import re

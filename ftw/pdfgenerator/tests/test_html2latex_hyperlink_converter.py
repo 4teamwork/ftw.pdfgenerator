@@ -4,8 +4,8 @@
 
 from Products import CMFCore
 from ftw.pdfgenerator.html2latex.converter import HTML2LatexConverter
+from ftw.testing import MockTestCase
 from mocker import ANY
-from plone.mocktestcase import MockTestCase
 
 
 LATEX_HREF = r'\href{%(url)s}{%(label)s\footnote{\href{%(url)s}{%(url)s}}}'

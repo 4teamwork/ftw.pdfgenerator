@@ -2,8 +2,8 @@ from ftw.pdfgenerator import interfaces
 from ftw.pdfgenerator.browser.views import ExportPDFView
 from ftw.pdfgenerator.interfaces import DEBUG_MODE_SESSION_KEY
 from ftw.pdfgenerator.testing import PDFGENERATOR_ZCML_LAYER
+from ftw.testing import MockTestCase
 from mocker import ANY
-from plone.mocktestcase import MockTestCase
 from zope.component import getMultiAdapter
 from zope.interface import Interface, directlyProvides
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer

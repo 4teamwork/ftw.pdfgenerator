@@ -1,6 +1,6 @@
 from ftw.pdfgenerator.interfaces import ITemplating, ILaTeXLayout
 from ftw.pdfgenerator.layout.makolayout import MakoLayoutBase
-from plone.mocktestcase import MockTestCase
+from ftw.testing import MockTestCase
 from zope.interface.verify import verifyClass
 import os
 

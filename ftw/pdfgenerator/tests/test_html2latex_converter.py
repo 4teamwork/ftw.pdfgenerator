@@ -4,11 +4,11 @@
 
 from ftw.pdfgenerator import interfaces
 from ftw.pdfgenerator.html2latex import converter
-from ftw.pdfgenerator.html2latex import wrapper
 from ftw.pdfgenerator.html2latex import subconverter
+from ftw.pdfgenerator.html2latex import wrapper
 from ftw.pdfgenerator.layout.baselayout import BaseLayout
 from ftw.pdfgenerator.testing import PDFGENERATOR_ZCML_LAYER
-from plone.mocktestcase import MockTestCase
+from ftw.testing import MockTestCase
 from unittest2 import TestCase
 from zope.component import getMultiAdapter
 from zope.interface.verify import verifyClass
