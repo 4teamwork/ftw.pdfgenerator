@@ -226,10 +226,10 @@ Customizable layouts
 --------------------
 
 When using multiple, independent addon packages using ``ftw.pdfgenerator``,
-every package may implement a new, specific layout. This can be painful when
+every package may implement a new, specific layout. This can be painful if
 there is a need to customize all layouts and add a logo image for example.
 
-For making that easier all customizable layouts can be customized with one
+For making this easier all customizable layouts can be customized with one
 single adapter. This only works for layouts subclassing
 ``ftw.pdfgenerator.layout.customizable.CustomizableLayout``. Those layouts
 need to follow certain concepts and provide inheritable blocks in the `mako`_
