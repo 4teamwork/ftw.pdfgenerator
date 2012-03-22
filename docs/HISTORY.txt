@@ -4,7 +4,7 @@ Changelog
 1.0.3 (unreleased)
 ------------------
 
-- Heaviliy improve testing speed by using ``ftw.testing``.
+- Improve testing speed by using ``ftw.testing``.
   [jone]
 
 - Add table converter css classes:
