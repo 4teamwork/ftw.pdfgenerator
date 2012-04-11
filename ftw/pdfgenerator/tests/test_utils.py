@@ -3,7 +3,44 @@
 
 from ftw.pdfgenerator import utils
 from unittest2 import TestCase
+from ftw.testing import MockTestCase
+from zope.interface import Interface
+from ftw.pdfgenerator.utils import provide_request_layer
 
+
+class TestProvideRequestLayer(MockTestCase):
+
+    def test_add_one_interface(self):
+
+        request = self.create_dummy()
+        class ITestLayer(Interface): pass
+
+        provide_request_layer(request, ITestLayer)
+
+        self.assertTrue(ITestLayer.providedBy(request))
+
+    def test_add_list_with_interfaces(self):
+
+        request = self.create_dummy()
+        class ITestLayer(Interface): pass
+        class ITestLayer2(Interface): pass
+
+        provide_request_layer(request, [ITestLayer, ITestLayer2])
+
+        self.assertTrue(ITestLayer.providedBy(request))
+        self.assertTrue(ITestLayer2.providedBy(request))
+
+    def test_add_two_intefaces_separately(self):
+
+        request = self.create_dummy()
+        class ITestLayer(Interface): pass
+        class ITestLayer2(Interface): pass
+
+        provide_request_layer(request, ITestLayer)
+        provide_request_layer(request, ITestLayer2)
+
+        self.assertTrue(ITestLayer.providedBy(request))
+        self.assertTrue(ITestLayer2.providedBy(request))
 
 class TestBaseclasses(TestCase):
 
