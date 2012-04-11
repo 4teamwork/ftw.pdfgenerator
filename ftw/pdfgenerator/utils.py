@@ -1,6 +1,21 @@
 from htmlentitydefs import name2codepoint as n2cp
 from htmlentitydefs import codepoint2name as cp2n
 import re
+from zope.interface import directlyProvidedBy, directlyProvides
+
+
+def provide_request_layer(request, layer):
+    """ Add a layer interface on the request
+    """
+    layer = type(layer) == list and layer or [layer]
+    ifaces = layer + list(directlyProvidedBy(request))
+
+    # Since we allow multiple markers here, we can't use
+    # zope.publisher.browser.applySkin() since this filters out
+    # IBrowserSkinType interfaces, nor can we use alsoProvides(), since
+    # this appends the interface (in which case we end up *after* the
+    # default Plone/CMF skin)
+    directlyProvides(request, *ifaces)
 
 
 def baseclasses(cls, bases=None):
