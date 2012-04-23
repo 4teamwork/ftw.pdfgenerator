@@ -57,6 +57,7 @@ class ListConverter(subconverter.SubConverter):
         if nodes_latex and has_items:
             begin_env, end_env = self._create_environ(node)
 
+            latex.append('')
             latex.append(begin_env)
             latex.append(nodes_latex)
             latex.append(end_env)
