@@ -419,3 +419,45 @@ class TestListConverter(SubconverterTestBase):
                            r''))
 
         self.assertEqual(self.convert(html), latex)
+
+    def test_limit_list_nesting_to_4(self):
+        """LaTeX allows a maximum list nesting of 4, we need to flatten
+        further nested lists into level 4.
+        """
+        html = '\n'.join((
+                r'<ul><li>one</li>',
+                r'  <ul><li>two</li>',
+                r'    <ul><li>three</li>',
+                r'      <ul><li>four</li>',
+                r'        <ul><li>five</li>',
+                r'          <ul><li>six</li>',
+                r'          </ul>',
+                r'        </ul>',
+                r'      </ul>',
+                r'    </ul>',
+                r'  </ul>',
+                r'</ul>',
+                ))
+
+        latex = '\n'.join((
+                r'',
+                r'\begin{itemize}',
+                r'\item one',
+                r'',
+                r'\begin{itemize}',
+                r'\item two',
+                r'',
+                r'\begin{itemize}',
+                r'\item three',
+                r'',
+                r'\begin{itemize}',
+                r'\item four',
+                r'\item five',
+                r'\item six',
+                r'\end{itemize}',
+                r'\end{itemize}',
+                r'\end{itemize}',
+                r'\end{itemize}',
+                r'',
+                ))
+        self.assertEqual(self.convert(html), latex)

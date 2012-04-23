@@ -4,6 +4,9 @@ Changelog
 1.1.1 (unreleased)
 ------------------
 
+- Listing converter: limit nested lists to four levels since LaTeX has this limit.
+  [jone]
+
 - Listing converter: fix bug when nested lists are not within a item.
   [jone]
 

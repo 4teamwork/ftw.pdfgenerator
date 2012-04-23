@@ -4,6 +4,12 @@ from ftw.pdfgenerator.utils import html2xmlentities
 from xml.dom import minidom
 
 
+LIST_NESTING_LIMIT = 4
+"""LaTeX allows a maximum list nesting of 4. Deeper nesting will be flattened
+to the nesting limit so that the produced LaTeX code is still valid.
+"""
+
+
 class ListConverter(subconverter.SubConverter):
     """
     The ListConverter converts <ul> and <ol> lists
@@ -16,6 +22,10 @@ class ListConverter(subconverter.SubConverter):
         'ol': 'enumerate',
         'dl': 'description',
     }
+
+    def __init__(self, *args, **kwargs):
+        super(ListConverter, self).__init__(*args, **kwargs)
+        self.nesting_level = 0
 
     def __call__(self):
         html = self.get_html()
@@ -34,7 +44,7 @@ class ListConverter(subconverter.SubConverter):
             if node.nodeType == minidom.Node.ELEMENT_NODE and \
                     node.tagName.lower() in self.listing_tag_mapping.keys():
 
-                latex.extend(self._convert_listing_environment(node))
+                latex.extend(self.convert_listing_environment(node))
 
             else:
                 latex.append(self.converter.convert(node.toxml()))
@@ -42,32 +52,19 @@ class ListConverter(subconverter.SubConverter):
         latex.append('')
         self.replace_and_lock('\n'.join(latex))
 
-    def _convert_listing_environment(self, node):
+    def convert_listing_environment(self, node):
         """Converts a <ul>, <ol> or <dl> node to latex.
         """
-        latex = []
-
-        if node.tagName.lower() in ('ol', 'ul'):
-            nodes_latex = self._convert_listing_items(node)
-
-        else:
-            nodes_latex = self._convert_description_items(node)
-
         has_items = self._listing_has_items(node)
-        if nodes_latex and has_items:
-            begin_env, end_env = self._create_environ(node)
 
-            latex.append('')
-            latex.append(begin_env)
-            latex.append(nodes_latex)
-            latex.append(end_env)
-            return latex
-
-        elif nodes_latex:
-            return [nodes_latex]
+        if has_items and not self.nesting_level >= LIST_NESTING_LIMIT:
+            self.nesting_level += 1
+            return self._convert_reduced_listing_environment(node)
+            self.nesting_level -= 1
 
         else:
-            return []
+            return self._convert_reduced_listing_environment(
+                node, environment=False)
 
     def _listing_has_items(self, node):
         for elm in node.childNodes:
@@ -75,6 +72,26 @@ class ListConverter(subconverter.SubConverter):
                     elm.tagName.lower() in ('li', 'dt', 'dd'):
                 return True
         return False
+
+    def _convert_reduced_listing_environment(self, node, environment=True):
+        """Internal method should only be called
+        by ``convert_listing_environment``.
+        """
+        if node.tagName.lower() in ('ol', 'ul'):
+            nodes_latex = self._convert_listing_items(node)
+
+        else:
+            nodes_latex = self._convert_description_items(node)
+
+        if not nodes_latex:
+            return []
+
+        elif environment:
+            begin_env, end_env = self._create_environ(node)
+            return ['', begin_env, nodes_latex, end_env]
+
+        else:
+            return [nodes_latex]
 
     def _convert_listing_items(self, list_node):
         """Converts <li> nodes to LaTeX.
@@ -88,7 +105,7 @@ class ListConverter(subconverter.SubConverter):
 
             elif elm.nodeType == minidom.Node.ELEMENT_NODE and \
                     elm.tagName.lower() in self.listing_tag_mapping.keys():
-                latex.extend(self._convert_listing_environment(elm))
+                latex.extend(self.convert_listing_environment(elm))
 
             else:
                 content_latex = self._get_node_content(elm)
@@ -118,7 +135,7 @@ class ListConverter(subconverter.SubConverter):
 
             elif elm.nodeType == minidom.Node.ELEMENT_NODE and \
                     elm.tagName.lower() in self.listing_tag_mapping.keys():
-                latex.extend(self._convert_listing_environment(elm))
+                latex.extend(self.convert_listing_environment(elm))
 
             else:
                 content_latex = self._get_node_content(elm)
