@@ -365,3 +365,40 @@ class TestListConverter(SubconverterTestBase):
             '\\item[bar] baz\n\\end{description}\n bar'
 
         self.assertEqual(self.convert(html), latex)
+
+    def test_outer_nesting(self):
+        html = '\n'.join(('<ul>',
+                          '    <li>a</li>',
+                          '    <ul>',
+                          '        <li>ba</li>',
+                          '        <li>bb</li>',
+                          '    </ul>',
+                          '    <li>b</li>',
+                          '    <dl>',
+                          '        <dt>foo</dt>',
+                          '        <dd>bar</dd>',
+                          '        <ol>',
+                          '            <li>baz</li>',
+                          '        </ol>',
+                          '    </dl>',
+                          '    <li>c</li>',
+                          '</ul>'))
+
+        latex = '\n'.join((r'\begin{itemize}',
+                           r'\item a',
+                           r'\begin{itemize}',
+                           r'\item ba',
+                           r'\item bb',
+                           r'\end{itemize}',
+                           r'\item b',
+                           r'\begin{description}',
+                           r'\item[foo] bar',
+                           r'\begin{enumerate}',
+                           r'\item baz',
+                           r'\end{enumerate}',
+                           r'\end{description}',
+                           r'\item c',
+                           r'\end{itemize}',
+                           r''))
+
+        self.assertEqual(self.convert(html), latex)

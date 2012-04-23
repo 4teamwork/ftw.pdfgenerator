@@ -34,17 +34,7 @@ class ListConverter(subconverter.SubConverter):
             if node.nodeType == minidom.Node.ELEMENT_NODE and \
                     node.tagName.lower() in self.listing_tag_mapping.keys():
 
-                if node.tagName.lower() in ('ol', 'ul'):
-                    nodes_latex = self._convert_listing_items(node)
-
-                else:
-                    nodes_latex = self._convert_description_items(node)
-
-                if nodes_latex:
-                    begin_env, end_env = self._create_environ(node)
-                    latex.append(begin_env)
-                    latex.append(nodes_latex)
-                    latex.append(end_env)
+                latex.extend(self._convert_listing_environment(node))
 
             else:
                 latex.append(self.converter.convert(node.toxml()))
@@ -52,7 +42,42 @@ class ListConverter(subconverter.SubConverter):
         latex.append('')
         self.replace_and_lock('\n'.join(latex))
 
+    def _convert_listing_environment(self, node):
+        """Converts a <ul>, <ol> or <dl> node to latex.
+        """
+        latex = []
+
+        if node.tagName.lower() in ('ol', 'ul'):
+            nodes_latex = self._convert_listing_items(node)
+
+        else:
+            nodes_latex = self._convert_description_items(node)
+
+        has_items = self._listing_has_items(node)
+        if nodes_latex and has_items:
+            begin_env, end_env = self._create_environ(node)
+
+            latex.append(begin_env)
+            latex.append(nodes_latex)
+            latex.append(end_env)
+            return latex
+
+        elif nodes_latex:
+            return [nodes_latex]
+
+        else:
+            return []
+
+    def _listing_has_items(self, node):
+        for elm in node.childNodes:
+            if elm.nodeType == minidom.Node.ELEMENT_NODE and \
+                    elm.tagName.lower() in ('li', 'dt', 'dd'):
+                return True
+        return False
+
     def _convert_listing_items(self, list_node):
+        """Converts <li> nodes to LaTeX.
+        """
         latex = []
         for elm in list_node.childNodes:
             if elm.nodeType == minidom.Node.ELEMENT_NODE and \
@@ -62,7 +87,7 @@ class ListConverter(subconverter.SubConverter):
 
             elif elm.nodeType == minidom.Node.ELEMENT_NODE and \
                     elm.tagName.lower() in self.listing_tag_mapping.keys():
-                latex.append(self._convert_listing_items(elm))
+                latex.extend(self._convert_listing_environment(elm))
 
             else:
                 content_latex = self._get_node_content(elm)
@@ -72,6 +97,8 @@ class ListConverter(subconverter.SubConverter):
         return '\n'.join(latex)
 
     def _convert_description_items(self, list_node):
+        """Converts <dt> / <dd> nodes to LaTeX.
+        """
         latex = []
 
         dt_node = None
@@ -90,7 +117,7 @@ class ListConverter(subconverter.SubConverter):
 
             elif elm.nodeType == minidom.Node.ELEMENT_NODE and \
                     elm.tagName.lower() in self.listing_tag_mapping.keys():
-                latex.append(self._convert_description_items(elm))
+                latex.extend(self._convert_listing_environment(elm))
 
             else:
                 content_latex = self._get_node_content(elm)
@@ -100,6 +127,8 @@ class ListConverter(subconverter.SubConverter):
         return '\n'.join(latex)
 
     def _get_node_content(self, elm):
+        """Returns the LaTeX for the node `elm`.
+        """
         if elm.nodeType == minidom.Node.TEXT_NODE:
             content_html = elm.toxml().strip()
 
@@ -114,6 +143,8 @@ class ListConverter(subconverter.SubConverter):
             return self.converter.convert(content_html)
 
     def _create_environ(self, list_):
+        """Creates an environment for the node `list_`.
+        """
         name = list_.tagName.lower()
         env = self.listing_tag_mapping[name]
 

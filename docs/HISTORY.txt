@@ -4,6 +4,9 @@ Changelog
 1.1.1 (unreleased)
 ------------------
 
+- Listing converter: fix bug when nested lists are not within a item.
+  [jone]
+
 - Add provide_request_layer util method to directly provide an interface on the request
   [eschmutz]
 
