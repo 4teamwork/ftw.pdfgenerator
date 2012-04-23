@@ -31,7 +31,7 @@ class ListConverter(subconverter.SubConverter):
         latex = []
 
         for node in dom.getElementsByTagName('dummy')[0].childNodes:
-            if node.nodeType == 1 and \
+            if node.nodeType == minidom.Node.ELEMENT_NODE and \
                     node.tagName.lower() in self.listing_tag_mapping.keys():
 
                 if node.tagName.lower() in ('ol', 'ul'):
@@ -55,11 +55,12 @@ class ListConverter(subconverter.SubConverter):
     def _convert_listing_items(self, list_node):
         latex = []
         for elm in list_node.childNodes:
-            if elm.nodeType == 1 and elm.tagName.lower() == 'li':
+            if elm.nodeType == minidom.Node.ELEMENT_NODE and \
+                    elm.tagName.lower() == 'li':
                 latex.append(r'\item %s' % (
                         self._get_node_content(elm).strip()))
 
-            elif elm.nodeType == 1 and \
+            elif elm.nodeType == minidom.Node.ELEMENT_NODE and \
                     elm.tagName.lower() in self.listing_tag_mapping.keys():
                 latex.append(self._convert_listing_items(elm))
 
@@ -75,17 +76,19 @@ class ListConverter(subconverter.SubConverter):
 
         dt_node = None
         for elm in list_node.childNodes:
-            if elm.nodeType == 1 and elm.tagName.lower() == 'dt':
+            if elm.nodeType == minidom.Node.ELEMENT_NODE and \
+                    elm.tagName.lower() == 'dt':
                 dt_node = elm
 
-            elif elm.nodeType == 1 and elm.tagName.lower() == 'dd' and \
+            elif elm.nodeType == minidom.Node.ELEMENT_NODE and \
+                    elm.tagName.lower() == 'dd' and \
                     dt_node is not None:
                 latex.append(r'\item[%s] %s' % (
                         self._get_node_content(dt_node).strip(),
                         self._get_node_content(elm).strip()))
                 dt_node = None
 
-            elif elm.nodeType == 1 and \
+            elif elm.nodeType == minidom.Node.ELEMENT_NODE and \
                     elm.tagName.lower() in self.listing_tag_mapping.keys():
                 latex.append(self._convert_description_items(elm))
 
@@ -97,7 +100,7 @@ class ListConverter(subconverter.SubConverter):
         return '\n'.join(latex)
 
     def _get_node_content(self, elm):
-        if elm.nodeType == 3:  # text node
+        if elm.nodeType == minidom.Node.TEXT_NODE:
             content_html = elm.toxml().strip()
 
         else:  # tag node
