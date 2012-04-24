@@ -299,6 +299,10 @@ class IHTML2LaTeXConverter(Interface):
         """Registers a list of converters.
         """
 
+    def get_subconverter_by_pattern(pattern):
+        """Returns the currently active subconverter for the passed pattern.
+        """
+
     def convert(html, custom_patterns=None, custom_subconverters=None,
                 trim=True):
         """Converts HTML to LaTeX.

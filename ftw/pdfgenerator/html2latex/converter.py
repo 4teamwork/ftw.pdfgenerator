@@ -46,6 +46,14 @@ class BasePatternAware(object):
         for converter in subconverters:
             self._register_converter(converter)
 
+    def get_subconverter_by_pattern(self, pattern):
+        for ptn in self.patterns:
+            if ptn[0] == interfaces.HTML2LATEX_MODE_REGEXP_FUNCTION and \
+                    ptn[1] == pattern:
+                return ptn[2]
+
+        return None
+
     def _insert_custom_pattern(self, pattern,
                                placeholder=DEFAULT_PLACEHOLDER,
                                replace=True):

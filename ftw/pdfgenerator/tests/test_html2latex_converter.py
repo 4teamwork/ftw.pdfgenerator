@@ -162,6 +162,28 @@ class TestBasePatternAware(TestCase):
             [(MODE_REGEXP_FUNCTION, 'foo', Foo),
              DEFAULT_PLACEHOLDER])
 
+    def test_get_subconverter_by_pattern(self):
+        obj = converter.BasePatternAware([DEFAULT_PLACEHOLDER])
+
+        class Foo(subconverter.SubConverter):
+            pattern = 'foo'
+            placeholder = DEFAULT_PLACEHOLDER
+
+            def __call__(self):
+                return ''
+
+        class Bar(Foo):
+            pattern = 'bar'
+
+        class Baz(Foo):
+            pattern = 'baz'
+
+        obj.register_subconverters([Foo, Bar, Baz])
+        self.assertEqual(obj.get_subconverter_by_pattern('foo'), Foo)
+        self.assertEqual(obj.get_subconverter_by_pattern('bar'), Bar)
+        self.assertEqual(obj.get_subconverter_by_pattern('baz'), Baz)
+        self.assertEqual(obj.get_subconverter_by_pattern('unkown'), None)
+
 
 class TestHTML2LatexConverter(MockTestCase):
 
