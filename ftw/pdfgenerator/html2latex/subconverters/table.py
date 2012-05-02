@@ -16,6 +16,26 @@ PLACEHOLDER_BOTTOM = interfaces.HTML2LATEX_CUSTOM_PATTERN_PLACEHOLDER_BOTTOM
 PREVENT_CHARACTER = interfaces.HTML2LATEX_PREVENT_CHARACTER
 LONGTABLE_ROWS_THRESHOLD = 15
 
+# Global border options:
+
+BORDER_TABLE_L = 2 ** 0
+BORDER_TABLE_R = 2 ** 1
+BORDER_TABLE_T = 2 ** 2
+BORDER_TABLE_B = 2 ** 3
+BORDER_TABLE = BORDER_TABLE_L | BORDER_TABLE_R | \
+    BORDER_TABLE_T | BORDER_TABLE_B
+
+BORDER_CELL_L = 2 ** 10
+BORDER_CELL_R = 2 ** 11
+BORDER_CELL_T = 2 ** 12
+BORDER_CELL_B = 2 ** 13
+BORDER_CELL = BORDER_CELL_L | BORDER_CELL_R | BORDER_CELL_T | BORDER_CELL_B
+
+NO_LAYOUT = 0
+GRID_LAYOUT = BORDER_TABLE | BORDER_CELL
+HORIZONTAL_LAYOUT = BORDER_TABLE_T | BORDER_TABLE_B | \
+    BORDER_CELL_T | BORDER_CELL_B
+
 
 class TableConverter(subconverter.SubConverter):
     """The TableConverter converts <table>-Tags to latex.
@@ -80,19 +100,22 @@ class TableConverter(subconverter.SubConverter):
             self._css_classes = classes.split(' ')
         return self._css_classes
 
-    def get_border(self):
+    def get_table_layout(self):
         domTable = self.dom.getElementsByTagName('table')[0]
 
         border = domTable.hasAttribute('border')
         if border and int(border) > 0:
-            return True
+            return GRID_LAYOUT
 
         elif 'border-grid' in self.get_css_classes() or \
-                'listing' in self.get_css_classes():
-            return True
+                'grid' in self.get_css_classes():
+            return GRID_LAYOUT
+
+        elif 'listing' in self.get_css_classes():
+            return HORIZONTAL_LAYOUT
 
         else:
-            return False
+            return NO_LAYOUT
 
     def render(self):
         latex = '\\begin{%s}{%s}\n' % (
@@ -352,17 +375,21 @@ class LatexColumn(object):
         return format_
 
     def has_left_border(self):
-        return self.table_converter.get_border()
+        return self.table_converter.get_table_layout() & BORDER_CELL_L
 
     def has_right_border(self):
-        if self.table_converter.get_border() and self.is_last_column():
-            return True
-
-        return False
+        if self.is_last_column():
+            return self.table_converter.get_table_layout() & BORDER_CELL_R
+        else:
+            return False
 
     def is_last_column(self):
         columns = self.table_converter.columns
         return columns[-1] == self
+
+    def is_first_column(self):
+        columns = self.table_converter.columns
+        return columns[0] == self
 
 
 class LatexRow(object):
@@ -561,7 +588,7 @@ class LatexCell(object):
         if 'scriptsize' in self.get_css_classes():
             latex = r'\scriptsize %s' % latex
 
-        if 'bold' in self.get_css_classes():
+        if 'bold' in self.get_css_classes() or self.is_head_cell():
             latex = r'\textbf{%s}' % latex
 
         if 'indent2' in self.get_css_classes():
@@ -575,9 +602,16 @@ class LatexCell(object):
         if 'thead' in [p.tagName.lower() for p in self.get_parent_nodes()]:
             # cell is within a <thead>
             return True
-        if self.dom_cell.tagName.lower() == 'th':
+
+        elif self.dom_cell.tagName.lower() == 'th':
             # cell is a <th>
             return True
+
+        elif 'vertical' in self.table_converter.get_css_classes() \
+                and self.columns[0].is_first_column():
+            # "vertical" class makes first column to be "head" cells.
+            return True
+
         else:
             # not a head cell
             return False
@@ -691,7 +725,7 @@ class LatexCell(object):
         if self.rows[-1] != row:
             return False
 
-        if self.table_converter.get_border():
+        if self.table_converter.get_table_layout() & BORDER_CELL_B:
             return True
 
         if 'border-bottom' in self.get_css_classes():
@@ -703,7 +737,7 @@ class LatexCell(object):
         if self.rows[0] != row:
             return False
 
-        if self.table_converter.get_border():
+        if self.table_converter.get_table_layout() & BORDER_CELL_T:
             return True
 
         if 'border-top' in self.get_css_classes():

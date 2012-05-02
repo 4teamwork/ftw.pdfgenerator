@@ -52,7 +52,7 @@ class TestTableConverter(MockTestCase):
 
         latex = '\n'.join((
                 r'\begin{tabular}{l}',
-                r'\multicolumn{1}{l}{My Head} \\',
+                r'\multicolumn{1}{l}{\textbf{My Head}} \\',
                 r'\multicolumn{1}{l}{My Body} \\',
                 r'\end{tabular}',
                 r''))
@@ -82,7 +82,8 @@ class TestTableConverter(MockTestCase):
 
         latex = '\n'.join((
                 r'\begin{tabular}{ll}',
-                r'\multicolumn{1}{l}{headA} & \multicolumn{1}{l}{headB} \\',
+                r'\multicolumn{1}{l}{\textbf{headA}} & ' + \
+                    r'\multicolumn{1}{l}{\textbf{headB}} \\',
                 r'\multicolumn{1}{l}{1A} & \multicolumn{1}{l}{1B} \\',
                 r'\multicolumn{1}{l}{2A} & \multicolumn{1}{l}{2B} \\',
                 r'\end{tabular}',
@@ -648,8 +649,8 @@ class TestTableConverter(MockTestCase):
                 r'\begin{tabular}{|l|l|}',
                 r'\hline',
 
-                r'\multicolumn{1}{|l}{heading A} & ' + \
-                    r'\multicolumn{1}{|l|}{heading B} \\',
+                r'\multicolumn{1}{|l}{\textbf{heading A}} & ' + \
+                    r'\multicolumn{1}{|l|}{\textbf{heading B}} \\',
                 r'\hline',
 
                 r'\multicolumn{1}{|l}{content 1A} & ' + \
@@ -668,7 +669,7 @@ class TestTableConverter(MockTestCase):
 
     def test_complex_grid_css_class(self):
         html = '\n'.join((
-                r'<table class="no-page-break listing">',
+                r'<table class="no-page-break grid">',
                 r' <colgroup>',
                 r'  <col width="50%" />'
                 r'  <col width="25%" />'
@@ -697,7 +698,7 @@ class TestTableConverter(MockTestCase):
                     'p{0.25\linewidth}|}',
                 r'\hline',
 
-                r'\multicolumn{3}{|p{1.0\linewidth}|}{heading} \\',
+                r'\multicolumn{3}{|p{1.0\linewidth}|}{\textbf{heading}} \\',
                 r'\hline',
 
                 r'\multicolumn{1}{|p{0.5\linewidth}|}{content 1A} & ' + \
@@ -716,17 +717,113 @@ class TestTableConverter(MockTestCase):
 
         self.assertEqual(self.convert(html), latex)
 
-    def test_border_classes(self):
+    def test_listing_css_class(self):
         html = '\n'.join((
-                r'<table class="no-page-break">',
+                r'<table class="no-page-break listing">',
+                r' <colgroup>',
+                r'  <col width="50%" />'
+                r'  <col width="25%" />'
+                r'  <col width="25%" />'
+                r' </colgroup>',
                 r' <thead>',
                 r'  <tr>',
-                r'   <th class="border-right">A1</th>',
-                r'   <th class="border-top">B1</th>',
-                r'   <th class="border-left border-bottom">C1</th>',
+                r'   <th colspan="3">heading</th>',
                 r'  </tr>',
                 r' </thead>',
                 r' <tbody>',
+                r'  <tr>',
+                r'   <td>content 1A</td>',
+                r'   <td rowspan="2">content 1/2 B</td>',
+                r'   <td>content 1C</td>',
+                r'  </tr>',
+                r'  <tr>',
+                r'   <td>content 2A</td>',
+                r'   <td>content 2C</td>',
+                r'  </tr>',
+                r' </tbody>',
+                r'</table>'))
+
+        latex = '\n'.join((
+                r'\begin{tabular}{p{0.5\linewidth}p{0.25\linewidth}' + \
+                    'p{0.25\linewidth}}',
+                r'\hline',
+
+                r'\multicolumn{3}{p{1.0\linewidth}}{\textbf{heading}} \\',
+                r'\hline',
+
+                r'\multicolumn{1}{p{0.5\linewidth}}{content 1A} & ' + \
+                    r'\multirow{2}{0.25\textwidth}{content 1/2 B} & ' + \
+                    r'\multicolumn{1}{p{0.25\linewidth}}{content 1C} \\',
+                r'\hline',
+
+                r'\multicolumn{1}{p{0.5\linewidth}}{content 2A} & ' + \
+                    r' & '
+                    r'\multicolumn{1}{p{0.25\linewidth}}{content 2C} \\',
+                r'\hline',
+
+                r'\end{tabular}',
+                r''
+                ))
+
+        self.assertEqual(self.convert(html), latex)
+
+    def test_vertical_css_class_makes_first_column_bold(self):
+        html = '\n'.join((
+                r'<table class="no-page-break vertical">',
+                r' <colgroup>',
+                r'  <col width="50%" />'
+                r'  <col width="25%" />'
+                r'  <col width="25%" />'
+                r' </colgroup>',
+                r' <thead>',
+                r'  <tr>',
+                r'   <th colspan="3">heading</th>',
+                r'  </tr>',
+                r' </thead>',
+                r' <tbody>',
+                r'  <tr>',
+                r'   <td>content 1A</td>',
+                r'   <td rowspan="2">content 1/2 B</td>',
+                r'   <td>content 1C</td>',
+                r'  </tr>',
+                r'  <tr>',
+                r'   <td>content 2A</td>',
+                r'   <td>content 2C</td>',
+                r'  </tr>',
+                r' </tbody>',
+                r'</table>'))
+
+        latex = '\n'.join((
+                r'\begin{tabular}{p{0.5\linewidth}p{0.25\linewidth}' + \
+                    'p{0.25\linewidth}}',
+
+                r'\multicolumn{3}{p{1.0\linewidth}}{\textbf{heading}} \\',
+
+                r'\multicolumn{1}{p{0.5\linewidth}}' + \
+                    r'{\textbf{content 1A}} & ' + \
+                    r'\multirow{2}{0.25\textwidth}{content 1/2 B} & ' + \
+                    r'\multicolumn{1}{p{0.25\linewidth}}{content 1C} \\',
+
+                r'\multicolumn{1}{p{0.5\linewidth}}' + \
+                    r'{\textbf{content 2A}} & ' + \
+                    r' & ' + \
+                    r'\multicolumn{1}{p{0.25\linewidth}}{content 2C} \\',
+
+                r'\end{tabular}',
+                r''
+                ))
+
+        self.assertEqual(self.convert(html), latex)
+
+    def test_border_classes(self):
+        html = '\n'.join((
+                r'<table class="no-page-break">',
+                r' <tbody>',
+                r'  <tr>',
+                r'   <td class="border-right">A1</td>',
+                r'   <td class="border-top">B1</td>',
+                r'   <td class="border-left border-bottom">C1</td>',
+                r'  </tr>',
                 r'  <tr>',
                 r'   <td class="border-right">A2</td>',
                 r'   <td class="border-top border-bottom">B2</td>',
