@@ -4,17 +4,15 @@ Changelog
 1.1.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
-
-1.1.1 (2012-04-30)
-------------------
-
 - Add convert_plain method to converter and view.
   [phgross]
 
 - Add encode_htmlentities utils function.
   [phgross]
+
+
+1.1.1 (2012-04-30)
+------------------
 
 - Listing converter: limit nested lists to four levels since LaTeX has this limit.
   [jone]
