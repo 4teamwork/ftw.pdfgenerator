@@ -89,6 +89,18 @@ class TestEntities(TestCase):
         self.assertEqual(utils.decode_htmlentities('a&foo;b'),
                          u'a&foo;b')
 
+    def test_encode_htmlentities(self):
+        self.assertEqual(utils.encode_htmlentities('"X>Y"'),
+                         '&quot;X&gt;Y&quot;')
+        self.assertEqual(utils.encode_htmlentities('m&m'),
+                         'm&amp;m')
+        self.assertEqual(utils.encode_htmlentities('a&foo;b'),
+                         'a&amp;foo;b')
+        self.assertEqual(utils.encode_htmlentities(u'uml\xe4ut'),
+                         u'uml&auml;ut')
+        self.assertEqual(utils.encode_htmlentities('uml\xc3\xa4ut'),
+                         'uml&auml;ut')
+
     def test_html2xmlentities(self):
         self.assertEqual(utils.html2xmlentities('m&amp;m'),
                          'm&#38;m')

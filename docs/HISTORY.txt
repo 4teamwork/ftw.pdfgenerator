@@ -10,6 +10,9 @@ Changelog
 1.1.1 (2012-04-30)
 ------------------
 
+- Add encode_htmlentities utils function.
+  [phgross]
+
 - Listing converter: limit nested lists to four levels since LaTeX has this limit.
   [jone]
 

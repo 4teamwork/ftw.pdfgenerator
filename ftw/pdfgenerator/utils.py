@@ -57,6 +57,28 @@ def decode_htmlentities(string):
     return entity_re.subn(substitute_entity, string)[0]
 
 
+def encode_htmlentities(string, encoding='utf-8'):
+    """
+    Encodes the string with html entities.
+    """
+
+    if isinstance(string, unicode):
+        was_unicode = True
+    else:
+        was_unicode = False
+        string = string.decode(encoding)
+
+    string = string.replace('&', '&amp;')
+
+    for codepoint, name in cp2n.items():
+        if name != 'amp':
+            string = string.replace(unichr(codepoint), '&%s;' % name)
+
+    if not was_unicode:
+        string = string.encode(encoding)
+    return string
+
+
 def html2xmlentities(string):
     """
     Converts htmlentities to xmlentities
