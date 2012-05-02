@@ -716,6 +716,56 @@ class TestTableConverter(MockTestCase):
 
         self.assertEqual(self.convert(html), latex)
 
+    def test_listing_css_class(self):
+        html = '\n'.join((
+                r'<table class="no-page-break listing">',
+                r' <colgroup>',
+                r'  <col width="50%" />'
+                r'  <col width="25%" />'
+                r'  <col width="25%" />'
+                r' </colgroup>',
+                r' <thead>',
+                r'  <tr>',
+                r'   <th colspan="3">heading</th>',
+                r'  </tr>',
+                r' </thead>',
+                r' <tbody>',
+                r'  <tr>',
+                r'   <td>content 1A</td>',
+                r'   <td rowspan="2">content 1/2 B</td>',
+                r'   <td>content 1C</td>',
+                r'  </tr>',
+                r'  <tr>',
+                r'   <td>content 2A</td>',
+                r'   <td>content 2C</td>',
+                r'  </tr>',
+                r' </tbody>',
+                r'</table>'))
+
+        latex = '\n'.join((
+                r'\begin{tabular}{p{0.5\linewidth}p{0.25\linewidth}' + \
+                    'p{0.25\linewidth}}',
+                r'\hline',
+
+                r'\multicolumn{3}{p{1.0\linewidth}}{heading} \\',
+                r'\hline',
+
+                r'\multicolumn{1}{p{0.5\linewidth}}{content 1A} & ' + \
+                    r'\multirow{2}{0.25\textwidth}{content 1/2 B} & ' + \
+                    r'\multicolumn{1}{p{0.25\linewidth}}{content 1C} \\',
+                r'\hline',
+
+                r'\multicolumn{1}{p{0.5\linewidth}}{content 2A} & ' + \
+                    r' & '
+                    r'\multicolumn{1}{p{0.25\linewidth}}{content 2C} \\',
+                r'\hline',
+
+                r'\end{tabular}',
+                r''
+                ))
+
+        self.assertEqual(self.convert(html), latex)
+
     def test_border_classes(self):
         html = '\n'.join((
                 r'<table class="no-page-break">',
