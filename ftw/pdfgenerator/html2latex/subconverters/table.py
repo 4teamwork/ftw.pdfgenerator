@@ -387,6 +387,10 @@ class LatexColumn(object):
         columns = self.table_converter.columns
         return columns[-1] == self
 
+    def is_first_column(self):
+        columns = self.table_converter.columns
+        return columns[0] == self
+
 
 class LatexRow(object):
     """
@@ -602,6 +606,12 @@ class LatexCell(object):
         elif self.dom_cell.tagName.lower() == 'th':
             # cell is a <th>
             return True
+
+        elif 'vertical' in self.table_converter.get_css_classes() \
+                and self.columns[0].is_first_column():
+            # "vertical" class makes first column to be "head" cells.
+            return True
+
         else:
             # not a head cell
             return False
