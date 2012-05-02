@@ -1,10 +1,11 @@
 from ftw.pdfgenerator import interfaces
-from ftw.pdfgenerator.html2latex.patterns import DEFAULT_PATTERNS
 from ftw.pdfgenerator.html2latex import wrapper
+from ftw.pdfgenerator.html2latex.patterns import DEFAULT_PATTERNS
 from ftw.pdfgenerator.html2latex.subconverters import htmlentities
 from ftw.pdfgenerator.html2latex.subconverters import hyperlink
 from ftw.pdfgenerator.html2latex.subconverters import listing
 from ftw.pdfgenerator.html2latex.subconverters import table
+from ftw.pdfgenerator.utils import encode_htmlentities
 from ftw.pdfgenerator.utils import xml2htmlentities
 from random import choice
 from zope.component import adapts
@@ -128,6 +129,11 @@ class HTML2LatexConverter(BasePatternAware):
             runner.register_subconverters(custom_subconverters)
 
         return runner.runner_convert()
+
+    def convert_plain(self, text, **kwargs):
+        html = encode_htmlentities(text)
+        return self.convert(html, **kwargs)
+
 
 
 class HTML2LatexConvertRunner(BasePatternAware):

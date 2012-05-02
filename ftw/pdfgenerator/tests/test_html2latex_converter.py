@@ -241,6 +241,14 @@ class TestHTML2LatexConverter(MockTestCase):
                     MyConverter]),
             r'foo {\bf replaced} baz {\bf replaced}')
 
+    def test_convert_plain(self):
+        obj = converter.HTML2LatexConverter(
+            object(), object(), object())
+
+        self.assertEqual(obj.convert('foo <bar> baz'), 'foo  baz')
+        self.assertEqual(obj.convert_plain('foo <bar> baz'), 'foo <bar> baz')
+
+
 
 class TestHTML2LaTeXConvertRunner(MockTestCase):
 

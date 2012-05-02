@@ -65,6 +65,13 @@ class MakoLaTeXView(MakoTemplating):
         """
         return self.layout.get_converter().convert(*args, **kwargs)
 
+    def convert_plain(self, *args, **kwargs):
+        """Convert plain text to LaTeX by encoding it with html entities
+        and then converting the HTML to latex.
+        """
+        return self.layout.get_converter().convert_plain(*args, **kwargs)
+
+
 
 class RecursiveLaTeXView(MakoLaTeXView):
     """A recursive LaTeX view, which also renders the content of the child

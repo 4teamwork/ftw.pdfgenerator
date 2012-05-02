@@ -265,6 +265,11 @@ class ILaTeXView(Interface):
         See the IHTML2LaTeXConverter.convert documentation.
         """
 
+    def convert_plain(*args, **kwargs):
+        """Convert HTML to LaTeX using the IHTML2LaTeXConverter.
+        See the IHTML2LaTeXConverter.convert_plain documentation.
+        """
+
 
 class IRecursiveLaTeXView(ILaTeXView):
     """A recursive LaTeX view walks down the tree and renders subcontent of
@@ -313,6 +318,14 @@ class IHTML2LaTeXConverter(Interface):
         custom_converters -- A list of custom subconverters, which will be
         merged into the custom_map.
         trim -- Strip the HTML before converting to LaTeX. (Default: `True`).
+        """
+
+    def convert_plain(text, **kwargs):
+        """Converts a text to HTML and then to LaTeX.
+
+        Arguments:
+        text -- The text to convert as string.
+        **kwargs -- Arguments passed to `convert()`.
         """
 
 

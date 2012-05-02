@@ -115,6 +115,22 @@ class TestMakoLaTeXView(MockTestCase):
         view = MakoLaTeXView(context, request, layout)
         self.assertEqual(view.convert(html, trim=True), latex)
 
+    def test_convert_plain_passes_to_converter(self):
+        context = request = object()
+        layout = self.mocker.mock()
+        converter = self.mocker.mock()
+
+        html = 'this is <not> html\n '
+        latex = 'this is <not> html'
+
+        self.expect(layout.get_converter()).result(converter)
+        self.expect(converter.convert_plain(html, trim=True)).result(latex)
+
+        self.replay()
+
+        view = MakoLaTeXView(context, request, layout)
+        self.assertEqual(view.convert_plain(html, trim=True), latex)
+
 
 class TestRecursiveLaTeXView(MockTestCase):
 

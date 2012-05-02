@@ -10,6 +10,9 @@ Changelog
 1.1.1 (2012-04-30)
 ------------------
 
+- Add convert_plain method to converter and view.
+  [phgross]
+
 - Add encode_htmlentities utils function.
   [phgross]
 
