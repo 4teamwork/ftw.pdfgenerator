@@ -4,6 +4,9 @@ Changelog
 1.1.3 (unreleased)
 ------------------
 
+- Tables: fix border collapse bug when using rowspan.
+  [jone]
+
 - Tables: calculate widths properly respecting \tabcolsep.
   [jone]
 

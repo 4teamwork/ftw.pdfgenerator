@@ -433,7 +433,7 @@ class LatexRow(object):
 
     def get_next_row(self):
         rows = self.table_converter.rows
-        next_row_index = rows.index(self)
+        next_row_index = rows.index(self) + 1
         try:
             return rows[next_row_index]
         except IndexError:
@@ -443,7 +443,7 @@ class LatexRow(object):
         latex = []
 
         if self.is_first_row():
-            line_latex = self.get_horizontal_line_latex([], self)
+            line_latex = self.get_horizontal_line_latex(self, None)
             if line_latex:
                 latex.append(line_latex)
 
@@ -456,30 +456,25 @@ class LatexRow(object):
                 latex_cells.append('')
 
         latex.append('%s \\\\' % ' & '.join(latex_cells))
-        line_latex = self.get_horizontal_line_latex(self, self.get_next_row())
+        line_latex = self.get_horizontal_line_latex(self.get_next_row(), self)
         if line_latex:
             latex.append(line_latex)
 
         return '\n'.join(latex) + '\n'
 
     def get_horizontal_line_latex(self, top_row, bottom_row):
-        lined_column_indexes = set()
+        lined_column_indexes = []
 
         if top_row:
-            index = 1
-            for cell in top_row.cells:
-                if cell.has_bottom_border_in_row(top_row):
-                    for i in range(index, index + cell.get_colspan()):
-                        lined_column_indexes.add(i)
-                index += cell.get_colspan()
+            lined_column_indexes.extend(
+                top_row._get_cell_indexes_with_border())
 
         if bottom_row:
-            index = 1
-            for cell in bottom_row.cells:
-                if cell.has_top_border_in_row(bottom_row):
-                    for i in range(index, index + cell.get_colspan()):
-                        lined_column_indexes.add(i)
-                index += cell.get_colspan()
+            lined_column_indexes.extend(
+                bottom_row._get_cell_indexes_with_border(bottom=True))
+
+        # make unique
+        lined_column_indexes = set(lined_column_indexes)
 
         if len(lined_column_indexes) == len(self.table_converter.columns):
             return r'\hline'
@@ -500,6 +495,27 @@ class LatexRow(object):
             latex.append(r'\cline{%s-%s}' % (start, end))
 
         return ''.join(latex)
+
+    def _get_cell_indexes_with_border(self, bottom=False):
+        """Decides for each cell of this row whether it should have a border
+        at the top (or at the bottom if `bottom` is `True`).
+        It returns each cells column index (starting with 1) for cells which
+        have a border.
+        """
+        if bottom:
+            has_border = lambda cell: cell.has_bottom_border_in_row(self)
+        else:
+            has_border = lambda cell: cell.has_top_border_in_row(self)
+
+        indexes = []
+        for cell in self.cells:
+            if not has_border(cell):
+                continue
+
+            for column in cell.columns:
+                indexes.append(self.table_converter.columns.index(column) + 1)
+
+        return indexes
 
 
 class LatexCell(object):
@@ -735,6 +751,9 @@ class LatexCell(object):
         if self.rows[-1] != row:
             return False
 
+        if self.get_rowspan() > 1 and row != self.rows[-1]:
+            return False
+
         if self.table_converter.get_table_layout() & BORDER_CELL_B:
             return True
 
@@ -745,6 +764,9 @@ class LatexCell(object):
 
     def has_top_border_in_row(self, row):
         if self.rows[0] != row:
+            return False
+
+        if self.get_rowspan() > 1 and row != self.rows[0]:
             return False
 
         if self.table_converter.get_table_layout() & BORDER_CELL_T:

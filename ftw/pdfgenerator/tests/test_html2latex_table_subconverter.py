@@ -780,7 +780,7 @@ class TestTableConverter(MockTestCase):
                 r'\multicolumn{1}{|p{0.5\tablewidth}|}{content 1A} & ' + \
                     r'\multirow{2}{0.25\tablewidth}{content 1/2 B} & ' + \
                     r'\multicolumn{1}{|p{0.25\tablewidth}|}{content 1C} \\',
-                r'\hline',
+                r'\cline{1-1}\cline{3-3}',
 
                 r'\multicolumn{1}{|p{0.5\tablewidth}|}{content 2A} & ' + \
                     r' & '
@@ -833,7 +833,7 @@ class TestTableConverter(MockTestCase):
                 r'\multicolumn{1}{p{0.5\tablewidth}}{content 1A} & ' + \
                     r'\multirow{2}{0.25\tablewidth}{content 1/2 B} & ' + \
                     r'\multicolumn{1}{p{0.25\tablewidth}}{content 1C} \\',
-                r'\hline',
+                r'\cline{1-1}\cline{3-3}',
 
                 r'\multicolumn{1}{p{0.5\tablewidth}}{content 2A} & ' + \
                     r' & '
