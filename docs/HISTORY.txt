@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.1.2 (unreleased)
+1.1.2 (2012-05-02)
 ------------------
 
 - Add convert_plain method to converter and view.
