@@ -4,7 +4,8 @@ Changelog
 1.1.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Tables: support plone css classes (grid, listing, vertical).
+  [jone]
 
 
 1.1.2 (2012-05-02)
