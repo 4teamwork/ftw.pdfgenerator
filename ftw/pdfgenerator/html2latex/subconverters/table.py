@@ -751,9 +751,6 @@ class LatexCell(object):
         if self.rows[-1] != row:
             return False
 
-        if self.get_rowspan() > 1 and row != self.rows[-1]:
-            return False
-
         if self.table_converter.get_table_layout() & BORDER_CELL_B:
             return True
 
@@ -764,9 +761,6 @@ class LatexCell(object):
 
     def has_top_border_in_row(self, row):
         if self.rows[0] != row:
-            return False
-
-        if self.get_rowspan() > 1 and row != self.rows[0]:
             return False
 
         if self.table_converter.get_table_layout() & BORDER_CELL_T:
@@ -809,12 +803,8 @@ class LatexCell(object):
 
     def get_css_classes(self):
         if self._css_classes is None:
-            if self.dom_cell:
-                classes = self.dom_cell.getAttribute('class').strip()
-                self._css_classes = classes.split(' ')
-
-            else:
-                self._css_classes = []
+            classes = self.dom_cell.getAttribute('class').strip()
+            self._css_classes = classes.split(' ')
 
         return self._css_classes
 
