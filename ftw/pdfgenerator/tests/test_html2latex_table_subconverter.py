@@ -797,20 +797,22 @@ class TestTableConverter(MockTestCase):
         html = '\n'.join((
                 r'<table class="no-page-break">',
                 r' <colgroup>',
-                r'  <col width="50%" />'
+                r'  <col width="25%" />'
+                r'  <col width="25%" />'
                 r'  <col width="25%" />'
                 r'  <col width="25%" />'
                 r' </colgroup>',
                 r' <tbody>',
                 r'  <tr>',
-                r'   <td>content 1A</td>',
+                r'   <td rowspan="2">1A</td>',
+                r'   <td>content 1B</td>',
                 r'   <td rowspan="2" class="border-right border-left">' + \
-                    r'content 1/2 B</td>',
-                r'   <td>content 1C</td>',
+                    r'content 1/2 C</td>',
+                r'   <td>content 1D</td>',
                 r'  </tr>',
                 r'  <tr>',
-                r'   <td>content 2A</td>',
-                r'   <td>content 2C</td>',
+                r'   <td>content 2B</td>',
+                r'   <td>content 2D</td>',
                 r'  </tr>',
                 r' </tbody>',
                 r'</table>'))
@@ -818,17 +820,19 @@ class TestTableConverter(MockTestCase):
         latex = '\n'.join((
                 r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
-                r'\addtolength\tablewidth{-6\tabcolsep}',
-                r'\begin{tabular}{p{0.5\tablewidth}p{0.25\tablewidth}' + \
-                    r'p{0.25\tablewidth}}',
+                r'\addtolength\tablewidth{-8\tabcolsep}',
+                r'\begin{tabular}{p{0.25\tablewidth}p{0.25\tablewidth}' + \
+                    r'p{0.25\tablewidth}p{0.25\tablewidth}}',
 
-                r'\multicolumn{1}{p{0.5\tablewidth}|}{content 1A} & ' + \
-                    r'\multirow{2}{0.25\tablewidth}{content 1/2 B} & ' + \
-                    r'\multicolumn{1}{|p{0.25\tablewidth}}{content 1C} \\',
+                r'\multirow{2}{0.25\tablewidth}{1A} & ' + \
+                r'\multicolumn{1}{p{0.25\tablewidth}|}{content 1B} & ' + \
+                    r'\multirow{2}{0.25\tablewidth}{content 1/2 C} & ' + \
+                    r'\multicolumn{1}{|p{0.25\tablewidth}}{content 1D} \\',
 
-                r'\multicolumn{1}{p{0.5\tablewidth}|}{content 2A} & ' + \
+                r' & ' + \
+                    r'\multicolumn{1}{p{0.25\tablewidth}|}{content 2B} & ' + \
                     r' & '
-                    r'\multicolumn{1}{|p{0.25\tablewidth}}{content 2C} \\',
+                    r'\multicolumn{1}{|p{0.25\tablewidth}}{content 2D} \\',
 
                 r'\end{tabular}',
                 r''
