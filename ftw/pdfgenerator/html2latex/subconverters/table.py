@@ -584,7 +584,7 @@ class LatexCell(object):
         if 'scriptsize' in self.get_css_classes():
             latex = r'\scriptsize %s' % latex
 
-        if 'bold' in self.get_css_classes():
+        if 'bold' in self.get_css_classes() or self.is_head_cell():
             latex = r'\textbf{%s}' % latex
 
         if 'indent2' in self.get_css_classes():
@@ -598,7 +598,8 @@ class LatexCell(object):
         if 'thead' in [p.tagName.lower() for p in self.get_parent_nodes()]:
             # cell is within a <thead>
             return True
-        if self.dom_cell.tagName.lower() == 'th':
+
+        elif self.dom_cell.tagName.lower() == 'th':
             # cell is a <th>
             return True
         else:

@@ -52,7 +52,7 @@ class TestTableConverter(MockTestCase):
 
         latex = '\n'.join((
                 r'\begin{tabular}{l}',
-                r'\multicolumn{1}{l}{My Head} \\',
+                r'\multicolumn{1}{l}{\textbf{My Head}} \\',
                 r'\multicolumn{1}{l}{My Body} \\',
                 r'\end{tabular}',
                 r''))
@@ -82,7 +82,8 @@ class TestTableConverter(MockTestCase):
 
         latex = '\n'.join((
                 r'\begin{tabular}{ll}',
-                r'\multicolumn{1}{l}{headA} & \multicolumn{1}{l}{headB} \\',
+                r'\multicolumn{1}{l}{\textbf{headA}} & ' + \
+                    r'\multicolumn{1}{l}{\textbf{headB}} \\',
                 r'\multicolumn{1}{l}{1A} & \multicolumn{1}{l}{1B} \\',
                 r'\multicolumn{1}{l}{2A} & \multicolumn{1}{l}{2B} \\',
                 r'\end{tabular}',
@@ -648,8 +649,8 @@ class TestTableConverter(MockTestCase):
                 r'\begin{tabular}{|l|l|}',
                 r'\hline',
 
-                r'\multicolumn{1}{|l}{heading A} & ' + \
-                    r'\multicolumn{1}{|l|}{heading B} \\',
+                r'\multicolumn{1}{|l}{\textbf{heading A}} & ' + \
+                    r'\multicolumn{1}{|l|}{\textbf{heading B}} \\',
                 r'\hline',
 
                 r'\multicolumn{1}{|l}{content 1A} & ' + \
@@ -697,7 +698,7 @@ class TestTableConverter(MockTestCase):
                     'p{0.25\linewidth}|}',
                 r'\hline',
 
-                r'\multicolumn{3}{|p{1.0\linewidth}|}{heading} \\',
+                r'\multicolumn{3}{|p{1.0\linewidth}|}{\textbf{heading}} \\',
                 r'\hline',
 
                 r'\multicolumn{1}{|p{0.5\linewidth}|}{content 1A} & ' + \
@@ -747,7 +748,7 @@ class TestTableConverter(MockTestCase):
                     'p{0.25\linewidth}}',
                 r'\hline',
 
-                r'\multicolumn{3}{p{1.0\linewidth}}{heading} \\',
+                r'\multicolumn{3}{p{1.0\linewidth}}{\textbf{heading}} \\',
                 r'\hline',
 
                 r'\multicolumn{1}{p{0.5\linewidth}}{content 1A} & ' + \
@@ -769,14 +770,12 @@ class TestTableConverter(MockTestCase):
     def test_border_classes(self):
         html = '\n'.join((
                 r'<table class="no-page-break">',
-                r' <thead>',
-                r'  <tr>',
-                r'   <th class="border-right">A1</th>',
-                r'   <th class="border-top">B1</th>',
-                r'   <th class="border-left border-bottom">C1</th>',
-                r'  </tr>',
-                r' </thead>',
                 r' <tbody>',
+                r'  <tr>',
+                r'   <td class="border-right">A1</td>',
+                r'   <td class="border-top">B1</td>',
+                r'   <td class="border-left border-bottom">C1</td>',
+                r'  </tr>',
                 r'  <tr>',
                 r'   <td class="border-right">A2</td>',
                 r'   <td class="border-top border-bottom">B2</td>',
