@@ -59,8 +59,9 @@ class ListConverter(subconverter.SubConverter):
 
         if has_items and not self.nesting_level >= LIST_NESTING_LIMIT:
             self.nesting_level += 1
-            return self._convert_reduced_listing_environment(node)
+            result = self._convert_reduced_listing_environment(node)
             self.nesting_level -= 1
+            return result
 
         else:
             return self._convert_reduced_listing_environment(
