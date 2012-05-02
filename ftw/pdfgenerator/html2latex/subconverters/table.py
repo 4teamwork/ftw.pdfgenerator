@@ -742,10 +742,10 @@ class LatexCell(object):
         """
         row_cells = self.rows[row_index].cells
         left_cell_index = row_cells.index(self) - 1
-        try:
-            return row_cells[left_cell_index]
-        except IndexError:
+        if left_cell_index < 0:
             return None
+        else:
+            return row_cells[left_cell_index]
 
     def has_bottom_border_in_row(self, row):
         if self.rows[-1] != row:
