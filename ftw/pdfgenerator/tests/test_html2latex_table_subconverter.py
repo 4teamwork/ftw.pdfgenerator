@@ -51,6 +51,9 @@ class TestTableConverter(MockTestCase):
                 r'</table>'))
 
         latex = '\n'.join((
+                r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-2\tabcolsep}',
                 r'\begin{tabular}{l}',
                 r'\multicolumn{1}{l}{\textbf{My Head}} \\',
                 r'\multicolumn{1}{l}{My Body} \\',
@@ -81,6 +84,9 @@ class TestTableConverter(MockTestCase):
                 r'</table>'))
 
         latex = '\n'.join((
+                r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-4\tabcolsep}',
                 r'\begin{tabular}{ll}',
                 r'\multicolumn{1}{l}{\textbf{headA}} & ' + \
                     r'\multicolumn{1}{l}{\textbf{headB}} \\',
@@ -110,13 +116,16 @@ class TestTableConverter(MockTestCase):
                 r'</table>'))
 
         latex = '\n'.join((
-                r'\begin{tabular}{p{0.3\linewidth}p{0.7\linewidth}}',
+                r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\begin{tabular}{p{0.3\tablewidth}p{0.7\tablewidth}}',
 
-                r'\multicolumn{1}{p{0.3\linewidth}}{test1} & '
-                r'\multicolumn{1}{p{0.7\linewidth}}{test2} \\',
+                r'\multicolumn{1}{p{0.3\tablewidth}}{test1} & '
+                r'\multicolumn{1}{p{0.7\tablewidth}}{test2} \\',
 
-                r'\multicolumn{1}{p{0.3\linewidth}}{test3} & '
-                r'\multicolumn{1}{p{0.7\linewidth}}{test4} \\',
+                r'\multicolumn{1}{p{0.3\tablewidth}}{test3} & '
+                r'\multicolumn{1}{p{0.7\tablewidth}}{test4} \\',
 
                 r'\end{tabular}',
                 r''))
@@ -139,9 +148,12 @@ class TestTableConverter(MockTestCase):
                 r'</table>'))
 
         latex = '\n'.join((
-                r'\begin{tabular}{p{0.3\linewidth}r}',
+                r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\begin{tabular}{p{0.3\tablewidth}r}',
 
-                r'\multicolumn{1}{p{0.3\linewidth}}{test1} & '
+                r'\multicolumn{1}{p{0.3\tablewidth}}{test1} & '
                 r'\multicolumn{1}{r}{test2} \\',
 
                 r'\end{tabular}',
@@ -171,14 +183,17 @@ class TestTableConverter(MockTestCase):
                 r'</table>'))
 
         latex = '\n'.join((
-                r'\begin{tabular}{p{0.3\linewidth}p{0.7\linewidth}}',
+                r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\begin{tabular}{p{0.3\tablewidth}p{0.7\tablewidth}}',
 
-                r'\multicolumn{1}{p{0.3\linewidth}}{'
+                r'\multicolumn{1}{p{0.3\tablewidth}}{'
                 r'\raggedleft test1} & \multicolumn{1}{'
-                r'p{0.7\linewidth}}{\raggedright test2} \\',
+                r'p{0.7\tablewidth}}{\raggedright test2} \\',
 
-                r'\multicolumn{1}{p{0.3\linewidth}}{\center\vspace{-1.5em}'
-                r'test3} & \multicolumn{1}{p{0.7\linewidth}}{test4} \\',
+                r'\multicolumn{1}{p{0.3\tablewidth}}{\center\vspace{-1.5em}'
+                r'test3} & \multicolumn{1}{p{0.7\tablewidth}}{test4} \\',
 
                 r'\end{tabular}',
                 r''))
@@ -195,6 +210,9 @@ class TestTableConverter(MockTestCase):
                 r'</table>'))
 
         latex = '\n'.join((
+                r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-2\tabcolsep}',
                 r'\begin{tabular}{l}',
                 r'\caption{Testtabelle} \\',
                 r'\multicolumn{1}{l}{test} \\',
@@ -214,6 +232,9 @@ class TestTableConverter(MockTestCase):
                 r'</table>'))
 
         latex = '\n'.join((
+                r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-2\tabcolsep}',
                 r'\begin{tabular}{l}',
                 r'\caption*{NotIndexedCaption} \\',
                 r'\multicolumn{1}{l}{foo} \\',
@@ -233,6 +254,9 @@ class TestTableConverter(MockTestCase):
                 r'</table>'))
 
         latex = '\n'.join((
+                r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-2\tabcolsep}',
                 r'\begin{tabular}{l}',
                 r'\multicolumn{1}{l}{foo} \\',
                 r'\caption{My Table} \\',
@@ -248,9 +272,17 @@ class TestTableConverter(MockTestCase):
             r'<table><tr><td>test2</td></tr></table>'
 
         latex = '\n'.join((
+                r'\makeatletter\@ifundefined{tablewidth}{\newlength' + \
+                    r'\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-2\tabcolsep}',
                 r'\begin{tabular}{l}',
                 r'\multicolumn{1}{l}{test1} \\',
                 r'\end{tabular}',
+                r'\makeatletter\@ifundefined{tablewidth}{\newlength' + \
+                    r'\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-2\tabcolsep}',
                 r'\begin{tabular}{l}',
                 r'\multicolumn{1}{l}{test2} \\',
                 r'\end{tabular}',
@@ -264,6 +296,9 @@ class TestTableConverter(MockTestCase):
         html = r'<table><tr><td><b>Hello</b> <i>World</i></td></tr></table>'
 
         latex = '\n'.join((
+                r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-2\tabcolsep}',
                 r'\begin{tabular}{l}',
                 r'\multicolumn{1}{l}{{\bf Hello} {\it World}} \\',
                 r'\end{tabular}',
@@ -281,7 +316,10 @@ class TestTableConverter(MockTestCase):
 
         latex = '\n'.join((
                 r'This {\it is} a {\bf Table}:\\',
-                r' \begin{tabular}{l}',
+                r' \makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-2\tabcolsep}',
+                r'\begin{tabular}{l}',
                 r'\multicolumn{1}{l}{test} \\',
                 r'\end{tabular}',
                 r' {\bf yeah}'))
@@ -299,6 +337,9 @@ class TestTableConverter(MockTestCase):
                 r'</table>'))
 
         latex = '\n'.join((
+                r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-2\tabcolsep}',
                 r'\begin{tabular}{l}',
                 r'\multicolumn{1}{l}{2>1} \\',
                 '\\multicolumn{1}{l}{X\xc3\xa4Y} \\\\',
@@ -328,15 +369,18 @@ class TestTableConverter(MockTestCase):
                 r'</table>'))
 
         latex = '\n'.join((
-                r'\begin{tabular}{p{0.33\linewidth}p{0.33\linewidth}'
-                r'p{0.34\linewidth}}',
+                r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-6\tabcolsep}',
+                r'\begin{tabular}{p{0.33\tablewidth}p{0.33\tablewidth}'
+                r'p{0.34\tablewidth}}',
 
-                r'\multicolumn{1}{p{0.33\linewidth}}{one} & '
-                r'\multicolumn{1}{p{0.33\linewidth}}{two} & '
-                r'\multicolumn{1}{p{0.34\linewidth}}{three} \\',
+                r'\multicolumn{1}{p{0.33\tablewidth}}{one} & '
+                r'\multicolumn{1}{p{0.33\tablewidth}}{two} & '
+                r'\multicolumn{1}{p{0.34\tablewidth}}{three} \\',
 
-                r'\multicolumn{2}{p{0.66\linewidth}}{one and two} & '
-                r'\multicolumn{1}{p{0.34\linewidth}}{three} \\',
+                r'\multicolumn{2}{p{0.66\tablewidth}}{one and two} & '
+                r'\multicolumn{1}{p{0.34\tablewidth}}{three} \\',
 
                 r'\end{tabular}',
                 r''))
@@ -361,12 +405,15 @@ class TestTableConverter(MockTestCase):
                 r'</table>'))
 
         latex = '\n'.join((
-                r'\begin{tabular}{p{0.5\linewidth}p{0.5\linewidth}}',
+                r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\begin{tabular}{p{0.5\tablewidth}p{0.5\tablewidth}}',
 
-                r'\multirow{2}{0.5\textwidth}{one} & \multicolumn{1}'
-                r'{p{0.5\linewidth}}{two} \\',
+                r'\multirow{2}{0.5\tablewidth}{one} & \multicolumn{1}'
+                r'{p{0.5\tablewidth}}{two} \\',
 
-                r' & \multicolumn{1}{p{0.5\linewidth}}{three} \\',
+                r' & \multicolumn{1}{p{0.5\tablewidth}}{three} \\',
                 r'\end{tabular}',
                 r''))
 
@@ -400,23 +447,27 @@ class TestTableConverter(MockTestCase):
                 ))
 
         latex = '\n'.join((
-                r'\begin{tabular}{p{0.25\linewidth}p{0.25\linewidth}' + \
-                    r'p{0.25\linewidth}p{0.25\linewidth}l}',
+                r'\makeatletter\@ifundefined{tablewidth}{\newlength' + \
+                    r'\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-10\tabcolsep}',
+                r'\begin{tabular}{p{0.25\tablewidth}p{0.25\tablewidth}' + \
+                    r'p{0.25\tablewidth}p{0.25\tablewidth}l}',
 
                 # row 1
-                r'\multicolumn{1}{p{0.25\linewidth}}{A1} & ' + \
-                    r'\multirow{2}{0.25\textwidth}{B1-B2} & ' + \
-                    r'\multicolumn{1}{p{0.25\linewidth}}{C1} & ' + \
-                    r'\multicolumn{1}{p{0.25\linewidth}}{D1} \\',
+                r'\multicolumn{1}{p{0.25\tablewidth}}{A1} & ' + \
+                    r'\multirow{2}{0.25\tablewidth}{B1-B2} & ' + \
+                    r'\multicolumn{1}{p{0.25\tablewidth}}{C1} & ' + \
+                    r'\multicolumn{1}{p{0.25\tablewidth}}{D1} \\',
 
                 # row 2
-                r'\multicolumn{1}{p{0.25\linewidth}}{A2} & ' + \
+                r'\multicolumn{1}{p{0.25\tablewidth}}{A2} & ' + \
                     r' & '
-                    r'\multirow{2}{0.25\textwidth}{C2-C3} & ' + \
-                    r'\multicolumn{1}{p{0.25\linewidth}}{D2} \\',
+                    r'\multirow{2}{0.25\tablewidth}{C2-C3} & ' + \
+                    r'\multicolumn{1}{p{0.25\tablewidth}}{D2} \\',
 
                 # row 3
-                r'\multicolumn{2}{p{0.5\linewidth}}{A3-B3} & ' + \
+                r'\multicolumn{2}{p{0.5\tablewidth}}{A3-B3} & ' + \
                     r' & '
                     r'\multicolumn{2}{l}{D3-E3} \\',
 
@@ -445,16 +496,19 @@ class TestTableConverter(MockTestCase):
                 r'</table>'))
 
         latex = '\n'.join((
-                r'\begin{tabular}{|p{0.3\linewidth}|p{0.7\linewidth}|}',
+                r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\begin{tabular}{|p{0.3\tablewidth}|p{0.7\tablewidth}|}',
                 r'\hline',
 
-                r'\multicolumn{1}{|p{0.3\linewidth}}{test1} & '
-                r'\multicolumn{1}{|p{0.7\linewidth}|}{test2} \\',
+                r'\multicolumn{1}{|p{0.3\tablewidth}}{test1} & '
+                r'\multicolumn{1}{|p{0.7\tablewidth}|}{test2} \\',
 
                 r'\hline',
 
-                r'\multicolumn{1}{|p{0.3\linewidth}}{test3} & '
-                r'\multicolumn{1}{|p{0.7\linewidth}|}{test4} \\',
+                r'\multicolumn{1}{|p{0.3\tablewidth}}{test3} & '
+                r'\multicolumn{1}{|p{0.7\tablewidth}|}{test4} \\',
 
                 r'\hline',
                 r'\end{tabular}',
@@ -477,11 +531,15 @@ class TestTableConverter(MockTestCase):
                 ))
 
         latex = '\n'.join((
-                r'\begin{tabular}{p{0.5\linewidth}p{0.5\linewidth}}',
+                r'\makeatletter\@ifundefined{tablewidth}{\newlength' + \
+                    r'\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\begin{tabular}{p{0.5\tablewidth}p{0.5\tablewidth}}',
 
-                r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
                     r'hello\newline world} & ' + \
-                    r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                    r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
                     r'foo\newline \newline bar} \\',
 
                 r'\end{tabular}',
@@ -505,11 +563,14 @@ class TestTableConverter(MockTestCase):
                 ))
 
         tabular_latex = '\n'.join((
-                r'\begin{tabular}{p{0.5\linewidth}p{0.5\linewidth}}',
+                r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\begin{tabular}{p{0.5\tablewidth}p{0.5\tablewidth}}',
 
-                r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
                     r'foo} & ' + \
-                    r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                    r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
                     r'bar} \\',
 
                 r'\end{tabular}',
@@ -530,6 +591,9 @@ class TestTableConverter(MockTestCase):
                 ))
 
         longtable_latex = '\n'.join((
+                r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-2\tabcolsep}',
                 r'\begin{longtable}{l}',
                 (40 * '\\multicolumn{1}{l}{foo} \\\\\n').strip(),
                 r'\end{longtable}',
@@ -551,11 +615,14 @@ class TestTableConverter(MockTestCase):
                 ))
 
         longtable_latex = '\n'.join((
-                r'\begin{longtable}{p{0.5\linewidth}p{0.5\linewidth}}',
+                r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\begin{longtable}{p{0.5\tablewidth}p{0.5\tablewidth}}',
 
-                r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
                     r'foo} & ' + \
-                    r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                    r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
                     r'bar} \\',
 
                 r'\end{longtable}',
@@ -574,6 +641,9 @@ class TestTableConverter(MockTestCase):
                 ))
 
         tabular_latex = '\n'.join((
+                r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-2\tabcolsep}',
                 r'\begin{tabular}{l}',
                 (20 * '\\multicolumn{1}{l}{foo} \\\\\n').strip(),
                 r'\end{tabular}',
@@ -646,6 +716,9 @@ class TestTableConverter(MockTestCase):
                 r'</table>'))
 
         latex = '\n'.join((
+                r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-4\tabcolsep}',
                 r'\begin{tabular}{|l|l|}',
                 r'\hline',
 
@@ -694,21 +767,24 @@ class TestTableConverter(MockTestCase):
                 r'</table>'))
 
         latex = '\n'.join((
-                r'\begin{tabular}{|p{0.5\linewidth}|p{0.25\linewidth}|' + \
-                    'p{0.25\linewidth}|}',
+                r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-6\tabcolsep}',
+                r'\begin{tabular}{|p{0.5\tablewidth}|p{0.25\tablewidth}|' + \
+                    r'p{0.25\tablewidth}|}',
                 r'\hline',
 
-                r'\multicolumn{3}{|p{1.0\linewidth}|}{\textbf{heading}} \\',
+                r'\multicolumn{3}{|p{1.0\tablewidth}|}{\textbf{heading}} \\',
                 r'\hline',
 
-                r'\multicolumn{1}{|p{0.5\linewidth}|}{content 1A} & ' + \
-                    r'\multirow{2}{0.25\textwidth}{content 1/2 B} & ' + \
-                    r'\multicolumn{1}{|p{0.25\linewidth}|}{content 1C} \\',
+                r'\multicolumn{1}{|p{0.5\tablewidth}|}{content 1A} & ' + \
+                    r'\multirow{2}{0.25\tablewidth}{content 1/2 B} & ' + \
+                    r'\multicolumn{1}{|p{0.25\tablewidth}|}{content 1C} \\',
                 r'\hline',
 
-                r'\multicolumn{1}{|p{0.5\linewidth}|}{content 2A} & ' + \
+                r'\multicolumn{1}{|p{0.5\tablewidth}|}{content 2A} & ' + \
                     r' & '
-                    r'\multicolumn{1}{|p{0.25\linewidth}|}{content 2C} \\',
+                    r'\multicolumn{1}{|p{0.25\tablewidth}|}{content 2C} \\',
                 r'\hline',
 
                 r'\end{tabular}',
@@ -744,21 +820,24 @@ class TestTableConverter(MockTestCase):
                 r'</table>'))
 
         latex = '\n'.join((
-                r'\begin{tabular}{p{0.5\linewidth}p{0.25\linewidth}' + \
-                    'p{0.25\linewidth}}',
+                r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-6\tabcolsep}',
+                r'\begin{tabular}{p{0.5\tablewidth}p{0.25\tablewidth}' + \
+                    r'p{0.25\tablewidth}}',
                 r'\hline',
 
-                r'\multicolumn{3}{p{1.0\linewidth}}{\textbf{heading}} \\',
+                r'\multicolumn{3}{p{1.0\tablewidth}}{\textbf{heading}} \\',
                 r'\hline',
 
-                r'\multicolumn{1}{p{0.5\linewidth}}{content 1A} & ' + \
-                    r'\multirow{2}{0.25\textwidth}{content 1/2 B} & ' + \
-                    r'\multicolumn{1}{p{0.25\linewidth}}{content 1C} \\',
+                r'\multicolumn{1}{p{0.5\tablewidth}}{content 1A} & ' + \
+                    r'\multirow{2}{0.25\tablewidth}{content 1/2 B} & ' + \
+                    r'\multicolumn{1}{p{0.25\tablewidth}}{content 1C} \\',
                 r'\hline',
 
-                r'\multicolumn{1}{p{0.5\linewidth}}{content 2A} & ' + \
+                r'\multicolumn{1}{p{0.5\tablewidth}}{content 2A} & ' + \
                     r' & '
-                    r'\multicolumn{1}{p{0.25\linewidth}}{content 2C} \\',
+                    r'\multicolumn{1}{p{0.25\tablewidth}}{content 2C} \\',
                 r'\hline',
 
                 r'\end{tabular}',
@@ -794,20 +873,23 @@ class TestTableConverter(MockTestCase):
                 r'</table>'))
 
         latex = '\n'.join((
-                r'\begin{tabular}{p{0.5\linewidth}p{0.25\linewidth}' + \
-                    'p{0.25\linewidth}}',
+                r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-6\tabcolsep}',
+                r'\begin{tabular}{p{0.5\tablewidth}p{0.25\tablewidth}' + \
+                    r'p{0.25\tablewidth}}',
 
-                r'\multicolumn{3}{p{1.0\linewidth}}{\textbf{heading}} \\',
+                r'\multicolumn{3}{p{1.0\tablewidth}}{\textbf{heading}} \\',
 
-                r'\multicolumn{1}{p{0.5\linewidth}}' + \
+                r'\multicolumn{1}{p{0.5\tablewidth}}' + \
                     r'{\textbf{content 1A}} & ' + \
-                    r'\multirow{2}{0.25\textwidth}{content 1/2 B} & ' + \
-                    r'\multicolumn{1}{p{0.25\linewidth}}{content 1C} \\',
+                    r'\multirow{2}{0.25\tablewidth}{content 1/2 B} & ' + \
+                    r'\multicolumn{1}{p{0.25\tablewidth}}{content 1C} \\',
 
-                r'\multicolumn{1}{p{0.5\linewidth}}' + \
+                r'\multicolumn{1}{p{0.5\tablewidth}}' + \
                     r'{\textbf{content 2A}} & ' + \
                     r' & ' + \
-                    r'\multicolumn{1}{p{0.25\linewidth}}{content 2C} \\',
+                    r'\multicolumn{1}{p{0.25\tablewidth}}{content 2C} \\',
 
                 r'\end{tabular}',
                 r''
@@ -835,6 +917,9 @@ class TestTableConverter(MockTestCase):
 
 
         latex = '\n'.join((
+                r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-6\tabcolsep}',
                 r'\begin{tabular}{lll}',
 
                 r'\cline{2-2}',
@@ -877,6 +962,9 @@ class TestTableConverter(MockTestCase):
 
         latex = '\n'.join((
                 r'without width: '
+                r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-2\tabcolsep}',
                 r'\begin{tabular}{l}',
                 r'\multicolumn{1}{l}{left} \\',
                 r'\multicolumn{1}{c}{center} \\',
@@ -884,11 +972,14 @@ class TestTableConverter(MockTestCase):
                 r'\end{tabular}',
 
                 r' with width: '
-                r'\begin{tabular}{p{1.0\linewidth}}',
-                r'\multicolumn{1}{p{1.0\linewidth}}{\raggedright left} \\',
-                r'\multicolumn{1}{p{1.0\linewidth}}{' + \
+                r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-2\tabcolsep}',
+                r'\begin{tabular}{p{1.0\tablewidth}}',
+                r'\multicolumn{1}{p{1.0\tablewidth}}{\raggedright left} \\',
+                r'\multicolumn{1}{p{1.0\tablewidth}}{' + \
                     r'\center\vspace{-1.5em}center} \\',
-                r'\multicolumn{1}{p{1.0\linewidth}}{\raggedleft right} \\',
+                r'\multicolumn{1}{p{1.0\tablewidth}}{\raggedleft right} \\',
                 r'\end{tabular}',
                 r''
                 ))
@@ -906,11 +997,14 @@ class TestTableConverter(MockTestCase):
                 ))
 
         latex = '\n'.join((
-                r'\begin{tabular}{p{0.5\linewidth}p{0.5\linewidth}}',
+                r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\begin{tabular}{p{0.5\tablewidth}p{0.5\tablewidth}}',
 
-                r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
                     r'\hangindent 0.2cm\hspace{0.2cm} foo} & ' + \
-                    r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                    r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
                     r'bar} \\',
 
                 r'\end{tabular}',
@@ -930,11 +1024,14 @@ class TestTableConverter(MockTestCase):
                 ))
 
         latex = '\n'.join((
-                r'\begin{tabular}{p{0.5\linewidth}p{0.5\linewidth}}',
+                r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\begin{tabular}{p{0.5\tablewidth}p{0.5\tablewidth}}',
 
-                r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
                     r'\hangindent 1cm\hspace{1cm} foo} & ' + \
-                    r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                    r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
                     r'bar} \\',
 
                 r'\end{tabular}',
@@ -954,11 +1051,14 @@ class TestTableConverter(MockTestCase):
                 ))
 
         latex = '\n'.join((
-                r'\begin{tabular}{p{0.5\linewidth}p{0.5\linewidth}}',
+                r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\begin{tabular}{p{0.5\tablewidth}p{0.5\tablewidth}}',
 
-                r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
                     r'\textbf{foo}} & ' + \
-                    r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                    r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
                     r'\hangindent 1cm\hspace{1cm} \textbf{bar}} \\',
 
                 r'\end{tabular}',
@@ -978,11 +1078,14 @@ class TestTableConverter(MockTestCase):
                 ))
 
         latex = '\n'.join((
-                r'\begin{tabular}{p{0.5\linewidth}p{0.5\linewidth}}',
+                r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\begin{tabular}{p{0.5\tablewidth}p{0.5\tablewidth}}',
 
-                r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
                     r'\textcolor{gray}{foo}} & ' + \
-                    r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                    r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
                     r'bar} \\',
 
                 r'\end{tabular}',
@@ -1003,11 +1106,14 @@ class TestTableConverter(MockTestCase):
                 ))
 
         latex = '\n'.join((
-                r'\begin{tabular}{p{0.5\linewidth}p{0.5\linewidth}}',
+                r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\begin{tabular}{p{0.5\tablewidth}p{0.5\tablewidth}}',
 
-                r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
                     r'\footnotesize foo} & ' + \
-                    r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                    r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
                     r'bar} \\',
 
                 r'\end{tabular}',
@@ -1027,11 +1133,14 @@ class TestTableConverter(MockTestCase):
                 ))
 
         latex = '\n'.join((
-                r'\begin{tabular}{p{0.5\linewidth}p{0.5\linewidth}}',
+                r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\begin{tabular}{p{0.5\tablewidth}p{0.5\tablewidth}}',
 
-                r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
                     r'\scriptsize foo} & ' + \
-                    r'\multicolumn{1}{p{0.5\linewidth}}{' + \
+                    r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
                     r'bar} \\',
 
                 r'\end{tabular}',
@@ -1064,13 +1173,13 @@ class TestLatexWidth(TestCase):
 
     def test_relative_width(self):
         width1 = table.LatexWidth.convert('10%')
-        self.assertEqual(str(width1), r'0.1\linewidth')
+        self.assertEqual(str(width1), r'0.1\tablewidth')
 
         width2 = table.LatexWidth.convert('25%')
-        self.assertEqual(str(width2), r'0.25\linewidth')
+        self.assertEqual(str(width2), r'0.25\tablewidth')
 
         self.assertEqual(str(width1 + width2),
-                         r'0.35\linewidth')
+                         r'0.35\tablewidth')
 
     def test_defaults_to_em(self):
         width1 = table.LatexWidth.convert('50')

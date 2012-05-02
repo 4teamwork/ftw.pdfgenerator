@@ -4,6 +4,9 @@ Changelog
 1.1.3 (unreleased)
 ------------------
 
+- Tables: calculate widths properly respecting \tabcolsep.
+  [jone]
+
 - Tables: support plone css classes (grid, listing, vertical).
   [jone]
 

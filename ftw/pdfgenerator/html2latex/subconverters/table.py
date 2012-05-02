@@ -118,17 +118,28 @@ class TableConverter(subconverter.SubConverter):
             return NO_LAYOUT
 
     def render(self):
-        latex = '\\begin{%s}{%s}\n' % (
-            self.environment, self.get_table_format())
+        latex = [
+            r'\makeatletter\@ifundefined{tablewidth}{' + \
+                r'\newlength\tablewidth}\makeatother',
+            r'\setlength\tablewidth\linewidth',
+            r'\addtolength\tablewidth{-%i\tabcolsep}' % (
+                2 * len(self.columns))]
+
+        latex.append(r'\begin{%s}{%s}' % (
+                self.environment, self.get_table_format()))
+
         caption_command, insert_caption_at_top = self.render_caption()
         if caption_command and insert_caption_at_top:
-            latex += caption_command
+            latex.append(caption_command.strip())
 
-        latex += self.render_rows()
+        latex.append(self.render_rows().strip())
+
         if caption_command and not insert_caption_at_top:
-            latex += caption_command
-        latex += '\\end{%s}\n' % self.environment
-        return latex
+            latex.append(caption_command.strip())
+
+        latex.append(r'\end{%s}' % self.environment)
+        latex.append('')
+        return '\n'.join(latex)
 
     def render_rows(self):
         head_rows = []
@@ -533,8 +544,7 @@ class LatexCell(object):
             span = str(self.get_rowspan())
             latex = '\\multirow{%s}{%s}{%s}' % (
                 span,
-                str(self.get_calculated_width()).replace(r'\linewidth',
-                                                       r'\textwidth'),
+                str(self.get_calculated_width()),
                 self.render_content(),
                 )
         else:
@@ -793,7 +803,7 @@ class LatexWidth(object):
     """
 
     TYPE_ABSOLUTE = 'absolute width (px, em, ..)'
-    TYPE_RELATIVE = 'relative width (% of linewidth, ..)'
+    TYPE_RELATIVE = 'relative width (% of tablewidth, ..)'
     VALID_ABSOLUTE_UNITS = [
         'cm',
         'mm',
@@ -846,7 +856,7 @@ class LatexWidth(object):
         if self.type == LatexWidth.TYPE_ABSOLUTE:
             return '%s%s' % (str(self.width), self.unit)
         elif self.type == LatexWidth.TYPE_RELATIVE:
-            return '%s\\linewidth' % str(self.width)
+            return '%s\\tablewidth' % str(self.width)
 
     def __str__(self):
         return self.get()
