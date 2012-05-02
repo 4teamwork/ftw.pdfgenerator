@@ -668,7 +668,7 @@ class TestTableConverter(MockTestCase):
 
     def test_complex_grid_css_class(self):
         html = '\n'.join((
-                r'<table class="no-page-break listing">',
+                r'<table class="no-page-break grid">',
                 r' <colgroup>',
                 r'  <col width="50%" />'
                 r'  <col width="25%" />'

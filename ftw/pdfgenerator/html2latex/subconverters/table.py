@@ -88,7 +88,7 @@ class TableConverter(subconverter.SubConverter):
             return True
 
         elif 'border-grid' in self.get_css_classes() or \
-                'listing' in self.get_css_classes():
+                'grid' in self.get_css_classes():
             return True
 
         else:
