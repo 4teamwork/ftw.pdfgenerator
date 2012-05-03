@@ -1,10 +1,13 @@
 from ftw.pdfgenerator.html2latex.converter import HTML2LatexConverter
 from ftw.pdfgenerator.html2latex.subconverters import table
+from ftw.pdfgenerator.testing import ZCML_WITH_SITE_LAYER
 from ftw.testing import MockTestCase
 from unittest2 import TestCase
 
 
 class TestTableConverter(MockTestCase):
+
+    layer = ZCML_WITH_SITE_LAYER
 
     def convert(self, *args, **kwargs):
         count = 1
@@ -210,11 +213,23 @@ class TestTableConverter(MockTestCase):
                 r'</table>'))
 
         latex = '\n'.join((
-                r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
+                r'\makeatletter\@ifundefined{tablewidth}{' + \
+                    r'\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-2\tabcolsep}',
+
+                r'\center{',
+                r'\addtocounter{table}{1}',
+                r'\addcontentsline{lot}{table}{' + \
+                    r'\protect\numberline ' + \
+                    r'{\thechapter.\arabic{table}}' + \
+                    r'{\ignorespaces Testtabelle}' + \
+                    r'}',
+                r'Table \thechapter.\arabic{table}: Testtabelle',
+                r'}',
+                r'\vspace{-\baselineskip}',
+
                 r'\begin{tabular}{l}',
-                r'\caption{Testtabelle} \\',
                 r'\multicolumn{1}{l}{test} \\',
                 r'\end{tabular}',
                 r''))
@@ -232,11 +247,17 @@ class TestTableConverter(MockTestCase):
                 r'</table>'))
 
         latex = '\n'.join((
-                r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
+                r'\makeatletter\@ifundefined{tablewidth}{' + \
+                    r'\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-2\tabcolsep}',
+
+                r'\center{',
+                r'NotIndexedCaption',
+                r'}',
+                r'\vspace{-\baselineskip}',
+
                 r'\begin{tabular}{l}',
-                r'\caption*{NotIndexedCaption} \\',
                 r'\multicolumn{1}{l}{foo} \\',
                 r'\end{tabular}',
                 r''))
@@ -254,13 +275,26 @@ class TestTableConverter(MockTestCase):
                 r'</table>'))
 
         latex = '\n'.join((
-                r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
+                r'\makeatletter\@ifundefined{tablewidth}{' + \
+                    r'\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-2\tabcolsep}',
+
                 r'\begin{tabular}{l}',
                 r'\multicolumn{1}{l}{foo} \\',
-                r'\caption{My Table} \\',
                 r'\end{tabular}',
+
+                r'\vspace{-\baselineskip}',
+                r'\center{',
+                r'\addtocounter{table}{1}',
+                r'\addcontentsline{lot}{table}{' + \
+                    r'\protect\numberline ' + \
+                    r'{\thechapter.\arabic{table}}' + \
+                    r'{\ignorespaces My Table}' + \
+                    r'}',
+                r'Table \thechapter.\arabic{table}: My Table',
+                r'}',
+
                 r''))
 
         self.assertEqual(self.convert(html), latex)

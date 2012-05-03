@@ -2,6 +2,7 @@ from BeautifulSoup import BeautifulSoup
 from ftw.pdfgenerator import interfaces
 from ftw.pdfgenerator.html2latex import subconverter
 from ftw.pdfgenerator.html2latex import wrapper
+from ftw.pdfgenerator.html2latex.utils import generate_manual_caption
 from ftw.pdfgenerator.utils import html2xmlentities
 from xml.dom import minidom
 import re
@@ -125,19 +126,20 @@ class TableConverter(subconverter.SubConverter):
             r'\addtolength\tablewidth{-%i\tabcolsep}' % (
                 2 * len(self.columns))]
 
-        latex.append(r'\begin{%s}{%s}' % (
-                self.environment, self.get_table_format()))
-
         caption_command, insert_caption_at_top = self.render_caption()
         if caption_command and insert_caption_at_top:
             latex.append(caption_command.strip())
+            latex.append(r'\vspace{-\baselineskip}')
 
+        latex.append(r'\begin{%s}{%s}' % (
+                self.environment, self.get_table_format()))
         latex.append(self.render_rows().strip())
+        latex.append(r'\end{%s}' % self.environment)
 
         if caption_command and not insert_caption_at_top:
+            latex.append(r'\vspace{-\baselineskip}')
             latex.append(caption_command.strip())
 
-        latex.append(r'\end{%s}' % self.environment)
         latex.append('')
         return '\n'.join(latex)
 
@@ -173,14 +175,6 @@ class TableConverter(subconverter.SubConverter):
         returns the LaTeX-Command for the caption and weather the
         command should be inserted at the top or at the bottom of
         the table.
-
-        Example:
-        caption_command, insert_at_top = self.render_caption()
-        caption_command : \caption{My Table}
-        insert_at_top : True
-
-        If there is no command, it will return
-        None, False
         """
 
         caption = self.dom.getElementsByTagName('caption')
@@ -196,10 +190,13 @@ class TableConverter(subconverter.SubConverter):
             content = content.encode('utf8')
             latexContent = self.converter.convert(content)
 
-            return '\\caption%s{%s} \\\\\n' % (
-                ('notListed' in self.get_css_classes() and '*' or ''),
-                latexContent,
-                ), insert_at_top
+            show_in_index = 'notListed' not in self.get_css_classes()
+
+            latex = generate_manual_caption(latexContent, 'table',
+                                            show_in_index=show_in_index)
+
+            return latex, insert_at_top
+
         else:
             return None, False
 

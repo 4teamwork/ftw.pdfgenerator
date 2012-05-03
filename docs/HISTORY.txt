@@ -4,6 +4,9 @@ Changelog
 1.1.3 (unreleased)
 ------------------
 
+- Tables: use seperate caption implementation for non-floating environments.
+  [jone]
+
 - Tables: fix border collapse bug when using rowspan.
   [jone]
 
