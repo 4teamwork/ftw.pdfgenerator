@@ -2,8 +2,13 @@ from ftw.pdfgenerator.config import DefaultConfig
 from ftw.pdfgenerator.interfaces import IConfig
 from ftw.testing.layer import ComponentRegistryLayer
 from mocker import Mocker, expect
+from plone.mocktestcase.dummy import Dummy
 from plone.testing import Layer
+from zope.app.component.hooks import setSite
+from zope.component import getGlobalSiteManager
 from zope.component import provideUtility
+from zope.i18n.interfaces import IUserPreferredLanguages
+from zope.interface import alsoProvides
 import os
 import shutil
 import tempfile
@@ -22,6 +27,30 @@ class PDFGeneratorZCMLLayer(ComponentRegistryLayer):
 
 
 PDFGENERATOR_ZCML_LAYER = PDFGeneratorZCMLLayer()
+
+
+class ZCMLWithSiteLayer(Layer):
+    """A layer with loaded zcml and a global site.
+    """
+
+    defaultBases = (PDFGENERATOR_ZCML_LAYER,)
+
+    def testSetUp(self):
+        setSite(self._create_site_with_request())
+
+    def testTearDown(self):
+        setSite(None)
+
+    def _create_site_with_request(self):
+        request = Dummy(getPreferredLanguages=lambda: [])
+        alsoProvides(request, IUserPreferredLanguages)
+        site = Dummy(REQUEST=request,
+                     getSiteManager=getGlobalSiteManager)
+
+        return site
+
+
+ZCML_WITH_SITE_LAYER = ZCMLWithSiteLayer()
 
 
 class PredefinedBuildDirectoryLayer(Layer):

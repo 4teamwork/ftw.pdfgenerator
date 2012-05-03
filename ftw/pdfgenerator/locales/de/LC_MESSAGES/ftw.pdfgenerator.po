@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-03-08 15:31+0000\n"
+"POT-Creation-Date: 2012-05-03 10:19+0000\n"
 "PO-Revision-Date: 2011-11-22 10:47+0100\n"
 "Last-Translator: Jonas Baumann <j.baumann@4teamwork.ch>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,4 +36,12 @@ msgstr "PDF"
 msgid "ZIP bundle"
 msgstr "ZIP Archiv"
 
+#. Default: "Figure"
+#: ./ftw/pdfgenerator/html2latex/utils.py:13
+msgid "enviroment_figure"
+msgstr "Abbildung"
 
+#. Default: "Table"
+#: ./ftw/pdfgenerator/html2latex/utils.py:8
+msgid "enviroment_table"
+msgstr "Tabelle"

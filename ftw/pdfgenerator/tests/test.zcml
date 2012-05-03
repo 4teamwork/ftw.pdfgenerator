@@ -2,6 +2,7 @@
            i18n_domain="Five">
 
   <include package="Products.Five" file="meta.zcml" />
+  <include package="zope.i18n" />
 
   <permission
       id="zope2.View"
