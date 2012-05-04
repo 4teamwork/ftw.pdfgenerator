@@ -102,6 +102,7 @@ DEFAULT_PATTERNS = ([
         (MODE_REPLACE,  '%',                       '\\%'),
         (MODE_REGEXP,   r'(\d) \\%',               r'\1\,\\%'),
         (MODE_REPLACE,  '_',                       '\\_'),
+        (MODE_REPLACE,  '$',                       '\\$'),
         (MODE_REGEXP,    '§',                       '\\S'),
         (MODE_REPLACE,  '#',                       '\\#'),
         (MODE_REGEXP,    '&szlig;',                 'ß'),

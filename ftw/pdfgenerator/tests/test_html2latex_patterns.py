@@ -225,7 +225,7 @@ class TestBasicPatterns(TestCase):
 
     def test_sepcial_characters(self):
         self.assertEqual(self.convert('!#$%&amp;\'()*+-./02345'),
-                         "!\\#$\\%\\&'()*+-./02345")
+                         "!\\#\\$\\%\\&'()*+-./02345")
 
         self.assertEqual(self.convert('6789:;&lt;=&gt;?@ABCDEFGHI'),
                          '6789:;<=>?@ABCDEFGHI')
