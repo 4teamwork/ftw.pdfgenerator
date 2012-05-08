@@ -71,6 +71,7 @@ def lookup_babel_option(language_code):
 
     return None
 
+
 def get_preferred_babel_option_for_context(context):
     """Returns the preferred babel option (language) for the current context.
     It tries to get the language of the current context, secondary using the

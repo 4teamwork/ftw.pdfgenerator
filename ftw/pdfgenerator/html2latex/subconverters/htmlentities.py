@@ -12,4 +12,3 @@ class HtmlentitiesConverter(subconverter.SubConverter):
         html = self.get_html()[1:]
         latex = decode_htmlentities(html).encode('utf8')
         self.replace(latex)
-

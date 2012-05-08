@@ -92,7 +92,7 @@ class Builder(object):
         stdout = ''
         while self._rerun_required(stdout):
             cmd = 'pdflatex --interaction=nonstopmode %s' % latex_path
-            exitcode_, stdout, stderr_ = self._execute(cmd)
+            _exitcode, stdout, _stderr = self._execute(cmd)
 
         if not os.path.exists(pdf_path):
             raise PDFBuildFailed('PDF missing.')

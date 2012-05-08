@@ -135,7 +135,6 @@ class HTML2LatexConverter(BasePatternAware):
         return self.convert(html, **kwargs)
 
 
-
 class HTML2LatexConvertRunner(BasePatternAware):
     implements(interfaces.IHTML2LaTeXConvertRunner)
 
@@ -190,7 +189,7 @@ class HTML2LatexConvertRunner(BasePatternAware):
             length = 10
 
         while not stop:
-            id_ = ''.join([choice(id_chars) for i in range(length)])
+            id_ = ''.join([choice(id_chars) for _i in range(length)])
             if id_ not in self.lockers.keys() and id_ not in self.html:
                 stop = True
 

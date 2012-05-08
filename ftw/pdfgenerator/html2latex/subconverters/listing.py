@@ -4,10 +4,9 @@ from ftw.pdfgenerator.utils import html2xmlentities
 from xml.dom import minidom
 
 
+# LaTeX allows a maximum list nesting of 4. Deeper nesting will be flattened
+# to the nesting limit so that the produced LaTeX code is still valid.
 LIST_NESTING_LIMIT = 4
-"""LaTeX allows a maximum list nesting of 4. Deeper nesting will be flattened
-to the nesting limit so that the produced LaTeX code is still valid.
-"""
 
 
 class ListConverter(subconverter.SubConverter):

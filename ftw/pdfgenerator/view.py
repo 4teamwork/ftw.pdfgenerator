@@ -72,7 +72,6 @@ class MakoLaTeXView(MakoTemplating):
         return self.layout.get_converter().convert_plain(*args, **kwargs)
 
 
-
 class RecursiveLaTeXView(MakoLaTeXView):
     """A recursive LaTeX view, which also renders the content of the child
     objects.

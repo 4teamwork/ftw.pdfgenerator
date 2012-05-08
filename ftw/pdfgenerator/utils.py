@@ -112,4 +112,3 @@ def xml2htmlentities(string):
             return match.group(0)
 
     return xpr.subn(substitute_entity, string)[0]
-
