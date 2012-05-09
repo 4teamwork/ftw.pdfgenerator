@@ -1,8 +1,8 @@
 Changelog
 =========
 
-1.1.3 (unreleased)
-------------------
+1.2 (2012-05-09)
+----------------
 
 - HTML to LaTeX: escape $ charactor. Otherwise it enables math-mode.
   [jone]
