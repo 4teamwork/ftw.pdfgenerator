@@ -690,7 +690,7 @@ class LatexCell(object):
             for i in range(1, len(self.columns)):
                 try:
                     width += self.columns[i].get_width()
-                except ValueError:
+                except (TypeError, ValueError):
                     # one of the columns has no or invalid width (not addable)
                     return None
             return width

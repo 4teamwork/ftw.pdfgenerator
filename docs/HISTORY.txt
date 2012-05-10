@@ -4,7 +4,8 @@ Changelog
 1.2.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Table converter: fix TypeError when using colspan without defining any widths.
+  [jone]
 
 
 1.2 (2012-05-09)

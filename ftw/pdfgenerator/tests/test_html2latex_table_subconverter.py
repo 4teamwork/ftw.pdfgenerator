@@ -978,6 +978,33 @@ class TestTableConverter(MockTestCase):
 
         self.assertEqual(self.convert(html), latex)
 
+    def test_colspan_without_width(self):
+        html = '\n'.join((
+                r'<table>',
+                r'<tr>',
+                r'<td>foo</td>',
+                r'<td>bar</td>',
+                r'</tr><tr>',
+                r'<td colspan="2">baz</td>',
+                r'</tr>',
+                r'</table>'))
+
+        latex = '\n'.join((
+                r'\makeatletter\@ifundefined{tablewidth}{' + \
+                    r'\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\begin{tabular}{ll}',
+
+                r'\multicolumn{1}{l}{foo} & ' + \
+                    r'\multicolumn{1}{l}{bar} \\',
+                r'\multicolumn{2}{l}{baz} \\',
+
+                r'\end{tabular}',
+                r''))
+
+        self.assertEqual(self.convert(html), latex)
+
     def test_border_classes(self):
         html = '\n'.join((
                 r'<table class="no-page-break">',
