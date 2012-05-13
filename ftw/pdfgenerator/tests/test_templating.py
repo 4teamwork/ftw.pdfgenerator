@@ -115,9 +115,7 @@ class TestBaseTemplating(TestCase):
 
         # OSError seems to be strange defined, so that the context manager
         # converts it to a list..
-        self.assertEqual(
-            cm.exception,
-            (2, 'No such file or directory', self.templates_not_existing))
+        self.assertEqual(cm.exception[1], 'No such file or directory')
 
     def test_get_template_returns_template(self):
         class Foo(BaseTemplating):
