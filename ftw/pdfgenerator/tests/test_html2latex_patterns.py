@@ -104,6 +104,12 @@ class TestBasicPatterns(TestCase):
         self.assertEqual(self.convert('Bar "foo (1)" blubb'),
                          'Bar "`foo (1)"\' blubb')
 
+        self.assertEqual(self.convert('foo &quot;<b>bar</b>&quot; baz'),
+                         'foo "`{\\bf bar}"\' baz')
+
+        self.assertEqual(self.convert('foo <b>&quot;bar&quot;</b> baz'),
+                         'foo {\\bf "`bar"\'} baz')
+
     def test_whitespace(self):
         self.assertEqual(self.convert('W\r\nX\nY\rZ'),
                          'W X Y Z')
