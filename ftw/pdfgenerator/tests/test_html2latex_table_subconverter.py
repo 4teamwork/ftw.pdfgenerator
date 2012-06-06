@@ -218,7 +218,7 @@ class TestTableConverter(MockTestCase):
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-2\tabcolsep}',
 
-                r'\center{',
+                r'\begin{center}',
                 r'\addtocounter{table}{1}',
                 r'\addcontentsline{lot}{table}{' + \
                     r'\protect\numberline ' + \
@@ -226,7 +226,7 @@ class TestTableConverter(MockTestCase):
                     r'{\ignorespaces Testtabelle}' + \
                     r'}',
                 r'Table \thechapter.\arabic{table}: Testtabelle',
-                r'}',
+                r'\end{center}',
                 r'\vspace{-\baselineskip}',
 
                 r'\begin{tabular}{l}',
@@ -252,9 +252,9 @@ class TestTableConverter(MockTestCase):
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-2\tabcolsep}',
 
-                r'\center{',
+                r'\begin{center}',
                 r'NotIndexedCaption',
-                r'}',
+                r'\end{center}',
                 r'\vspace{-\baselineskip}',
 
                 r'\begin{tabular}{l}',
@@ -285,7 +285,7 @@ class TestTableConverter(MockTestCase):
                 r'\end{tabular}',
 
                 r'\vspace{-\baselineskip}',
-                r'\center{',
+                r'\begin{center}',
                 r'\addtocounter{table}{1}',
                 r'\addcontentsline{lot}{table}{' + \
                     r'\protect\numberline ' + \
@@ -293,7 +293,7 @@ class TestTableConverter(MockTestCase):
                     r'{\ignorespaces My Table}' + \
                     r'}',
                 r'Table \thechapter.\arabic{table}: My Table',
-                r'}',
+                r'\end{center}',
 
                 r''))
 

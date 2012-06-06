@@ -4,6 +4,9 @@ Changelog
 1.2.2 (unreleased)
 ------------------
 
+- Fix centering of table captions which used to affect contents beneath.
+  [jone]
+
 - Fix quotation marks around bold text.
   [jone]
 

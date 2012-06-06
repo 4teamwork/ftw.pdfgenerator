@@ -41,7 +41,7 @@ def generate_manual_caption(caption, environment, show_in_index=True):
     env = ENVIRONMENTS[environment]
     label = translate(env['label'], context=getSite().REQUEST).encode('utf-8')
 
-    latex = [r'\center{']
+    latex = [r'\begin{center}']
 
     if show_in_index:
         latex.extend([
@@ -61,7 +61,7 @@ def generate_manual_caption(caption, environment, show_in_index=True):
         latex.append(caption)
 
     latex.extend([
-            r'}',
+            r'\end{center}',
             r'',
             ])
 
