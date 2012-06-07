@@ -22,7 +22,7 @@ class HyperlinkConverter(subconverter.SubConverter):
 
         url = url.replace('&amp;', '&')
         url = url.replace(' ', '%20').replace('%', '\%')
-        url = url.replace('_', '\_').url.replace('#', '\#')
+        url = url.replace('_', '\_').replace('#', '\#')
 
         self.get_layout().use_package('hyperref')
         self.replace_and_lock(self.latex_link(url, label))
