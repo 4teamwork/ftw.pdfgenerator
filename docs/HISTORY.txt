@@ -4,6 +4,9 @@ Changelog
 1.2.2 (unreleased)
 ------------------
 
+- Hyperlinks: handle underscores and hash keys in urls.
+  [jone]
+
 - Fix centering of table captions which used to affect contents beneath.
   [jone]
 

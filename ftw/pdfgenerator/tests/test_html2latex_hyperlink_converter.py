@@ -123,6 +123,20 @@ class TestHyperlinkConverter(MockTestCase):
                               'url': 'http://host.com/?foo=1&bar=2'}
         self.assertEqual(self.convert(html), latex)
 
+    def test_underscores_in_links(self):
+        self.replay()
+        html = '<a href="http://host.com/foo_bar">baz</a>'
+        latex = LATEX_HREF % {'label': 'baz',
+                              'url': 'http://host.com/foo\\_bar'}
+        self.assertEqual(self.convert(html), latex)
+
+    def test_hash_key_in_links(self):
+        self.replay()
+        html = '<a href="http://host.com/foo#bar">baz</a>'
+        latex = LATEX_HREF % {'label': 'baz',
+                              'url': 'http://host.com/foo\\#bar'}
+        self.assertEqual(self.convert(html), latex)
+
     def test_additional_parameters(self):
         self.replay()
         html = 'foo <a color="red" href="http://nohost/bar" class="link">' + \
