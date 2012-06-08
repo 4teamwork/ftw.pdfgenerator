@@ -55,17 +55,7 @@ class TableConverter(subconverter.SubConverter):
         self._environment = None
 
     def __call__(self):
-        html = self.get_html()
-        # cleanup html with BeautifulSoup
-
-        html = str(BeautifulSoup(html))
-        # minidom hates htmlentities, but loves xmlentities -.-
-
-        html = html2xmlentities(html)
-
-        # parse DOM
-        self.dom = minidom.parseString(html)
-        self.parse_dom()
+        self.parse()
 
         # render table
         latex = self.render()
@@ -78,6 +68,19 @@ class TableConverter(subconverter.SubConverter):
             self.converter.converter.layout.use_package('longtable')
         self.converter.converter.layout.use_package('multirow')
         self.converter.converter.layout.use_package('multicol')
+
+    def parse(self):
+        html = self.get_html()
+        # cleanup html with BeautifulSoup
+
+        html = str(BeautifulSoup(html))
+        # minidom hates htmlentities, but loves xmlentities -.-
+
+        html = html2xmlentities(html)
+
+        # parse DOM
+        self.dom = minidom.parseString(html)
+        self.parse_dom()
 
     @property
     def environment(self):
