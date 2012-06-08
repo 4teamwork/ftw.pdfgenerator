@@ -177,28 +177,48 @@ class TableConverter(subconverter.SubConverter):
         the table.
         """
 
-        caption = self.dom.getElementsByTagName('caption')
-        if len(caption) > 0:
-            caption_tag = caption[0]
-            siblings = caption_tag.parentNode.childNodes
-            insert_at_top = len(siblings) / float(2) > (
-                siblings.index(caption_tag) + 1)
+        caption, insert_at_top = self._get_caption_from_tag()
 
-            content = ''.join([child.toxml() for child
-                               in caption[0].childNodes])
+        if caption is None:
+            caption, insert_at_top = self._get_caption_from_summary()
 
-            content = content.encode('utf8')
-            latexContent = self.converter.convert(content)
-
-            show_in_index = 'notListed' not in self.get_css_classes()
-
-            latex = generate_manual_caption(latexContent, 'table',
-                                            show_in_index=show_in_index)
-
-            return latex, insert_at_top
-
-        else:
+        if caption is None:
             return None, False
+
+        show_in_index = 'notListed' not in self.get_css_classes()
+
+        latex = generate_manual_caption(caption, 'table',
+                                        show_in_index=show_in_index)
+
+        return latex, insert_at_top
+
+    def _get_caption_from_tag(self):
+        caption_tags = self.dom.getElementsByTagName('caption')
+        if len(caption_tags) == 0:
+            return None, False
+
+        caption_tag = caption_tags[0]
+
+        content = ''.join([child.toxml() for child
+                           in caption_tag.childNodes])
+        content = content.encode('utf8')
+        latexContent = self.converter.convert(content)
+
+        siblings = caption_tag.parentNode.childNodes
+        insert_at_top = len(siblings) / float(2) > (
+            siblings.index(caption_tag) + 1)
+
+        return latexContent, insert_at_top
+
+    def _get_caption_from_summary(self):
+        domTable = self.dom.getElementsByTagName('table')[0]
+
+        caption = domTable.getAttribute('summary') or None
+        if caption is not None:
+            caption = self.converter.convert(caption)
+
+        insert_at_top = False
+        return caption, insert_at_top
 
     def get_table_format(self):
         column_format = []

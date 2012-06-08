@@ -4,6 +4,9 @@ Changelog
 1.2.2 (unreleased)
 ------------------
 
+- Table: support "summary" attribute as caption (TinyMCE support).
+  [jone]
+
 - Handle hyphenation characters and entities.
   [jone]
 

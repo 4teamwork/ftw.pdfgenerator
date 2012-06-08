@@ -299,6 +299,66 @@ class TestTableConverter(MockTestCase):
 
         self.assertEqual(self.convert(html), latex)
 
+    def test_summary_as_caption(self):
+        # Tinymce allows easily to put a <caption> tag at the top but not
+        # at the bottom.
+        # Therefore we use the "summary"-Attribute as bottom-caption.
+
+        html = '\n'.join((
+                r'<table summary="a quite simple table">',
+                r'    <tr><td>foo</td></tr>',
+                r'</table>'))
+
+        latex = '\n'.join((
+                r'\makeatletter\@ifundefined{tablewidth}{' + \
+                    r'\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-2\tabcolsep}',
+
+                r'\begin{tabular}{l}',
+                r'\multicolumn{1}{l}{foo} \\',
+                r'\end{tabular}',
+
+                r'\vspace{-\baselineskip}',
+                r'\begin{center}',
+                r'\addtocounter{table}{1}',
+                r'\addcontentsline{lot}{table}{' + \
+                    r'\protect\numberline ' + \
+                    r'{\thechapter.\arabic{table}}' + \
+                    r'{\ignorespaces a quite simple table}' + \
+                    r'}',
+                r'Table \thechapter.\arabic{table}: a quite simple table',
+                r'\end{center}',
+
+                r''))
+
+        self.assertEqual(self.convert(html), latex)
+
+    def test_summary_as_not_listed_caption(self):
+        html = '\n'.join((
+                r'<table class="notListed" summary="not listed table">',
+                r'    <tr><td>foo</td></tr>',
+                r'</table>'))
+
+        latex = '\n'.join((
+                r'\makeatletter\@ifundefined{tablewidth}{' + \
+                    r'\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-2\tabcolsep}',
+
+                r'\begin{tabular}{l}',
+                r'\multicolumn{1}{l}{foo} \\',
+                r'\end{tabular}',
+
+                r'\vspace{-\baselineskip}',
+                r'\begin{center}',
+                r'not listed table',
+                r'\end{center}',
+
+                r''))
+
+        self.assertEqual(self.convert(html), latex)
+
     def test_multiple_tables(self):
         # Multiple tables should work as well
 
