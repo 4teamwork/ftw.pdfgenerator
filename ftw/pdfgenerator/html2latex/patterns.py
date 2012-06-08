@@ -165,6 +165,10 @@ DEFAULT_PATTERNS = ([
         (MODE_REPLACE,  '^',                       '\\^{}'),
         (MODE_REPLACE,  '~',                       '\\~{}'),
 
+        # additional hypthenation character
+        (MODE_REPLACE,  '\xc2\xad',                '"-'),
+        (MODE_REPLACE,  '&shy;',                   '"-'),
+
         # Various abbreviation replacements...
         # TODO: make regexp patterns or subconverter
         (MODE_REGEXP,   r'\\S[ ]{0,1}(\d)',         r'\S\,\1'),

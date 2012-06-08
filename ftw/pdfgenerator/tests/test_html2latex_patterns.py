@@ -305,6 +305,12 @@ class TestBasicPatterns(TestCase):
             self.convert('&yen;&brvbar;‛&diams;►'),
             '')
 
+    def test_hyphenation_characters(self):
+        self.assertEqual(
+            self.convert('ergo\xc2\xadnomic'), 'ergo"-nomic')
+        self.assertEqual(
+            self.convert('ergo&shy;nomic'), 'ergo"-nomic')
+
     def test_remove_css(self):
         self.assertEqual(self.convert(
                 'hello\n'

@@ -4,6 +4,9 @@ Changelog
 1.2.2 (unreleased)
 ------------------
 
+- Handle hyphenation characters and entities.
+  [jone]
+
 - Hyperlinks: handle underscores and hash keys in urls.
   [jone]
 
