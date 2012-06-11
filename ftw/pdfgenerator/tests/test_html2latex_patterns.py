@@ -259,14 +259,12 @@ class TestBasicPatterns(TestCase):
             '¡\cent{}£\currency{}\S¨©ª')
 
         self.assertEqual(
-            self.convert('&laquo;&not;&reg;&macr;&deg;'
-                         '&plusmn;&sup2;&sup3;&acute;&micro;'),
-            '«¬®¯°±²³´µ')
+            self.convert('&laquo;&reg;&macr;&sup2;&sup3;&acute;&micro;'),
+            '«®¯²³´µ')
 
         self.assertEqual(
-            self.convert('&para;&middot;&cedil;&sup1;&ordm;'
-                         '&raquo;&frac14;&frac12;&frac34;&iquest;'),
-            '¶·¸¹º»¼½¾¿')
+            self.convert('&middot;&cedil;&sup1;&ordm;&raquo;&iquest;'),
+            '·¸¹º»¿')
 
         self.assertEqual(
             self.convert('ÀÁÂÃÅÆÇÈÉ'),
@@ -277,8 +275,8 @@ class TestBasicPatterns(TestCase):
             'ÊËÌÍÎÏÐÑÒÓ')
 
         self.assertEqual(
-            self.convert('ÔÕÖ&times;ØÙÚÛÜÝ'),
-            'ÔÕÖ×ØÙÚÛÜÝ')
+            self.convert('ÔÕÖØÙÚÛÜÝ'),
+            'ÔÕÖØÙÚÛÜÝ')
 
         self.assertEqual(
             self.convert('Þßàáâãäåæç'),
@@ -289,16 +287,29 @@ class TestBasicPatterns(TestCase):
             'èéêëìíîïðñ')
 
         self.assertEqual(
-            self.convert('òóôõö&divide;øùúû'),
-            'òóôõö÷øùúû')
+            self.convert('òóôõöøùúû'),
+            'òóôõöøùúû')
 
         self.assertEqual(
             self.convert('üüýþÿŒœ&sbquo;&bdquo;'),
             'üüýþÿŒœ‚„')
 
-        self.assertEqual(
-            self.convert('&hellip;&trade;&bull;&rarr;&rArr;&hArr;&asymp;'),
-            '…™•→⇒⇔≈')
+        self.assertEqual(self.convert('&divide;'), '$\\div$')
+        self.assertEqual(self.convert('&times;'), '$\\times$')
+        self.assertEqual(self.convert('&frac12;'), '$\\frac12$')
+        self.assertEqual(self.convert('&frac34;'), '$\\frac34$')
+        self.assertEqual(self.convert('&frac14;'), '$\\frac14$')
+        self.assertEqual(self.convert('&para;'), '\\P')
+        self.assertEqual(self.convert('&deg;'), '$\\circ$')
+        self.assertEqual(self.convert('&plusmn;'), '$\\pm$')
+        self.assertEqual(self.convert('&not;'), '\\ensuremath{\\lnot}')
+        self.assertEqual(self.convert('&hellip;'), '$\\dots$')
+        self.assertEqual(self.convert('&trade;'), '™')
+        self.assertEqual(self.convert('&bull;'), '•')
+        self.assertEqual(self.convert('&rarr;'), '$\\rightarrow$')
+        self.assertEqual(self.convert('&rArr;'), '$\\Rightarrow$')
+        self.assertEqual(self.convert('&hArr;'), '⇔')
+        self.assertEqual(self.convert('&asymp;'), '$\\approx$')
 
         # unsupported sepcial chars:
         self.assertEqual(
@@ -458,3 +469,541 @@ class TestBasicPatterns(TestCase):
         html = 'foo <i>bar</i>'
         latex = r'foo {\it bar}'
         self.assertEqual(self.convert(html), latex)
+
+    def test_utf8_math_charaters(self):
+        self.assertEqual(self.convert(u'\u22a5'.encode('utf-8')),
+                         r'$\perp$')
+
+        self.assertEqual(self.convert(u'\u2264'.encode('utf-8')),
+                         r'$\leq$')
+
+        self.assertEqual(self.convert(u'\u2216'.encode('utf-8')),
+                         r'$\setminus$')
+
+        self.assertEqual(self.convert(u'\u2283'.encode('utf-8')),
+                         r'$\supset$')
+
+        self.assertEqual(self.convert(u'\u211c'.encode('utf-8')),
+                         r'$\Re$')
+
+        self.assertEqual(self.convert(u'\u2197'.encode('utf-8')),
+                         r'$\nearrow$')
+
+        self.assertEqual(self.convert(u'\u221a'.encode('utf-8')),
+                         r'$\surd$')
+
+        self.assertEqual(self.convert(u'\xbd'.encode('utf-8')),
+                         r'$\frac12$')
+
+        self.assertEqual(self.convert(u'\u2153'.encode('utf-8')),
+                         r'$\frac13$')
+
+        self.assertEqual(self.convert(u'\xbc'.encode('utf-8')),
+                         r'$\frac14$')
+
+        self.assertEqual(self.convert(u'\u2155'.encode('utf-8')),
+                         r'$\frac15$')
+
+        self.assertEqual(self.convert(u'\u2159'.encode('utf-8')),
+                         r'$\frac16$')
+
+        self.assertEqual(self.convert(u'\u215b'.encode('utf-8')),
+                         r'$\frac18$')
+
+        self.assertEqual(self.convert(u'\u2229'.encode('utf-8')),
+                         r'$\cap$')
+
+        self.assertEqual(self.convert(u'\u03a3'.encode('utf-8')),
+                         r'$\Sigma$')
+
+        self.assertEqual(self.convert(u'\u03a8'.encode('utf-8')),
+                         r'$\Psi$')
+
+        self.assertEqual(self.convert(u'\u03a9'.encode('utf-8')),
+                         r'$\Omega$')
+
+        self.assertEqual(self.convert(u'\u2205'.encode('utf-8')),
+                         r'$\emptyset$')
+
+        self.assertEqual(self.convert(u'\u22c3'.encode('utf-8')),
+                         r'$\bigcup$')
+
+        self.assertEqual(self.convert(u'\u2190'.encode('utf-8')),
+                         r'$\leftarrow$')
+
+        self.assertEqual(self.convert(u'\u227a'.encode('utf-8')),
+                         r'$\prec$')
+
+        self.assertEqual(self.convert(u'\u2297'.encode('utf-8')),
+                         r'$\otimes$')
+
+        self.assertEqual(self.convert(u'\u2135'.encode('utf-8')),
+                         r'$\aleph$')
+
+        self.assertEqual(self.convert(u'\u22ef'.encode('utf-8')),
+                         r'$\cdots$')
+
+        self.assertEqual(self.convert(u'\u2245'.encode('utf-8')),
+                         r'$\cong$')
+
+        self.assertEqual(self.convert(u'\u2261'.encode('utf-8')),
+                         r'$\equiv$')
+
+        self.assertEqual(self.convert(u'\u226a'.encode('utf-8')),
+                         r'$\ll$')
+
+        self.assertEqual(self.convert(u'\u22c6'.encode('utf-8')),
+                         r'$\star$')
+
+        self.assertEqual(self.convert(u'\u2260'.encode('utf-8')),
+                         r'$\neq$')
+
+        self.assertEqual(self.convert(u'\u03b1'.encode('utf-8')),
+                         r'$\alpha$')
+
+        self.assertEqual(self.convert(u'\u2210'.encode('utf-8')),
+                         r'$\amalg$')
+
+        self.assertEqual(self.convert(u'\u228e'.encode('utf-8')),
+                         r'$\uplus$')
+
+        self.assertEqual(self.convert(u'\u03ba'.encode('utf-8')),
+                         r'$\kappa$')
+
+        self.assertEqual(self.convert(u'\u03c3'.encode('utf-8')),
+                         r'$\sigma$')
+
+        self.assertEqual(self.convert(u'\u039b'.encode('utf-8')),
+                         r'$\Lambda$')
+
+        self.assertEqual(self.convert(u'\u222a'.encode('utf-8')),
+                         r'$\cup$')
+
+        self.assertEqual(self.convert(u'\u03bb'.encode('utf-8')),
+                         r'$\lambda$')
+
+        self.assertEqual(self.convert(u'\u0398'.encode('utf-8')),
+                         r'$\Theta$')
+
+        self.assertEqual(self.convert(u'\u221c'.encode('utf-8')),
+                         r'$\sqrt4$')
+
+        self.assertEqual(self.convert(u'\u2240'.encode('utf-8')),
+                         r'$\wr$')
+
+        self.assertEqual(self.convert(u'\u2118'.encode('utf-8')),
+                         r'$\wp$')
+
+        self.assertEqual(self.convert(u'\u221b'.encode('utf-8')),
+                         r'$\sqrt3$')
+
+        self.assertEqual(self.convert(u'\xac'.encode('utf-8')),
+                         r'\ensuremath{\lnot}')
+
+        self.assertEqual(self.convert(u'\u2293'.encode('utf-8')),
+                         r'$\sqcap$')
+
+        self.assertEqual(self.convert(u'\u03f1'.encode('utf-8')),
+                         r'$\varrho$')
+
+        self.assertEqual(self.convert(u'\u03b2'.encode('utf-8')),
+                         r'$\beta$')
+
+        self.assertEqual(self.convert(u'\u22a3'.encode('utf-8')),
+                         r'$\dashv$')
+
+        self.assertEqual(self.convert(u'\u2265'.encode('utf-8')),
+                         r'$\geq$')
+
+        self.assertEqual(self.convert(u'\u2199'.encode('utf-8')),
+                         r'$\searrow$')
+
+        self.assertEqual(self.convert(u'\u2664'.encode('utf-8')),
+                         r'$\spadesuit$')
+
+        self.assertEqual(self.convert(u'\u2021'.encode('utf-8')),
+                         r'$\ddag$')
+
+        self.assertEqual(self.convert(u'\u220f'.encode('utf-8')),
+                         r'$\prod$')
+
+        self.assertEqual(self.convert(u'\u2156'.encode('utf-8')),
+                         r'$\frac25$')
+
+        self.assertEqual(self.convert(u'\u2154'.encode('utf-8')),
+                         r'$\frac23$')
+
+        self.assertEqual(self.convert(u'\u22a4'.encode('utf-8')),
+                         r'$\bot$')
+
+        self.assertEqual(self.convert(u'\u21d1'.encode('utf-8')),
+                         r'$\Uparrow$')
+
+        self.assertEqual(self.convert(u'\u2194'.encode('utf-8')),
+                         r'$\leftrightarrow$')
+
+        self.assertEqual(self.convert(u'\u03c8'.encode('utf-8')),
+                         r'$\psi$')
+
+        self.assertEqual(self.convert(u'\u21c0'.encode('utf-8')),
+                         r'$\rightharpoonup$')
+
+        self.assertEqual(self.convert(u'\u2219'.encode('utf-8')),
+                         r'$\bullet$')
+
+        self.assertEqual(self.convert(u'\u03d5'.encode('utf-8')),
+                         r'$\varphi$')
+
+        self.assertEqual(self.convert(u'\u03db'.encode('utf-8')),
+                         r'$\varsigma$')
+
+        self.assertEqual(self.convert(u'\u2284'.encode('utf-8')),
+                         r'$\not\subset$')
+
+        self.assertEqual(self.convert(u'\u2206'.encode('utf-8')),
+                         r'$\Delta$')
+
+        self.assertEqual(self.convert(u'\xb0'.encode('utf-8')),
+                         r'$\circ$')
+
+        self.assertEqual(self.convert(u'\u03c5'.encode('utf-8')),
+                         r'$\upsilon$')
+
+        self.assertEqual(self.convert(u'\u03c7'.encode('utf-8')),
+                         r'$\chi$')
+
+        self.assertEqual(self.convert(u'\u2250'.encode('utf-8')),
+                         r'$\doteq$')
+
+        self.assertEqual(self.convert(u'\u2191'.encode('utf-8')),
+                         r'$\uparrow$')
+
+        self.assertEqual(self.convert(u'\u222d'.encode('utf-8')),
+                         r'$\iiint$')
+
+        self.assertEqual(self.convert(u'\u266d'.encode('utf-8')),
+                         r'$\flat$')
+
+        self.assertEqual(self.convert(u'\u03a6'.encode('utf-8')),
+                         r'$\Phi$')
+
+        self.assertEqual(self.convert(u'\u03f5'.encode('utf-8')),
+                         r'$\epsilon$')
+
+        self.assertEqual(self.convert(u'\u03d6'.encode('utf-8')),
+                         r'$\varpi$')
+
+        self.assertEqual(self.convert(u'\u22c2'.encode('utf-8')),
+                         r'$\bigcap$')
+
+        self.assertEqual(self.convert(u'\u03a0'.encode('utf-8')),
+                         r'$\Pi$')
+
+        self.assertEqual(self.convert(u'\u2020'.encode('utf-8')),
+                         r'$\dag$')
+
+        self.assertEqual(self.convert(u'\u2217'.encode('utf-8')),
+                         r'$\ast$')
+
+        self.assertEqual(self.convert(u'\u21a6'.encode('utf-8')),
+                         r'$\mapsto$')
+
+        self.assertEqual(self.convert(u'\u03b8'.encode('utf-8')),
+                         r'$\theta$')
+
+        self.assertEqual(self.convert(u'\u222e'.encode('utf-8')),
+                         r'$\oint$')
+
+        self.assertEqual(self.convert(u'\u2295'.encode('utf-8')),
+                         r'$\oplus$')
+
+        self.assertEqual(self.convert(u'\u22c4'.encode('utf-8')),
+                         r'$\diamond$')
+
+        self.assertEqual(self.convert(u'\u2113'.encode('utf-8')),
+                         r'$\ell$')
+
+        self.assertEqual(self.convert(u'\u2213'.encode('utf-8')),
+                         r'$\mp$')
+
+        self.assertEqual(self.convert(u'\u2207'.encode('utf-8')),
+                         r'$\nabla$')
+
+        self.assertEqual(self.convert(u'\u220c'.encode('utf-8')),
+                         r'$\not\ni$')
+
+        self.assertEqual(self.convert(u'\u2298'.encode('utf-8')),
+                         r'$\oslash$')
+
+        self.assertEqual(self.convert(u'\u222c'.encode('utf-8')),
+                         r'$\iint$')
+
+        self.assertEqual(self.convert(u'\u22c5'.encode('utf-8')),
+                         r'$\cdot$')
+
+        self.assertEqual(self.convert(u'\u2111'.encode('utf-8')),
+                         r'$\Im$')
+
+        self.assertEqual(self.convert(u'\xb1'.encode('utf-8')),
+                         r'$\pm$')
+
+        self.assertEqual(self.convert(u'\u03c0'.encode('utf-8')),
+                         r'$\pi$')
+
+        self.assertEqual(self.convert(u'\u2287'.encode('utf-8')),
+                         r'$\supseteq$')
+
+        self.assertEqual(self.convert(u'\u0393'.encode('utf-8')),
+                         r'$\Gamma$')
+
+        self.assertEqual(self.convert(u'\u03c4'.encode('utf-8')),
+                         r'$\tau$')
+
+        self.assertEqual(self.convert(u'\u2299'.encode('utf-8')),
+                         r'$\odot$')
+
+        self.assertEqual(self.convert(u'\u21aa'.encode('utf-8')),
+                         r'$\hookrightarrow$')
+
+        self.assertEqual(self.convert(u'\u2294'.encode('utf-8')),
+                         r'$\sqcup$')
+
+        self.assertEqual(self.convert(u'\u22a8'.encode('utf-8')),
+                         r'$\models$')
+
+        self.assertEqual(self.convert(u'\u21d2'.encode('utf-8')),
+                         r'$\Rightarrow$')
+
+        self.assertEqual(self.convert(u'\u22c0'.encode('utf-8')),
+                         r'$\bigwedge$')
+
+        self.assertEqual(self.convert(u'\u03c9'.encode('utf-8')),
+                         r'$\omega$')
+
+        self.assertEqual(self.convert(u'\u215c'.encode('utf-8')),
+                         r'$\frac38$')
+
+        self.assertEqual(self.convert(u'\u221d'.encode('utf-8')),
+                         r'$\propto$')
+
+        self.assertEqual(self.convert(u'\u266f'.encode('utf-8')),
+                         r'$\sharp$')
+
+        self.assertEqual(self.convert(u'\u03bc'.encode('utf-8')),
+                         r'$\mu$')
+
+        self.assertEqual(self.convert(u'\u2157'.encode('utf-8')),
+                         r'$\frac35$')
+
+        self.assertEqual(self.convert(u'\xbe'.encode('utf-8')),
+                         r'$\frac34$')
+
+        self.assertEqual(self.convert(u'\u220a'.encode('utf-8')),
+                         r'$\in$')
+
+        self.assertEqual(self.convert(u'\u03b5'.encode('utf-8')),
+                         r'$\varepsilon$')
+
+        self.assertEqual(self.convert(u'\u03b6'.encode('utf-8')),
+                         r'$\zeta$')
+
+        self.assertEqual(self.convert(u'\u03b7'.encode('utf-8')),
+                         r'$\eta$')
+
+        self.assertEqual(self.convert(u'\u2244'.encode('utf-8')),
+                         r'$\not\simeq$')
+
+        self.assertEqual(self.convert(u'\u2158'.encode('utf-8')),
+                         r'$\frac45$')
+
+        self.assertEqual(self.convert(u'\u2200'.encode('utf-8')),
+                         r'$\forall$')
+
+        self.assertEqual(self.convert(u'\xd7'.encode('utf-8')),
+                         r'$\times$')
+
+        self.assertEqual(self.convert(u'\u2026'.encode('utf-8')),
+                         r'$\dots$')
+
+        self.assertEqual(self.convert(u'\u2262'.encode('utf-8')),
+                         r'$\not\equiv$')
+
+        self.assertEqual(self.convert(u'\u2196'.encode('utf-8')),
+                         r'$\nwarrow$')
+
+        self.assertEqual(self.convert(u'\u2227'.encode('utf-8')),
+                         r'$\wedge$')
+
+        self.assertEqual(self.convert(u'\u03c1'.encode('utf-8')),
+                         r'$\rho$')
+
+        self.assertEqual(self.convert(u'\u2666'.encode('utf-8')),
+                         r'$\diamondsuit$')
+
+        self.assertEqual(self.convert(u'\u220d'.encode('utf-8')),
+                         r'$\ni$')
+
+        self.assertEqual(self.convert(u'\u2192'.encode('utf-8')),
+                         r'$\rightarrow$')
+
+        self.assertEqual(self.convert(u'\u039e'.encode('utf-8')),
+                         r'$\Xi$')
+
+        self.assertEqual(self.convert(u'\u03b9'.encode('utf-8')),
+                         r'$\iota$')
+
+        self.assertEqual(self.convert(u'\u03bd'.encode('utf-8')),
+                         r'$\nu$')
+
+        self.assertEqual(self.convert(u'\xf7'.encode('utf-8')),
+                         r'$\div$')
+
+        self.assertEqual(self.convert(u'\xa7'.encode('utf-8')),
+                         r'\S')
+
+        self.assertEqual(self.convert(u'\u03d1'.encode('utf-8')),
+                         r'$\vartheta$')
+
+        self.assertEqual(self.convert(u'\u03c6'.encode('utf-8')),
+                         r'$\phi$')
+
+        self.assertEqual(self.convert(u'\u22a2'.encode('utf-8')),
+                         r'$\vdash$')
+
+        self.assertEqual(self.convert(u'\u2209'.encode('utf-8')),
+                         r'$\notin$')
+
+        self.assertEqual(self.convert(u'\u2296'.encode('utf-8')),
+                         r'$\ominus$')
+
+        self.assertEqual(self.convert(u'\u210f'.encode('utf-8')),
+                         r'$\hbar$')
+
+        self.assertEqual(self.convert(u'\u2220'.encode('utf-8')),
+                         r'$\angle$')
+
+        self.assertEqual(self.convert(u'\u227b'.encode('utf-8')),
+                         r'$\succ$')
+
+        self.assertEqual(self.convert(u'\u221e'.encode('utf-8')),
+                         r'$\infty$')
+
+        self.assertEqual(self.convert(u'\u03be'.encode('utf-8')),
+                         r'$\xi$')
+
+        self.assertEqual(self.convert(u'\u2665'.encode('utf-8')),
+                         r'$\heartsuit$')
+
+        self.assertEqual(self.convert(u'\u2249'.encode('utf-8')),
+                         r'$\not\approx$')
+
+        self.assertEqual(self.convert(u'\xb6'.encode('utf-8')),
+                         r'\P')
+
+        self.assertEqual(self.convert(u'\u21d0'.encode('utf-8')),
+                         r'$\Leftarrow$')
+
+        self.assertEqual(self.convert(u'\u2228'.encode('utf-8')),
+                         r'$\vee$')
+
+        self.assertEqual(self.convert(u'\u03b3'.encode('utf-8')),
+                         r'$\gamma$')
+
+        self.assertEqual(self.convert(u'\u2195'.encode('utf-8')),
+                         r'$\updownarrow$')
+
+        self.assertEqual(self.convert(u'\u224d'.encode('utf-8')),
+                         r'$\asymp$')
+
+        self.assertEqual(self.convert(u'\u222b'.encode('utf-8')),
+                         r'$\int$')
+
+        self.assertEqual(self.convert(u'\u223c'.encode('utf-8')),
+                         r'$\sim$')
+
+        self.assertEqual(self.convert(u'\u2667'.encode('utf-8')),
+                         r'$\clubsuit$')
+
+        self.assertEqual(self.convert(u'\u215e'.encode('utf-8')),
+                         r'$\frac78$')
+
+        self.assertEqual(self.convert(u'\u21a9'.encode('utf-8')),
+                         r'$\hookleftarrow$')
+
+        self.assertEqual(self.convert(u'\u2193'.encode('utf-8')),
+                         r'$\downarrow$')
+
+        self.assertEqual(self.convert(u'\u226b'.encode('utf-8')),
+                         r'$\gg$')
+
+        self.assertEqual(self.convert(u'\u22c1'.encode('utf-8')),
+                         r'$\bigvee$')
+
+        self.assertEqual(self.convert(u'\u226d'.encode('utf-8')),
+                         r'$\not\asymp$')
+
+        self.assertEqual(self.convert(u'\u21d5'.encode('utf-8')),
+                         r'$\Updownarrow$')
+
+        self.assertEqual(self.convert(u'\u03b4'.encode('utf-8')),
+                         r'$\delta$')
+
+        self.assertEqual(self.convert(u'\u21bc'.encode('utf-8')),
+                         r'$\leftharpoonup$')
+
+        self.assertEqual(self.convert(u'\u2243'.encode('utf-8')),
+                         r'$\simeq$')
+
+        self.assertEqual(self.convert(u'\u2225'.encode('utf-8')),
+                         r'$\parallel$')
+
+        self.assertEqual(self.convert(u'\u215d'.encode('utf-8')),
+                         r'$\frac58$')
+
+        self.assertEqual(self.convert(u'\u215a'.encode('utf-8')),
+                         r'$\frac56$')
+
+        self.assertEqual(self.convert(u'\u2248'.encode('utf-8')),
+                         r'$\approx$')
+
+        self.assertEqual(self.convert(u'\u21c1'.encode('utf-8')),
+                         r'$\rightharpoondown$')
+
+        self.assertEqual(self.convert(u'\u2202'.encode('utf-8')),
+                         r'$\partial$')
+
+        self.assertEqual(self.convert(u'\u2286'.encode('utf-8')),
+                         r'$\subseteq$')
+
+        self.assertEqual(self.convert(u'\u21cc'.encode('utf-8')),
+                         r'$\rightleftharpoons$')
+
+        self.assertEqual(self.convert(u'\u2223'.encode('utf-8')),
+                         r'$\mid$')
+
+        self.assertEqual(self.convert(u'\u215f'.encode('utf-8')),
+                         r'$\frac14$')
+
+        self.assertEqual(self.convert(u'\u21bd'.encode('utf-8')),
+                         r'$\leftharpoondown$')
+
+        self.assertEqual(self.convert(u'\u21d3'.encode('utf-8')),
+                         r'$\Downarrow$')
+
+        self.assertEqual(self.convert(u'\u22c8'.encode('utf-8')),
+                         r'$\bowtie$')
+
+        self.assertEqual(self.convert(u'\u266e'.encode('utf-8')),
+                         r'$\natural$')
+
+        self.assertEqual(self.convert(u'\u22ee'.encode('utf-8')),
+                         r'$\vdots$')
+
+        self.assertEqual(self.convert(u'\u2211'.encode('utf-8')),
+                         r'$\sum$')
+
+        self.assertEqual(self.convert(u'\u2285'.encode('utf-8')),
+                         r'$\not\supset$')
+
+        self.assertEqual(self.convert(u'\u2282'.encode('utf-8')),
+                         r'$\subset$')

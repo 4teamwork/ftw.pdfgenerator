@@ -4,6 +4,9 @@ Changelog
 1.2.2 (unreleased)
 ------------------
 
+- Improve support for mathematic characters (utf8 and html-entities).
+  [jone]
+
 - Table: support "summary" attribute as caption (TinyMCE support).
   [jone]
 
