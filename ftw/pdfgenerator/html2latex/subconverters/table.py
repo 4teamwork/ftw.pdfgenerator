@@ -123,8 +123,8 @@ class TableConverter(subconverter.SubConverter):
 
     def render(self):
         latex = [
-            r'\makeatletter\@ifundefined{tablewidth}{' + \
-                r'\newlength\tablewidth}\makeatother',
+            r'\makeatletter\@ifundefined{tablewidth}{' +
+            r'\newlength\tablewidth}\makeatother',
             r'\setlength\tablewidth\linewidth',
             r'\addtolength\tablewidth{-%i\tabcolsep}' % (
                 2 * len(self.columns))]
@@ -907,8 +907,8 @@ class LatexWidth(object):
 
         if a.unit != b.unit:
             raise ValueError(
-                'Cannot accumulate LatexWidths with different ' + \
-                    'units (%s, %s)' % (a.unit, b.unit))
+                'Cannot accumulate LatexWidths with different ' +
+                'units (%s, %s)' % (a.unit, b.unit))
 
         return LatexWidth(width=(a.width + b.width),
                           type_=a.type,

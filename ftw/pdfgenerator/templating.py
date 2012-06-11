@@ -25,8 +25,8 @@ class BaseTemplating(object):
 
         for class_or_obj in classes:
             local_paths = getattr(class_or_obj, 'template_directories', None)
-            cls = (inspect.isclass(class_or_obj) \
-                       and class_or_obj or class_or_obj.__class__)
+            cls = (inspect.isclass(class_or_obj)
+                   and class_or_obj or class_or_obj.__class__)
 
             if local_paths is None:
                 continue

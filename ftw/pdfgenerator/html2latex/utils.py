@@ -47,12 +47,13 @@ def generate_manual_caption(caption, environment, show_in_index=True):
         latex.extend([
                 r'\addtocounter{%s}{1}' % env['counter'],
 
-                r'\addcontentsline{%s}{%s}{' % (env['index'],
-                                                env['counter']) + \
-                    r'\protect\numberline ' + \
-                    r'{\thechapter.\arabic{%s}}' % env['counter'] + \
-                    r'{\ignorespaces %s}' % caption + \
-                    r'}',
+                r'\addcontentsline{%s}{%s}{' % (
+                    env['index'], env['counter']) +
+                r'\protect\numberline ' +
+                r'{\thechapter.\arabic{%s}}' % env['counter'] +
+                r'{\ignorespaces %s}' % caption +
+                r'}',
+
                 r'%s \thechapter.\arabic{%s}: %s' % (
                     label, env['counter'], caption),
                 ])
