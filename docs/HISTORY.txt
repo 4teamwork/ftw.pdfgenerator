@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.2.2 (unreleased)
+1.2.2 (2012-06-11)
 ------------------
 
 - Improve support for mathematic characters (utf8 and html-entities).
