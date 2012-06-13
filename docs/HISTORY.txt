@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.2.3 (unreleased)
+1.2.3 (2012-06-13)
 ------------------
 
 - Table converter: fix centering of cell contents by using correct
