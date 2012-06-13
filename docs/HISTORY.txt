@@ -4,7 +4,11 @@ Changelog
 1.2.3 (unreleased)
 ------------------
 
-- Hyperlink: support resolveUid (with upper U) resolution.
+- Hyperlink:
+
+  - support resolveUid (with upper U) resolution.
+  - Remove "./" from concatenated relative urls.
+
   [jone]
 
 

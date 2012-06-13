@@ -17,6 +17,7 @@ class HyperlinkConverter(subconverter.SubConverter):
 
         if is_relative:
             url = os.path.join(context.absolute_url(), url)
+            url = url.replace('/./', '/')
 
         url = self.resolve_uid(url)
 

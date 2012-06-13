@@ -61,7 +61,7 @@ class TestHyperlinkConverter(MockTestCase):
         self.replay()
         html = '<a href="./foo/bar">baz</a>'
         latex = LATEX_HREF % {'label': 'baz',
-                              'url': 'http://nohost/plone/./foo/bar'}
+                              'url': 'http://nohost/plone/foo/bar'}
         self.assertEqual(self.convert(html), latex)
 
         html = '<a href="foo/bar">baz</a>'
