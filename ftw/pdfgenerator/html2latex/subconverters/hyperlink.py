@@ -1,6 +1,7 @@
 from Products.CMFCore.utils import getToolByName
 from ftw.pdfgenerator.html2latex import subconverter
 import os.path
+import re
 
 
 class HyperlinkConverter(subconverter.SubConverter):
@@ -25,12 +26,19 @@ class HyperlinkConverter(subconverter.SubConverter):
         url = url.replace(' ', '%20').replace('%', '\%')
         url = url.replace('_', '\_').replace('#', '\#')
 
-        self.get_layout().use_package('hyperref')
-        self.replace_and_lock(self.latex_link(url, label))
+        # hyphenation: "" allows latex to insert a word wrap at this
+        # position without adding a hyphen.
+        url_label = url.replace('/', '/""')
+        url_label = url_label.replace(':/""/""', '://')
+        url_label = re.sub('/""$', '/', url_label)
+        url_label = re.sub('^mailto:', '', url_label)
 
-    def latex_link(self, url, label):
+        self.get_layout().use_package('hyperref')
+        self.replace_and_lock(self.latex_link(url, label, url_label))
+
+    def latex_link(self, url, label, url_label):
         href = r'\href{%s}{%s}'
-        footnote = r'\footnote{%s}' % href % (url, url)
+        footnote = r'\footnote{%s}' % href % (url, url_label)
         return href % (url, label + footnote)
 
     def resolve_uid(self, url):
