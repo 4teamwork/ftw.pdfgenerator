@@ -4,12 +4,15 @@ Changelog
 1.2.3 (unreleased)
 ------------------
 
+- Table converter: fix centering of cell contents by using correct
+  LaTeX (\centering instead of \center\vspace{-1.5em}).
+  [jone]
+
 - Hyperlink:
 
   - Support resolveUid (with upper U) resolution.
   - Remove "./" from concatenated relative urls.
   - Support hyphenation in urls.
-
   [jone]
 
 

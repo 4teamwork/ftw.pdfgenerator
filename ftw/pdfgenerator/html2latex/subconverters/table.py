@@ -618,7 +618,7 @@ class LatexCell(object):
             mapping = {
                 'left': r'\raggedright ',
                 'right': r'\raggedleft ',
-                'center': r'\center\vspace{-1.5em}',
+                'center': r'\centering ',
                 }
 
             if self.get_align() in mapping.keys():

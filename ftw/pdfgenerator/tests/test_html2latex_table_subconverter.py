@@ -195,7 +195,7 @@ class TestTableConverter(MockTestCase):
                 r'\raggedleft test1} & \multicolumn{1}{'
                 r'p{0.7\tablewidth}}{\raggedright test2} \\',
 
-                r'\multicolumn{1}{p{0.3\tablewidth}}{\center\vspace{-1.5em}'
+                r'\multicolumn{1}{p{0.3\tablewidth}}{\centering '
                 r'test3} & \multicolumn{1}{p{0.7\tablewidth}}{test4} \\',
 
                 r'\end{tabular}',
@@ -1146,7 +1146,7 @@ class TestTableConverter(MockTestCase):
                 r'\begin{tabular}{p{1.0\tablewidth}}',
                 r'\multicolumn{1}{p{1.0\tablewidth}}{\raggedright left} \\',
                 r'\multicolumn{1}{p{1.0\tablewidth}}{' + \
-                    r'\center\vspace{-1.5em}center} \\',
+                    r'\centering center} \\',
                 r'\multicolumn{1}{p{1.0\tablewidth}}{\raggedleft right} \\',
                 r'\end{tabular}',
                 r''
