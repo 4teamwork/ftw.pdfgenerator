@@ -202,3 +202,8 @@ class TestHyperlinkConverter(MockTestCase):
         latex = LATEX_HREF % {'label': 'The Obj',
                               'url': 'http://nohost/theobj'}
         self.assertEqual(self.convert(html), latex)
+
+        html = '<a href="./resolveUid/THEUID">The Obj</a>'
+        latex = LATEX_HREF % {'label': 'The Obj',
+                              'url': 'http://nohost/theobj'}
+        self.assertEqual(self.convert(html), latex)

@@ -37,7 +37,7 @@ class HyperlinkConverter(subconverter.SubConverter):
             return url
 
         parts = url.split('/')
-        if parts[-2] == 'resolveuid':
+        if parts[-2] == 'resolveuid' or parts[-2] == 'resolveUid':
             context = self.converter.converter.context
             reference_catalog = getToolByName(context, 'reference_catalog')
 
