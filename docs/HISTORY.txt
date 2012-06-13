@@ -13,6 +13,7 @@ Changelog
   - Support resolveUid (with upper U) resolution.
   - Remove "./" from concatenated relative urls.
   - Support hyphenation in urls.
+
   [jone]
 
 
