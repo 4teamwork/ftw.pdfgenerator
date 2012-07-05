@@ -4,7 +4,12 @@ Changelog
 1.2.4 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- List conversion: handle empty list items.
+
+  - Removing them in ordered and unordered lists.
+  - Keep them in definition lists, since two tags result in one item.
+
+  [jone]
 
 
 1.2.3 (2012-06-13)

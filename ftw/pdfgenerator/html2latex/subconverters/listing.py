@@ -100,8 +100,9 @@ class ListConverter(subconverter.SubConverter):
         for elm in list_node.childNodes:
             if elm.nodeType == minidom.Node.ELEMENT_NODE and \
                     elm.tagName.lower() == 'li':
-                latex.append(r'\item %s' % (
-                        self._get_node_content(elm).strip()))
+                content = self._get_node_content(elm)
+                if content:
+                    latex.append(r'\item %s' % content.strip())
 
             elif elm.nodeType == minidom.Node.ELEMENT_NODE and \
                     elm.tagName.lower() in self.listing_tag_mapping.keys():
@@ -128,9 +129,11 @@ class ListConverter(subconverter.SubConverter):
             elif elm.nodeType == minidom.Node.ELEMENT_NODE and \
                     elm.tagName.lower() == 'dd' and \
                     dt_node is not None:
+                dt_content = self._get_node_content(dt_node) or ''
+                dd_content = self._get_node_content(elm) or ''
                 latex.append(r'\item[%s] %s' % (
-                        self._get_node_content(dt_node).strip(),
-                        self._get_node_content(elm).strip()))
+                        dt_content.strip(),
+                        dd_content.strip()))
                 dt_node = None
 
             elif elm.nodeType == minidom.Node.ELEMENT_NODE and \

@@ -461,3 +461,42 @@ class TestListConverter(SubconverterTestBase):
                 r'',
                 ))
         self.assertEqual(self.convert(html), latex)
+
+    def test_ul_does_not_fail_on_empty_item(self):
+        html = '\n'.join((
+                '<ul>',
+                '<li>foo</li>',
+                '<li></li>',
+                '<li>bar</li>',
+                '</ul>'))
+
+        latex = '\n'.join((
+                r'',
+                r'\begin{itemize}',
+                r'\item foo',
+                r'\item bar',
+                r'\end{itemize}',
+                r'',
+                ))
+
+        self.assertEqual(self.convert(html), latex)
+
+    def test_dl_does_not_fail_on_empty_item(self):
+        html = '\n'.join((
+                '<dl>',
+                '<dt>foo</dt>',
+                '<dd></dd>',
+                '<dt></dt>',
+                '<dd>bar</dd>',
+                '</dl>'))
+
+        latex = '\n'.join((
+                r'',
+                r'\begin{description}',
+                r'\item[foo] ',
+                r'\item[] bar',
+                r'\end{description}',
+                r'',
+                ))
+
+        self.assertEqual(self.convert(html), latex)
