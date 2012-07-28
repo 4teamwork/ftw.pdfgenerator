@@ -18,15 +18,16 @@ class BaseTemplating(object):
     def get_template_directories(self):
         dirs = []
 
-        # get baseclasses, but use "self" instead of its class
-        # as first item.
-        classes = [self]
-        classes.extend(baseclasses(self.__class__)[1:])
+        if self.__class__.__module__ == 'Products.Five.metaclass':
+            # self is a browser view which is based on a metaclass.
+            # We need to get rid of the metaclass so that we know
+            # where the class is defined.
+            classes = baseclasses(self.__class__)[1:]
+        else:
+            classes = baseclasses(self.__class__)
 
-        for class_or_obj in classes:
-            local_paths = getattr(class_or_obj, 'template_directories', None)
-            cls = (inspect.isclass(class_or_obj)
-                   and class_or_obj or class_or_obj.__class__)
+        for cls in classes:
+            local_paths = getattr(cls, 'template_directories', None)
 
             if local_paths is None:
                 continue

@@ -4,6 +4,10 @@ Changelog
 1.2.4 (unreleased)
 ------------------
 
+- Templating: fix template lookup for five based browser views which
+  are wrapped into a meta class.
+  [jone]
+
 - List conversion: handle empty list items.
 
   - Removing them in ordered and unordered lists.
