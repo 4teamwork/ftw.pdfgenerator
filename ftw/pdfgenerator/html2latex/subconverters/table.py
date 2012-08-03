@@ -38,6 +38,25 @@ HORIZONTAL_LAYOUT = BORDER_TABLE_T | BORDER_TABLE_B | \
     BORDER_CELL_T | BORDER_CELL_B
 
 
+def parse_html_style_attribute(value):
+    data = {}
+    if not value:
+        return data
+
+    for arg in value.split(';'):
+        arg = arg.strip()
+        if not arg:
+            continue
+
+        if ':' not in arg:
+            continue
+
+        key, value = arg.split(':', 1)
+        data[key.strip()] = value.strip()
+
+    return data
+
+
 class TableConverter(subconverter.SubConverter):
     """The TableConverter converts <table>-Tags to latex.
     """
@@ -678,11 +697,25 @@ class LatexCell(object):
 
     def get_width(self):
         if self._width == _marker:
-            try:
-                self._width = LatexWidth.convert(
-                    self.dom_cell.getAttribute('width'))
-            except ValueError:
-                self._width = None
+            widths = [
+                parse_html_style_attribute(
+                    self.dom_cell.getAttribute('style')).get('width', ''),
+                self.dom_cell.getAttribute('width'),
+                ]
+
+            self._width = None
+
+            for width in widths:
+                if not width:
+                    continue
+
+                try:
+                    self._width = LatexWidth.convert(width)
+                except ValueError:
+                    continue
+                else:
+                    break
+
         return self._width
 
     def get_colspan(self):

@@ -4,6 +4,9 @@ Changelog
 1.2.4 (unreleased)
 ------------------
 
+- Tables: support width definition in "style" attribute of cells. #10
+  [jone]
+
 - Fix ampersand escaping in urls. #11
   [jone]
 

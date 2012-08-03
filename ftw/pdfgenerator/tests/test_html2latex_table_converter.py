@@ -203,6 +203,42 @@ class TestTableConverter(MockTestCase):
 
         self.assertEqual(self.convert(html), latex)
 
+    def test_style_widths(self):
+
+        html = '\n'.join((
+                r'<table>',
+                r'    <tbody>',
+                r'        <tr>',
+                r'            <td align="right" style="width:30%">test1</td>',
+                r'            <td align="left" ' +
+                r'style="color: red; width: 70%;">test2</td>',
+                r'        </tr><tr>',
+                r'            <td align="center">test3</td>',
+                r'            <td>test4</td>',
+                r'        </tr>',
+                r'    </tbody>',
+                r'</table>'))
+
+        latex = '\n'.join((
+                r'\makeatletter\@ifundefined{tablewidth}{' +
+                r'\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\begin{tabular}{p{0.3\tablewidth}p{0.7\tablewidth}}',
+
+                r'\multicolumn{1}{p{0.3\tablewidth}}{'
+                r'\raggedleft test1} & \multicolumn{1}{'
+                r'p{0.7\tablewidth}}{\raggedright test2} \\',
+
+                r'\multicolumn{1}{p{0.3\tablewidth}}{\centering '
+                r'test3} & \multicolumn{1}{p{0.7\tablewidth}}{test4} \\',
+
+                r'\end{tabular}',
+                r''))
+
+        self.assertEqual(self.convert(html), latex)
+
+
     def test_caption_is_used(self):
         # The table caption is used and will be shown in the table index
 
@@ -1396,3 +1432,36 @@ class TestLatexWidth(TestCase):
         self.assertEqual(
             str(cm.exception),
             'Cannot accumulate relative and absolute widths.')
+
+
+class TestParseHTMLStyleAttribute(TestCase):
+
+    def test_empty(self):
+        self.assertEqual(table.parse_html_style_attribute(''), {})
+
+    def test_none(self):
+        self.assertEqual(table.parse_html_style_attribute(None), {})
+
+    def test_single_argument(self):
+        self.assertEqual(table.parse_html_style_attribute('width: 10'),
+                         {'width': '10'})
+
+        self.assertEqual(table.parse_html_style_attribute('width:10;'),
+                         {'width': '10'})
+
+        self.assertEqual(table.parse_html_style_attribute('width : 10 ;'),
+                         {'width': '10'})
+
+        self.assertEqual(table.parse_html_style_attribute('width : 10 ;;'),
+                         {'width': '10'})
+
+    def test_multiple_arguments(self):
+        self.assertEqual(table.parse_html_style_attribute(
+                'width:10;height:5'),
+                         {'width': '10',
+                          'height': '5'})
+
+        self.assertEqual(table.parse_html_style_attribute(
+                'width : 10 ; height : 5 ;'),
+                         {'width': '10',
+                          'height': '5'})
