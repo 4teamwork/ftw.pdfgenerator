@@ -4,6 +4,9 @@ Changelog
 1.2.4 (unreleased)
 ------------------
 
+- Fix ampersand escaping in urls. #11
+  [jone]
+
 - Templating: fix template lookup for five based browser views which
   are wrapped into a meta class.
   [jone]

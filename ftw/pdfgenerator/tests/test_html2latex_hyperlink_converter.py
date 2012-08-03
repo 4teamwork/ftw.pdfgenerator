@@ -128,14 +128,14 @@ class TestHyperlinkConverter(MockTestCase):
         self.replay()
         html = '<a href="http://host.com/?foo=1&amp;bar=2">baz</a>'
         latex = LATEX_HREF % {'label': 'baz',
-                              'url': 'http://host.com/?foo=1&bar=2',
-                              'url_label': 'http://host.com/""?foo=1&bar=2'}
+                              'url': 'http://host.com/?foo=1\\&bar=2',
+                              'url_label': 'http://host.com/""?foo=1\\&bar=2'}
         self.assertEqual(self.convert(html), latex)
 
         html = '<a href="http://host.com/?foo=1&bar=2">baz</a>'
         latex = LATEX_HREF % {'label': 'baz',
-                              'url': 'http://host.com/?foo=1&bar=2',
-                              'url_label': 'http://host.com/""?foo=1&bar=2'}
+                              'url': 'http://host.com/?foo=1\\&bar=2',
+                              'url_label': 'http://host.com/""?foo=1\\&bar=2'}
         self.assertEqual(self.convert(html), latex)
 
     def test_underscores_in_links(self):
@@ -233,3 +233,24 @@ class TestHyperlinkConverter(MockTestCase):
                               'url': 'http://nohost/theobj',
                               'url_label': 'http://nohost/""theobj'}
         self.assertEqual(self.convert(html), latex)
+
+    def test_links_in_listing_items(self):
+        self.replay()
+
+        # There should not be a non-escaped ampersand (&) within listing
+        # items - even when in a href.
+        html = '<ol><li><a href="%s">foo bar</a></li></ol>' % (
+            'http://host/view?foo=1&bar=2')
+
+        latex_link = LATEX_HREF % {
+            'label': 'foo bar',
+            'url': 'http://host/view?foo=1\\&bar=2',
+            'url_label': 'http://host/""view?foo=1\\&bar=2'}
+
+        latex = '\n'.join((
+                r'\begin{enumerate}',
+                r'\item %s' % latex_link,
+                r'\end{enumerate}',
+                ))
+
+        self.assertEqual(self.convert(html).strip(), latex)

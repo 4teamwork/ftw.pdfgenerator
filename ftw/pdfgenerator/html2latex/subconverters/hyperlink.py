@@ -23,6 +23,7 @@ class HyperlinkConverter(subconverter.SubConverter):
         url = self.resolve_uid(url)
 
         url = url.replace('&amp;', '&')
+        url = url.replace('&', '\\&')
         url = url.replace(' ', '%20').replace('%', '\%')
         url = url.replace('_', '\_').replace('#', '\#')
 
