@@ -1353,6 +1353,34 @@ class TestTableConverter(MockTestCase):
 
         self.assertEqual(self.convert(html), latex)
 
+    def test_ragged_and_style_order(self):
+        # \raggedright should be first, the \textbf
+        html = '\n'.join((
+                r'<table>',
+                r'  <tr>',
+                r'    <td width="50%" class="bold right">foo</td>',
+                r'    <td width="50%">bar</td>',
+                r'  </tr>',
+                r'</table>',
+                ))
+
+        latex = '\n'.join((
+                r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\begin{tabular}{p{0.5\tablewidth}p{0.5\tablewidth}}',
+
+                r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
+                    r'\raggedleft \textbf{foo}} & ' + \
+                    r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
+                    r'bar} \\',
+
+                r'\end{tabular}',
+                r''
+                ))
+
+        self.assertEqual(self.convert(html), latex)
+
 
 class TestLatexWidth(TestCase):
 

@@ -631,18 +631,6 @@ class LatexCell(object):
         latex = self.converter.convert(content,
                                        custom_patterns=custom_patterns)
 
-        if self.get_calculated_width() and self.get_align():
-            # if a width and align is defined, we need to set
-            # aligenement in content part with a command
-            mapping = {
-                'left': r'\raggedright ',
-                'right': r'\raggedleft ',
-                'center': r'\centering ',
-                }
-
-            if self.get_align() in mapping.keys():
-                latex = mapping[self.get_align()] + latex
-
         if 'grey' in self.get_css_classes():
             self.converter.converter.layout.use_package('xcolor')
             latex = r'\textcolor{gray}{%s}' % latex
@@ -655,6 +643,18 @@ class LatexCell(object):
 
         if 'bold' in self.get_css_classes() or self.is_head_cell():
             latex = r'\textbf{%s}' % latex
+
+        if self.get_calculated_width() and self.get_align():
+            # if a width and align is defined, we need to set
+            # aligenement in content part with a command
+            mapping = {
+                'left': r'\raggedright ',
+                'right': r'\raggedleft ',
+                'center': r'\centering ',
+                }
+
+            if self.get_align() in mapping.keys():
+                latex = mapping[self.get_align()] + latex
 
         if 'indent2' in self.get_css_classes():
             latex = r'\hangindent 0.2cm\hspace{0.2cm} %s' % latex
