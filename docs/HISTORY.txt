@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.2.4 (unreleased)
+1.2.4 (2012-08-21)
 ------------------
 
 - Tables: fix wrong indentation when using combined css classes
