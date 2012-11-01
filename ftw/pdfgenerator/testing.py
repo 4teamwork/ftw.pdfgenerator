@@ -4,9 +4,9 @@ from ftw.testing.layer import ComponentRegistryLayer
 from mocker import Mocker, expect
 from plone.mocktestcase.dummy import Dummy
 from plone.testing import Layer
-from zope.app.component.hooks import setSite
 from zope.component import getGlobalSiteManager
 from zope.component import provideUtility
+from zope.component.hooks import setSite
 from zope.i18n.interfaces import IUserPreferredLanguages
 from zope.interface import alsoProvides
 import os

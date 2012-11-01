@@ -1,5 +1,5 @@
 from ftw.pdfgenerator import _
-from zope.app.component.hooks import getSite
+from zope.component.hooks import getSite
 from zope.i18n import translate
 
 
