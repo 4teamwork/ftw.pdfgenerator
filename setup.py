@@ -25,8 +25,8 @@ setup(name='ftw.pdfgenerator',
 
       keywords='ftw pdf generator',
       author='4teamwork GmbH',
-      author_email='mailto:info@4temamwork.ch',
-      url='http://github.com/4teamwork/ftw.pdfgenerator',
+      author_email='mailto:info@4teamwork.ch',
+      url='https://github.com/4teamwork/ftw.pdfgenerator',
       license='GPL2',
 
       packages=find_packages(exclude=['ez_setup']),
