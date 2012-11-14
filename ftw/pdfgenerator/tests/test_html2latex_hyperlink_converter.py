@@ -2,10 +2,8 @@
 # W0212: Access to a protected member of a client class
 # W0201: Attribute defined outside __init__
 
-from Products import CMFCore
 from ftw.pdfgenerator.html2latex.converter import HTML2LatexConverter
 from ftw.testing import MockTestCase
-from mocker import ANY
 
 
 LATEX_HREF = r'\href{%(url)s}{%(label)s\footnote{\href{%(url)s}' + \
@@ -33,23 +31,6 @@ class TestHyperlinkConverter(MockTestCase):
 
         self.reference_catalog = self.mocker.mock(count=False)
         self.mock_tool(self.reference_catalog, 'reference_catalog')
-
-    def tearDown(self):
-        if self._getToolByName_mock is not None:
-            CMFCore.utils.getToolByName = self._ori_getToolByName
-            self._getToolByName_mock = None
-
-    def mock_tool(self, mock, name):
-        """Register a mock tool that will be returned when getToolByName()
-        is called.
-        """
-
-        if self._getToolByName_mock is None:
-            self._ori_getToolByName = CMFCore.utils.getToolByName
-            self._getToolByName_mock = self.mocker.replace(
-                'Products.CMFCore.utils.getToolByName')
-        self.expect(self._getToolByName_mock(ANY, name)).result(mock).count(
-            0, None)
 
     def test_converts_urls(self):
         self.replay()
