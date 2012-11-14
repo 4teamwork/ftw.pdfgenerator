@@ -4,6 +4,7 @@ from ftw.pdfgenerator.interfaces import IBuilder
 from ftw.pdfgenerator.interfaces import IHTML2LaTeXConverter
 from ftw.pdfgenerator.interfaces import ILaTeXLayout
 from ftw.pdfgenerator.interfaces import ILaTeXView
+from zope.annotation import IAttributeAnnotatable
 from zope.component import adapts, getMultiAdapter, queryMultiAdapter
 from zope.interface import implements, Interface
 
@@ -13,7 +14,7 @@ class BaseLayout(object):
     context and request.
     """
 
-    implements(ILaTeXLayout)
+    implements(ILaTeXLayout, IAttributeAnnotatable)
     adapts(Interface, Interface, IBuilder)
 
     def __init__(self, context, request, builder):

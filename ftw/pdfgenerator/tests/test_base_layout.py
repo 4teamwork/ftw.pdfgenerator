@@ -9,6 +9,7 @@ from ftw.pdfgenerator.interfaces import ILaTeXView
 from ftw.pdfgenerator.layout.baselayout import BaseLayout
 from ftw.pdfgenerator.testing import PDFGENERATOR_ZCML_LAYER
 from ftw.testing import MockTestCase
+from zope.annotation import IAnnotations
 from zope.component import adaptedBy, provideAdapter
 from zope.interface import Interface, implements
 from zope.interface import alsoProvides, directlyProvides
@@ -31,6 +32,12 @@ class TestBaseLayout(MockTestCase):
     def test_adapts(self):
         # BaseLayout should adapt three things (context, request, builder).
         self.assertEquals(len(adaptedBy(BaseLayout)), 3)
+
+    def test_layout_is_annotatable(self):
+        layout = BaseLayout(self.create_dummy(), self.create_dummy(),
+                            self.builder)
+        ann = IAnnotations(layout)
+        self.assertNotEqual(ann, None)
 
     def test_use_package(self):
         layout = BaseLayout(self.create_dummy(), self.create_dummy(),

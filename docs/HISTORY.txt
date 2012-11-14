@@ -4,6 +4,10 @@ Changelog
 1.2.5 (unreleased)
 ------------------
 
+- Make layout annotatable.
+  This allows to store certain informations while building the PDF.
+  [jone]
+
 - Plone 4.3 compatibility.
   [jone]
 
