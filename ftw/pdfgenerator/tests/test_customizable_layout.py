@@ -23,6 +23,7 @@ class TestCustomizableLayout(MockTestCase):
     layer = PDFGENERATOR_ZCML_LAYER
 
     def setUp(self, context=None, request=None, builder=None):
+        super(TestCustomizableLayout, self).setUp()
         self.context = context or self.create_dummy()
         self.request = request or self.create_dummy()
         self.builder = builder or self.create_dummy()

@@ -15,7 +15,7 @@ LATEX_HREF = r'\href{%(url)s}{%(label)s\footnote{\href{%(url)s}' + \
 class TestHyperlinkConverter(MockTestCase):
 
     def setUp(self):
-        MockTestCase.setUp(self)
+        super(TestHyperlinkConverter, self).setUp()
 
         self.context = self.mocker.mock(count=False)
         self.expect(self.context.absolute_url()).result(

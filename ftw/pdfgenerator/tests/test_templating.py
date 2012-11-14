@@ -15,6 +15,7 @@ import os
 class TestBaseTemplating(TestCase):
 
     def setUp(self):
+        super(TestBaseTemplating, self).setUp()
         testdata_basedir = os.path.join(os.path.dirname(__file__),
                                         'templates')
 
@@ -174,6 +175,7 @@ class TestBaseTemplating(TestCase):
 class TestMakoTemplating(TestCase):
 
     def setUp(self):
+        super(TestMakoTemplating, self).setUp()
         testdata_basedir = os.path.join(os.path.dirname(__file__),
                                         'templates')
 

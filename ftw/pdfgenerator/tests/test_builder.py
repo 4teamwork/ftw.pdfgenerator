@@ -14,7 +14,6 @@ from zope.interface.verify import verifyClass
 import os
 
 
-
 class TestBuilder(MockTestCase):
 
     layer = PREDEFINED_BUILD_DIRECTORY_LAYER

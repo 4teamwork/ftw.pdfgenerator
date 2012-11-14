@@ -20,9 +20,9 @@ class TestBaseLayout(MockTestCase):
     layer = PDFGENERATOR_ZCML_LAYER
 
     def setUp(self):
+        super(TestBaseLayout, self).setUp()
         self.builder = self.create_dummy()
         directlyProvides(self.builder, IBuilder)
-
 
     def test_implements_interface(self):
         self.assertTrue(ILaTeXLayout.implementedBy(BaseLayout))
