@@ -4,6 +4,9 @@ Changelog
 1.2.5 (unreleased)
 ------------------
 
+- Declare missing dependencies.
+  [jone]
+
 - Make layout annotatable.
   This allows to store certain informations while building the PDF.
   [jone]

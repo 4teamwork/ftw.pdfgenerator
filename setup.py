@@ -4,8 +4,17 @@ import os
 version = '1.2.5.dev0'
 
 tests_require = [
-    'plone.app.testing',
+    'unittest2',
+    'mocker',
+    'plone.mocktestcase',
     'ftw.testing',
+    'plone.testing',
+
+    'zope.annotation',
+    'zope.component',
+    'zope.i18n',
+    'zope.interface',
+    'zope.publisher',
     ]
 
 setup(name='ftw.pdfgenerator',
@@ -36,6 +45,19 @@ setup(name='ftw.pdfgenerator',
 
       install_requires=[
         'setuptools',
+
+        # Zope
+        'Zope2',
+        'zope.annotation',
+        'zope.component',
+        'zope.i18n',
+        'zope.i18nmessageid',
+        'zope.interface',
+
+        # Plone
+        'Products.Archetypes',
+        'Products.CMFCore',
+
         'Mako',
         'BeautifulSoup!=4.0b',
         # -*- Extra requirements: -*-
