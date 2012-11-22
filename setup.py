@@ -26,10 +26,13 @@ setup(name='ftw.pdfgenerator',
 
       classifiers=[
         "Environment :: Web Environment",
-        "Framework :: Plone",
+        'Framework :: Plone',
+        'Framework :: Plone :: 4.1',
+        'Framework :: Plone :: 4.2',
         "Intended Audience :: Developers",
-        "License :: OSI Approved :: GNU General Public License (GPL)",
-        "Programming Language :: Python",
+        'License :: OSI Approved :: GNU General Public License (GPL)',
+        'Programming Language :: Python',
+        'Topic :: Software Development :: Libraries :: Python Modules',
         ],
 
       keywords='ftw pdf generator',
