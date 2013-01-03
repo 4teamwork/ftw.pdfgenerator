@@ -6,6 +6,12 @@ data using predefined `LaTeX`_ views. It is not useful for converting
 full HTML pages into `LaTeX`_ / PDFs, although it is able to convert small HTML
 chunks into `LaTeX`_.
 
+.. figure:: http://onegov.ch/approved.png/image
+   :align: right
+   :target: http://onegov.ch/community/zertifizierte-module/ftw.pdfgenerator
+
+   Certified: 01/2013
+
 
 Requirements
 ============
