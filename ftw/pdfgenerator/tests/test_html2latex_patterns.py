@@ -33,22 +33,22 @@ class TestBasicPatterns(TestCase):
                          'Hello \\textbf{World}!')
 
         self.assertEqual(self.convert('Hello <u>World</u>!'),
-                         'Hello {\\em World}\\/!')
+                         'Hello \\emph{World}\\/!')
 
         self.assertEqual(self.convert('Hello <u id="foo">World</u>!'),
-                         'Hello {\\em World}\\/!')
+                         'Hello \\emph{World}\\/!')
 
         self.assertEqual(self.convert('Hello <em>World</em>!'),
-                         'Hello {\\em World}\\/!')
+                         'Hello \\emph{World}\\/!')
 
         self.assertEqual(self.convert('Hello <em id="foo">World</em>!'),
-                         'Hello {\\em World}\\/!')
+                         'Hello \\emph{World}\\/!')
 
         self.assertEqual(self.convert('Hello <i>World</i>!'),
-                         'Hello {\\it World}\\/!')
+                         'Hello \\textit{World}\\/!')
 
         self.assertEqual(self.convert('Hello <i id="foo">World</i>!'),
-                         'Hello {\\it World}\\/!')
+                         'Hello \\textit{World}\\/!')
 
         self.assertEqual(self.convert('capacity: 55 m<sup>3</sup>'),
                          'capacity: 55 m\\textsuperscript{3}')
@@ -195,19 +195,19 @@ class TestBasicPatterns(TestCase):
                          'te\\textbf{X}t')
 
         self.assertEqual(self.convert('a<em> b</em> c'),
-                         'a {\\em b} c')
+                         'a \\emph{b} c')
 
         self.assertEqual(self.convert('a<u> b</u> c'),
-                         'a {\\em b} c')
+                         'a \\emph{b} c')
 
         self.assertEqual(self.convert('a<i> b</i> c'),
-                         'a {\\it b} c')
+                         'a \\textit{b} c')
 
         self.assertEqual(self.convert('a <i>b</i> c'),
-                         'a {\\it b} c')
+                         'a \\textit{b} c')
 
         self.assertEqual(self.convert('a<i>b</i>c'),
-                         'a{\\it b}\\/c')
+                         'a\\textit{b}\\/c')
 
     def test_links(self):
         # Blank links should be stripped
@@ -425,51 +425,51 @@ class TestBasicPatterns(TestCase):
 
     def test_space_after_italic(self):
         html = 'foo <em>bar</em> baz'
-        latex = r'foo {\em bar} baz'
+        latex = r'foo \emph{bar} baz'
         self.assertEqual(self.convert(html), latex)
 
         html = 'foo <u>bar</u> baz'
-        latex = r'foo {\em bar} baz'
+        latex = r'foo \emph{bar} baz'
         self.assertEqual(self.convert(html), latex)
 
         html = 'foo <i>bar</i> baz'
-        latex = r'foo {\it bar} baz'
+        latex = r'foo \textit{bar} baz'
         self.assertEqual(self.convert(html), latex)
 
         html = 'foo (<em>bar</em>) baz'
-        latex = r'foo ({\em bar}\/) baz'
+        latex = r'foo (\emph{bar}\/) baz'
         self.assertEqual(self.convert(html), latex)
 
         html = 'foo (<u>bar</u>) baz'
-        latex = r'foo ({\em bar}\/) baz'
+        latex = r'foo (\emph{bar}\/) baz'
         self.assertEqual(self.convert(html), latex)
 
         html = 'foo (<i>bar</i>) baz'
-        latex = r'foo ({\it bar}\/) baz'
+        latex = r'foo (\textit{bar}\/) baz'
         self.assertEqual(self.convert(html), latex)
 
         html = 'foo <em>bar</em>-baz'
-        latex = r'foo {\em bar}\/-baz'
+        latex = r'foo \emph{bar}\/-baz'
         self.assertEqual(self.convert(html), latex)
 
         html = 'foo <u>bar</u>-baz'
-        latex = r'foo {\em bar}\/-baz'
+        latex = r'foo \emph{bar}\/-baz'
         self.assertEqual(self.convert(html), latex)
 
         html = 'foo <i>bar</i>-baz'
-        latex = r'foo {\it bar}\/-baz'
+        latex = r'foo \textit{bar}\/-baz'
         self.assertEqual(self.convert(html), latex)
 
         html = 'foo <em>bar</em>'
-        latex = r'foo {\em bar}'
+        latex = r'foo \emph{bar}'
         self.assertEqual(self.convert(html), latex)
 
         html = 'foo <u>bar</u>'
-        latex = r'foo {\em bar}'
+        latex = r'foo \emph{bar}'
         self.assertEqual(self.convert(html), latex)
 
         html = 'foo <i>bar</i>'
-        latex = r'foo {\it bar}'
+        latex = r'foo \textit{bar}'
         self.assertEqual(self.convert(html), latex)
 
     def test_utf8_math_charaters(self):
