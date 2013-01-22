@@ -181,7 +181,7 @@ class TestHyperlinkConverter(MockTestCase):
     def test_label_is_converted(self):
         self.replay()
         html = '<a href="http://foo">foo <b>bar</b> baz</a>'
-        latex = LATEX_HREF % {'label': r'foo {\bf bar} baz',
+        latex = LATEX_HREF % {'label': r'foo \textbf{bar} baz',
                               'url': 'http://foo',
                               'url_label': 'http://foo'}
         self.assertEqual(self.convert(html), latex)

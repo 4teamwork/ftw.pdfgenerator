@@ -27,10 +27,10 @@ class TestBasicPatterns(TestCase):
 
     def test_common_text_formatting(self):
         self.assertEqual(self.convert('Hello <b>World</b>!'),
-                         'Hello {\\bf World}!')
+                         'Hello \\textbf{World}!')
 
         self.assertEqual(self.convert('Hello <strong>World</strong>!'),
-                         'Hello {\\bf World}!')
+                         'Hello \\textbf{World}!')
 
         self.assertEqual(self.convert('Hello <u>World</u>!'),
                          'Hello {\\em World}\\/!')
@@ -104,11 +104,13 @@ class TestBasicPatterns(TestCase):
         self.assertEqual(self.convert('Bar "foo (1)" blubb'),
                          'Bar "`foo (1)"\' blubb')
 
+    def test_quotation_marks2(self):
         self.assertEqual(self.convert('foo &quot;<b>bar</b>&quot; baz'),
-                         'foo "`{\\bf bar}"\' baz')
+                         'foo "`\\textbf{bar}"\' baz')
 
+    def test_quotation_marks3(self):
         self.assertEqual(self.convert('foo <b>&quot;bar&quot;</b> baz'),
-                         'foo {\\bf "`bar"\'} baz')
+                         'foo \\textbf{"`bar"\'} baz')
 
     def test_whitespace(self):
         self.assertEqual(self.convert('W\r\nX\nY\rZ'),
@@ -126,26 +128,26 @@ class TestBasicPatterns(TestCase):
 
         # test trimming newlines
         self.assertEqual(self.convert('<b>eins</b>'),
-                         '{\\bf eins}')
+                         '\\textbf{eins}')
 
         self.assertEqual(self.convert('<b>zwei</b><br />zwei'),
-                         '{\\bf zwei}\\\\\nzwei')
+                         '\\textbf{zwei}\\\\\nzwei')
 
         self.assertEqual(self.convert('<b>drei<br /></b>'),
-                         '{\\bf drei\\\\\n}')
+                         '\\textbf{drei\\\\\n}')
 
         self.assertEqual(self.convert('<b>vier<br />\n</b>'),
-                         '{\\bf vier\\\\\n }')
+                         '\\textbf{vier\\\\\n }')
 
         self.assertEqual(self.convert('<b>fuenf<br />\n</b><br />'),
-                         '{\\bf fuenf\\\\\n }')
+                         '\\textbf{fuenf\\\\\n }')
 
         self.assertEqual(self.convert('<b>sechs<br />\n</b>sechs<br />'),
-                         '{\\bf sechs\\\\\n }sechs')
+                         '\\textbf{sechs\\\\\n }sechs')
 
         self.assertEqual(self.convert('<strong>&quot;sieben&quot;<br />\n'
                                       '</strong><br />'),
-                         '{\\bf "`sieben"\'\\\\\n }')
+                         '\\textbf{"`sieben"\'\\\\\n }')
 
     def test_paragraphs_and_newlines(self):
         self.assertEqual(self.convert('Hello<br><br>World'),
@@ -171,12 +173,12 @@ class TestBasicPatterns(TestCase):
             self.convert('<p><span style="font-weight: bold;">Mitglieder'
                          '</span><br />Name1<br />Name2<br /></p>').strip(),
             '\n'.join((
-                    r'{\bf Mitglieder}\\',
+                    r'\textbf{Mitglieder}\\',
                     r'Name1\\',
                     r'Name2')))
 
         self.assertEqual(self.convert('<p><strong><br />Text</strong></p>'),
-                         r'{\bf Text}')
+                         r'\textbf{Text}')
 
     def test_curly_bracket_spaces(self):
         # If there is no space at left of the curly brackets, there will
@@ -184,13 +186,13 @@ class TestBasicPatterns(TestCase):
         # is (with the bold-tag in HTML the browser displays a bold space).
 
         self.assertEqual(self.convert('text<b> bold text</b>'),
-                         'text {\\bf bold text}')
+                         'text \\textbf{bold text}')
 
         self.assertEqual(self.convert('text<strong> bold text</strong>'),
-                         'text {\\bf bold text}')
+                         'text \\textbf{bold text}')
 
         self.assertEqual(self.convert('te<b>X</b>t'),
-                         'te{\\bf X}t')
+                         'te\\textbf{X}t')
 
         self.assertEqual(self.convert('a<em> b</em> c'),
                          'a {\\em b} c')
@@ -219,15 +221,15 @@ class TestBasicPatterns(TestCase):
         self.assertEqual(
             self.convert('Hello <span style="font-weight: bold;">my</span>'
                          ' world'),
-            'Hello {\\bf my} world')
+            'Hello \\textbf{my} world')
 
         self.assertEqual(
             self.convert('<span style="font-weight: bold;">test</span>'),
-            '{\\bf test}')
+            '\\textbf{test}')
 
         self.assertEqual(
             self.convert('<span style="font-weight: bold">test</span>'),
-            '{\\bf test}')
+            '\\textbf{test}')
 
     def test_sepcial_characters(self):
         self.assertEqual(self.convert('!#$%&amp;\'()*+-./02345'),
@@ -404,7 +406,7 @@ class TestBasicPatterns(TestCase):
         # which caused to only replace the first 16 matches.
         times = 20
         html = ('<b>foo</b> ' * times).strip()
-        latex = (r'{\bf foo} ' * times).strip()
+        latex = (r'\textbf{foo} ' * times).strip()
 
         result = self.convert(html)
 

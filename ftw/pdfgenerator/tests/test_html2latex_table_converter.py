@@ -430,7 +430,7 @@ class TestTableConverter(MockTestCase):
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-2\tabcolsep}',
                 r'\begin{tabular}{l}',
-                r'\multicolumn{1}{l}{{\bf Hello} {\it World}} \\',
+                r'\multicolumn{1}{l}{\textbf{Hello} {\it World}} \\',
                 r'\end{tabular}',
                 r''))
 
@@ -445,14 +445,14 @@ class TestTableConverter(MockTestCase):
                 r'<b>yeah</b>'))
 
         latex = '\n'.join((
-                r'This {\it is} a {\bf Table}:\\',
+                r'This {\it is} a \textbf{Table}:\\',
                 r' \makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-2\tabcolsep}',
                 r'\begin{tabular}{l}',
                 r'\multicolumn{1}{l}{test} \\',
                 r'\end{tabular}',
-                r' {\bf yeah}'))
+                r' \textbf{yeah}'))
 
         self.assertEqual(self.convert(html), latex)
 

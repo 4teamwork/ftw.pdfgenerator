@@ -57,7 +57,7 @@ class TestMakoLayoutBase(MockTestCase):
 
         builder = self.mocker.mock()
         self.expect(builder.add_file(
-                'welcome.tex', data='{\\large Hello {\\bf ${view.name}}!}\n'))
+                'welcome.tex', data='{\\large Hello \\textbf{${view.name}}!}\n'))
 
         self.replay()
 

@@ -53,14 +53,14 @@ DEFAULT_PATTERNS = ([
         (MODE_REGEXP,   r'([^ ])<(b|strong|em|u|i)> ',
          r'\g<1> <\g<2>>'),
         (MODE_REGEXP,   r'<b>(.*?)</b>',
-         r'{\\bf \g<1>}' + interfaces.HTML2LATEX_PREVENT_CHARACTER),
+         r'\\textbf{\g<1>}' + interfaces.HTML2LATEX_PREVENT_CHARACTER),
         (MODE_REGEXP,   r'<b .*?>(.*?)</b>',
-         r'{\\bf \g<1>}' + interfaces.HTML2LATEX_PREVENT_CHARACTER),
+         r'\\textbf{\g<1>}' + interfaces.HTML2LATEX_PREVENT_CHARACTER),
         (MODE_REGEXP,   r'<strong.*?>(.*?)</strong>',
-         r'{\\bf \g<1>}' + interfaces.HTML2LATEX_PREVENT_CHARACTER),
+         r'\\textbf{\g<1>}' + interfaces.HTML2LATEX_PREVENT_CHARACTER),
 
         (MODE_REGEXP,   r'<span .*?style="font-weight: bold.*?">(.*?)</span>',
-         r'{\\bf \g<1>}' + interfaces.HTML2LATEX_PREVENT_CHARACTER),
+         r'\\textbf{\g<1>}' + interfaces.HTML2LATEX_PREVENT_CHARACTER),
 
         # <em> / <u> -> {\em}
         (MODE_REGEXP,   r'<(em|u)(>| [^>]*>)([^<\1]*)</(\1)>([^\s])',
@@ -78,8 +78,8 @@ DEFAULT_PATTERNS = ([
 
         # quotes
         (MODE_REGEXP,   r'\&quot;',                 '"'),
-        (MODE_REGEXP,   r'"([\w\{])',               '"`\g<1>'),
-        (MODE_REGEXP,   r'(\S)"',                   '\g<1>"\''),
+        (MODE_REGEXP,   r'"([\w\{\\])',             '"`\g<1>'),
+        (MODE_REGEXP,   r'([^ \t\n\r\f\v\{])"',     '\g<1>"\''),
 
         # paragraphs and white space
         (MODE_REGEXP,   r'<p.*?>(.*?)[\r\n ]{0,}</p>',
@@ -96,6 +96,8 @@ DEFAULT_PATTERNS = ([
         (MODE_REGEXP,   r'\n([^\n])',              r'\\\\\n\g<1>'),
         (MODE_REGEXP,   r'([^}])\n\n',             r'\g<1>\\\\\n\n'),
         (MODE_REGEXP,   r'({\\[\w]*? )\\\\\W(.*?})',
+         r'\1\2'),
+        (MODE_REGEXP,   r'(\\[\w]*?{)\\\\\W(.*?})',
          r'\1\2'),
 
         # special characters
