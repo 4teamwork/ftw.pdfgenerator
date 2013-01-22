@@ -231,7 +231,7 @@ class TestHTML2LatexConverter(MockTestCase):
             pattern = 'bar'
 
             def __call__(self):
-                self.replace(r'{\bf replaced}')
+                self.replace(r'\textbf{replaced}')
 
         obj = converter.HTML2LatexConverter(
             object(), object(), object())
@@ -239,7 +239,7 @@ class TestHTML2LatexConverter(MockTestCase):
         self.assertEqual(
             obj.convert('foo bar baz bar', custom_subconverters=[
                     MyConverter]),
-            r'foo {\bf replaced} baz {\bf replaced}')
+            r'foo \textbf{replaced} baz \textbf{replaced}')
 
     def test_convert_plain(self):
         obj = converter.HTML2LatexConverter(

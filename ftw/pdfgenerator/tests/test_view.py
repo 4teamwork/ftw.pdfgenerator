@@ -97,7 +97,7 @@ class TestMakoLaTeXView(MockTestCase):
                 return 'Hugo Boss'
 
         self.assertEqual(FooView(context, request, layout).render(),
-                         '{\\large Hello {\\bf Hugo Boss}!}\n')
+                         '{\\large Hello \\textbf{Hugo Boss}!}\n')
 
     def test_convert_passes_to_converter(self):
         context = request = object()
@@ -105,7 +105,7 @@ class TestMakoLaTeXView(MockTestCase):
         converter = self.mocker.mock()
 
         html = 'this <b>is</b> html\n '
-        latex = 'this {\bf is} html'
+        latex = 'this \textbf{is} html'
 
         self.expect(layout.get_converter()).result(converter)
         self.expect(converter.convert(html, trim=True)).result(latex)

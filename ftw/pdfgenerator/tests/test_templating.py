@@ -203,7 +203,7 @@ class TestMakoTemplating(TestCase):
         self.assertEqual(
             obj.render_template('customtitlepage.tex', title='foo',
                                 custom='bar'),
-            '\\title{foo}\n\n{\\large\\bf bar}\n\n')
+            '\\title{foo}\n\n{\\large\\textbf{bar}}\n\n')
 
     def test_render_template_view_access(self):
         class Foo(MakoTemplating):
@@ -216,7 +216,7 @@ class TestMakoTemplating(TestCase):
         foo = Foo()
         self.assertEqual(
             foo.render_template('welcome.tex'),
-            '{\\large Hello {\\bf John}!}\n')
+            '{\\large Hello \\textbf{John}!}\n')
 
     def test_get_raw_template(self):
         class Foo(MakoTemplating):
@@ -225,7 +225,7 @@ class TestMakoTemplating(TestCase):
         foo = Foo()
         self.assertEqual(
             foo.get_raw_template('welcome.tex'),
-            r'{\large Hello {\bf ${view.name}}!}' + '\n')
+            r'{\large Hello \textbf{${view.name}}!}' + '\n')
 
     def test_get_raw_template_returns_None_if_template_not_found(self):
         class Foo(MakoTemplating):

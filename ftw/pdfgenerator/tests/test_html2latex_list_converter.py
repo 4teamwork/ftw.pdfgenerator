@@ -81,7 +81,7 @@ class TestListConverter(SubconverterTestBase):
         html = '<ul><li>This is <b>important</b>!</ul>'
         latex = '\n'.join((r'',
                            r'\begin{itemize}',
-                           r'\item This is {\bf important}!',
+                           r'\item This is \textbf{important}!',
                            r'\end{itemize}',
                            r''))
 
@@ -111,7 +111,7 @@ class TestListConverter(SubconverterTestBase):
                 r'\item bar',
                 r'\end{itemize}',
                 r'',
-                r'{\bf foobar}',
+                r'\textbf{foobar}',
                 r'',
                 r'',
                 r'\begin{itemize}',

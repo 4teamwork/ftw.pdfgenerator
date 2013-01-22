@@ -4,6 +4,9 @@ Changelog
 1.2.5 (unreleased)
 ------------------
 
+- Use local text formatting commands, such as \textbf instead of {\bf }. #13
+  [jone]
+
 - onegov.ch approved: add badge to readme.
   [jone]
 
