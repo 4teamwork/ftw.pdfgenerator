@@ -33,22 +33,22 @@ class TestBasicPatterns(TestCase):
                          'Hello \\textbf{World}!')
 
         self.assertEqual(self.convert('Hello <u>World</u>!'),
-                         'Hello \\emph{World}\\/!')
+                         'Hello \\emph{World}!')
 
         self.assertEqual(self.convert('Hello <u id="foo">World</u>!'),
-                         'Hello \\emph{World}\\/!')
+                         'Hello \\emph{World}!')
 
         self.assertEqual(self.convert('Hello <em>World</em>!'),
-                         'Hello \\emph{World}\\/!')
+                         'Hello \\emph{World}!')
 
         self.assertEqual(self.convert('Hello <em id="foo">World</em>!'),
-                         'Hello \\emph{World}\\/!')
+                         'Hello \\emph{World}!')
 
         self.assertEqual(self.convert('Hello <i>World</i>!'),
-                         'Hello \\textit{World}\\/!')
+                         'Hello \\textit{World}!')
 
         self.assertEqual(self.convert('Hello <i id="foo">World</i>!'),
-                         'Hello \\textit{World}\\/!')
+                         'Hello \\textit{World}!')
 
         self.assertEqual(self.convert('capacity: 55 m<sup>3</sup>'),
                          'capacity: 55 m\\textsuperscript{3}')
@@ -207,7 +207,7 @@ class TestBasicPatterns(TestCase):
                          'a \\textit{b} c')
 
         self.assertEqual(self.convert('a<i>b</i>c'),
-                         'a\\textit{b}\\/c')
+                         'a\\textit{b}c')
 
     def test_links(self):
         # Blank links should be stripped
@@ -423,7 +423,10 @@ class TestBasicPatterns(TestCase):
         self.assertIn('bar', result)
         self.assertIn('baz', result)
 
-    def test_space_after_italic(self):
+    def test_no_space_after_italic(self):
+        # we used to have a little space after italic text when using the
+        # old school syntax {\em }. But since the new syntax \emph{} does
+        # this automatically, we don't insert it manually anymore.
         html = 'foo <em>bar</em> baz'
         latex = r'foo \emph{bar} baz'
         self.assertEqual(self.convert(html), latex)
@@ -437,27 +440,27 @@ class TestBasicPatterns(TestCase):
         self.assertEqual(self.convert(html), latex)
 
         html = 'foo (<em>bar</em>) baz'
-        latex = r'foo (\emph{bar}\/) baz'
+        latex = r'foo (\emph{bar}) baz'
         self.assertEqual(self.convert(html), latex)
 
         html = 'foo (<u>bar</u>) baz'
-        latex = r'foo (\emph{bar}\/) baz'
+        latex = r'foo (\emph{bar}) baz'
         self.assertEqual(self.convert(html), latex)
 
         html = 'foo (<i>bar</i>) baz'
-        latex = r'foo (\textit{bar}\/) baz'
+        latex = r'foo (\textit{bar}) baz'
         self.assertEqual(self.convert(html), latex)
 
         html = 'foo <em>bar</em>-baz'
-        latex = r'foo \emph{bar}\/-baz'
+        latex = r'foo \emph{bar}-baz'
         self.assertEqual(self.convert(html), latex)
 
         html = 'foo <u>bar</u>-baz'
-        latex = r'foo \emph{bar}\/-baz'
+        latex = r'foo \emph{bar}-baz'
         self.assertEqual(self.convert(html), latex)
 
         html = 'foo <i>bar</i>-baz'
-        latex = r'foo \textit{bar}\/-baz'
+        latex = r'foo \textit{bar}-baz'
         self.assertEqual(self.convert(html), latex)
 
         html = 'foo <em>bar</em>'
@@ -1009,3 +1012,71 @@ class TestBasicPatterns(TestCase):
 
         self.assertEqual(self.convert(u'\u2282'.encode('utf-8')),
                          r'$\subset$')
+
+    def test_newline_in_bold_command(self):
+        # "\textbf{X\n\n}" is not allowed, use "\textbf{X\\}"
+        self.assertEqual(
+            self.convert(r'<p><b>foo<br /> <br /></b></p>'),
+            r'\textbf{foo\\\\}')
+
+    def test_newline_in_bold_command2(self):
+        # "\textbf{X\n\nY}" is not allowed, use "\textbf{X\\Y}"
+        self.assertEqual(
+            self.convert(r'<p><b>foo<br /> <br />bar</b></p>'),
+            r'\textbf{foo\\\\bar}')
+
+    def test_newline_in_bold_command3(self):
+        # "\textbf{\n\nY}" is not allowed, use "\textbf{\\Y}"
+        self.assertEqual(
+            self.convert(r'<b><br /> <br />bar</b>' * 2),
+            r'\textbf{\\\\bar}' * 2)
+
+    def test_newline_in_emph_command(self):
+        # "\emph{X\n\n}" is not allowed, use "\emph{X\\}"
+        self.assertEqual(
+            self.convert(r'foo <u>bar<br /> <br /></u> baz'),
+            r'foo \emph{bar\\\\} baz')
+
+    def test_newline_in_emph_command2(self):
+        # "\emph{X\n\nY}" is not allowed, use "\emph{X\\Y}"
+        self.assertEqual(
+            self.convert(r'<u>foo<br /> <br />bar</u>'),
+            r'\emph{foo\\\\bar}')
+
+    def test_newline_in_emph_command3(self):
+        # "\emph{\n\nY}" is not allowed, use "\emph{\\Y}"
+        self.assertEqual(
+            self.convert(r'<u><br /> <br />bar</u>' * 2),
+            r'\emph{\\\\bar}' * 2)
+
+    def test_newline_in_italic_command(self):
+        # "\textit{X\n\n}" is not allowed, use "\textit{X\\}"
+        self.assertEqual(
+            self.convert(r'<p><i>foo<br /> <br /></i></p>'),
+            r'\textit{foo\\\\}')
+
+    def test_newline_in_italic_command2(self):
+        # "\textit{X\n\nY}" is not allowed, use "\textit{X\\Y}"
+        self.assertEqual(
+            self.convert(r'<p><i>foo<br /> <br />bar</i></p>'),
+            r'\textit{foo\\\\bar}')
+
+    def test_newline_in_italic_command3(self):
+        # "\textit{\n\nY}" is not allowed, use "\textit{\\Y}"
+        self.assertEqual(
+            self.convert(r'<i><br /> <br />bar</i>' * 2),
+            r'\textit{\\\\bar}' * 2)
+
+    def test_newline_in_combined_italic_and_bold_command(self):
+        # "\textit{*\n\n*}" is not allowed, use "\textit{*\\*}"
+        # "\textbf{*\n\n*}" is not allowed, use "\textbf{*\\*}"
+        self.assertEqual(
+            self.convert(r'<i>foo'
+                         r'<b>bar</b><br /> <br />'
+                         r'<u>baz</u><br /> <br />'
+                         r'</i>'),
+            r'\textit{foo\textbf{bar}\\\\\emph{baz}\\\\}')
+
+        self.assertEqual(
+            self.convert(r'<b>foo<i>bar</i><br /> <br /></b>'),
+            r'\textbf{foo\textit{bar}\\\\}')

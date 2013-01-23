@@ -63,14 +63,10 @@ DEFAULT_PATTERNS = ([
          r'\\textbf{\g<1>}' + interfaces.HTML2LATEX_PREVENT_CHARACTER),
 
         # <em> / <u> -> \emph{X}
-        (MODE_REGEXP,   r'<(em|u)(>| [^>]*>)([^<\1]*)</(\1)>([^\s])',
-         r'\\emph{\g<3>}\/\g<5>'),
-        (MODE_REGEXP,   r'<(em|u)(>| [^>]*>)([^<\1]*)</(\1)>',
+        (MODE_REGEXP,   r'<(em|u)(>| [^>]*>)(.*?)</(\1)>',
          r'\\emph{\g<3>}'),
         # <i> -> \textit{X}
-        (MODE_REGEXP,   r'<(i)(>| [^>]*>)([^<\1]*)</(\1)>([^\s])',
-         r'\\textit{\g<3>}\/\g<5>'),
-        (MODE_REGEXP,   r'<(i)(>| [^>]*>)([^<\1]*)</(\1)>',
+        (MODE_REGEXP,   r'<(i)(>| [^>]*>)(.*?)</(\1)>',
          r'\\textit{\g<3>}'),
 
         (MODE_REGEXP,   r'<sup.*?>(.*?)</sup>',
@@ -99,6 +95,7 @@ DEFAULT_PATTERNS = ([
          r'\1\2'),
         (MODE_REGEXP,   r'(\\[\w]*?{)\\\\\W(.*?})',
          r'\1\2'),
+
 
         # special characters
         (MODE_REPLACE,  '%',                       '\\%'),
@@ -396,6 +393,13 @@ DEFAULT_PATTERNS = ([
         (MODE_REGEXP,   r'(\n|^)[ ]{0,}\\\\',      r'\g<1>'),
         # remove all line endings (\\) after a } (latex command)
         (MODE_REGEXP,   r'}[\t ]{0,}\\\\',         r'}'),
+
+        # "\textbf{*\n\n*}" is not allowed, use "\textbf{*\\*}"
+        # "\textit{*\n\n*}" is not allowed, use "\textit{*\\*}"
+        # "\emph{*\n\n*}" is not allowed, use "\emph{*\\*}"
+        (MODE_REGEXP,   r'\\(textbf|textit|emph){(.*?)\n\n(.*?)}',
+         r'\\\g<1>{\g<2>\\\\\\\\\g<3>}',
+         interfaces.HTML2LATEX_REPEAT_MODIFIER),
 
         # special characters
         (MODE_REPLACE,  '&lt;',                    '<'),
