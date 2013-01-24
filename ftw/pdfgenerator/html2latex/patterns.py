@@ -394,13 +394,6 @@ DEFAULT_PATTERNS = ([
         # remove all line endings (\\) after a } (latex command)
         (MODE_REGEXP,   r'}[\t ]{0,}\\\\',         r'}'),
 
-        # "\textbf{*\n\n*}" is not allowed, use "\textbf{*\\*}"
-        # "\textit{*\n\n*}" is not allowed, use "\textit{*\\*}"
-        # "\emph{*\n\n*}" is not allowed, use "\emph{*\\*}"
-        (MODE_REGEXP,   r'\\(textbf|textit|emph){(.*?)\n\n(.*?)}',
-         r'\\\g<1>{\g<2>\\\\\\\\\g<3>}',
-         interfaces.HTML2LATEX_REPEAT_MODIFIER),
-
         # special characters
         (MODE_REPLACE,  '&lt;',                    '<'),
         (MODE_REPLACE,  '&gt;',                    '>'),

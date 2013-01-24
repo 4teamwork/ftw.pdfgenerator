@@ -5,6 +5,7 @@ from ftw.pdfgenerator.html2latex.subconverters import htmlentities
 from ftw.pdfgenerator.html2latex.subconverters import hyperlink
 from ftw.pdfgenerator.html2latex.subconverters import listing
 from ftw.pdfgenerator.html2latex.subconverters import table
+from ftw.pdfgenerator.html2latex.subconverters import textformatting
 from ftw.pdfgenerator.utils import encode_htmlentities
 from ftw.pdfgenerator.utils import xml2htmlentities
 from random import choice
@@ -25,7 +26,8 @@ DEFAULT_SUBCONVERTERS = (
     table.TableConverter,
     listing.ListConverter,
     htmlentities.HtmlentitiesConverter,
-    hyperlink.HyperlinkConverter
+    hyperlink.HyperlinkConverter,
+    textformatting.Textformatting,
     )
 
 

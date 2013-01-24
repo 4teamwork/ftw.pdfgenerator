@@ -2,6 +2,7 @@
 
 
 from ftw.pdfgenerator.html2latex.converter import HTML2LatexConverter
+from ftw.pdfgenerator.html2latex.subconverters import textformatting
 from unittest2 import TestCase
 
 
@@ -10,7 +11,7 @@ class BasicConverter(HTML2LatexConverter):
     """
 
     def get_default_subconverters(self):
-        return []
+        return [textformatting.Textformatting]
 
 
 class TestBasicPatterns(TestCase):
@@ -1012,71 +1013,3 @@ class TestBasicPatterns(TestCase):
 
         self.assertEqual(self.convert(u'\u2282'.encode('utf-8')),
                          r'$\subset$')
-
-    def test_newline_in_bold_command(self):
-        # "\textbf{X\n\n}" is not allowed, use "\textbf{X\\}"
-        self.assertEqual(
-            self.convert(r'<p><b>foo<br /> <br /></b></p>'),
-            r'\textbf{foo\\\\}')
-
-    def test_newline_in_bold_command2(self):
-        # "\textbf{X\n\nY}" is not allowed, use "\textbf{X\\Y}"
-        self.assertEqual(
-            self.convert(r'<p><b>foo<br /> <br />bar</b></p>'),
-            r'\textbf{foo\\\\bar}')
-
-    def test_newline_in_bold_command3(self):
-        # "\textbf{\n\nY}" is not allowed, use "\textbf{\\Y}"
-        self.assertEqual(
-            self.convert(r'<b><br /> <br />bar</b>' * 2),
-            r'\textbf{\\\\bar}' * 2)
-
-    def test_newline_in_emph_command(self):
-        # "\emph{X\n\n}" is not allowed, use "\emph{X\\}"
-        self.assertEqual(
-            self.convert(r'foo <u>bar<br /> <br /></u> baz'),
-            r'foo \emph{bar\\\\} baz')
-
-    def test_newline_in_emph_command2(self):
-        # "\emph{X\n\nY}" is not allowed, use "\emph{X\\Y}"
-        self.assertEqual(
-            self.convert(r'<u>foo<br /> <br />bar</u>'),
-            r'\emph{foo\\\\bar}')
-
-    def test_newline_in_emph_command3(self):
-        # "\emph{\n\nY}" is not allowed, use "\emph{\\Y}"
-        self.assertEqual(
-            self.convert(r'<u><br /> <br />bar</u>' * 2),
-            r'\emph{\\\\bar}' * 2)
-
-    def test_newline_in_italic_command(self):
-        # "\textit{X\n\n}" is not allowed, use "\textit{X\\}"
-        self.assertEqual(
-            self.convert(r'<p><i>foo<br /> <br /></i></p>'),
-            r'\textit{foo\\\\}')
-
-    def test_newline_in_italic_command2(self):
-        # "\textit{X\n\nY}" is not allowed, use "\textit{X\\Y}"
-        self.assertEqual(
-            self.convert(r'<p><i>foo<br /> <br />bar</i></p>'),
-            r'\textit{foo\\\\bar}')
-
-    def test_newline_in_italic_command3(self):
-        # "\textit{\n\nY}" is not allowed, use "\textit{\\Y}"
-        self.assertEqual(
-            self.convert(r'<i><br /> <br />bar</i>' * 2),
-            r'\textit{\\\\bar}' * 2)
-
-    def test_newline_in_combined_italic_and_bold_command(self):
-        # "\textit{*\n\n*}" is not allowed, use "\textit{*\\*}"
-        # "\textbf{*\n\n*}" is not allowed, use "\textbf{*\\*}"
-        self.assertEqual(
-            self.convert(r'<i>foo'
-                         r'<b>bar</b><br /> <br />'
-                         r'<u>baz</u><br /> <br />'
-                         r'</i>'),
-            r'\textit{foo\textbf{bar}\\\\\emph{baz}\\\\}')
-
-        self.assertEqual(
-            self.convert(r'<b>foo<i>bar</i><br /> <br /></b>'),
-            r'\textbf{foo\textit{bar}\\\\}')
