@@ -48,7 +48,8 @@ class TestBuilder(MockTestCase):
 
         self.assertTrue(os.path.exists(self.builddir))
         filepath = os.path.join(self.builddir, 'foo.txt')
-        self.assertTrue(os.path.exists(filepath), 'File not found: %s' % filepath)
+        self.assertTrue(os.path.exists(filepath),
+                        'File not found: {}'.format(filepath))
         self.assertEqual(open(filepath).read(), 'Foo\nBar')
 
     def test_terminated_exception_raised(self):
