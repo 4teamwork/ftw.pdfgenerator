@@ -378,3 +378,7 @@ This package is copyright by `4teamwork <http://www.4teamwork.ch/>`_.
 .. _Tex Live: http://www.tug.org/texlive/
 .. _MiKTeX: http://www.miktex.org/
 .. _mako: http://www.makotemplates.org/
+
+.. image:: https://cruel-carlota.pagodabox.com/94ca8bd22baa91bf8038e9d2c210aa37
+   :alt: githalytics.com
+   :target: http://githalytics.com/4teamwork/ftw.pdfgenerator
