@@ -4,13 +4,15 @@ Changelog
 1.2.7 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Table width calculation: treat "px" the same as widths without measure units.
+  [jone]
 
 
 1.2.6 (2013-04-17)
 ------------------
 
-- Nothing changed yet.
+- Update package classifiers.
+  [jone]
 
 
 1.2.5 (2013-01-24)

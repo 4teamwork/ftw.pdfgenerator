@@ -238,6 +238,41 @@ class TestTableConverter(MockTestCase):
 
         self.assertEqual(self.convert(html), latex)
 
+    def test_style_widths_in_px(self):
+
+        html = '\n'.join((
+                r'<table>',
+                r'    <tbody>',
+                r'        <tr>',
+                r'            <td align="right" style="width:30px">test1</td>',
+                r'            <td align="left" ' +
+                r'style="color: red; width: 70px;">test2</td>',
+                r'        </tr><tr>',
+                r'            <td align="center">test3</td>',
+                r'            <td>test4</td>',
+                r'        </tr>',
+                r'    </tbody>',
+                r'</table>'))
+
+        latex = '\n'.join((
+                r'\makeatletter\@ifundefined{tablewidth}{' +
+                r'\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\begin{tabular}{p{30.0em}p{70.0em}}',
+
+                r'\multicolumn{1}{p{30.0em}}{'
+                r'\raggedleft test1} & \multicolumn{1}{'
+                r'p{70.0em}}{\raggedright test2} \\',
+
+                r'\multicolumn{1}{p{30.0em}}{\centering '
+                r'test3} & \multicolumn{1}{p{70.0em}}{test4} \\',
+
+                r'\end{tabular}',
+                r''))
+
+        self.assertEqual(self.convert(html), latex)
+
 
     def test_caption_is_used(self):
         # The table caption is used and will be shown in the table index
@@ -1428,6 +1463,12 @@ class TestLatexWidth(TestCase):
                          r'123.1mm')
         self.assertEqual(str(width2 + width1),
                          r'123.1mm')
+
+    def test_px_is_the_same_as_no_measure_unit(self):
+        width_px = table.LatexWidth.convert('50px')
+        width_no = table.LatexWidth.convert('50')
+
+        self.assertEqual(str(width_no), str(width_px))
 
     def test_fails_if_summing_with_non_width(self):
         width = table.LatexWidth.convert('10.3cm')
