@@ -10,7 +10,8 @@ Changelog
 1.2.6 (2013-04-17)
 ------------------
 
-- Nothing changed yet.
+- Update package classifiers.
+  [jone]
 
 
 1.2.5 (2013-01-24)
