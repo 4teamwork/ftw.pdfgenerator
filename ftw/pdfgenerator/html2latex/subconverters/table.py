@@ -886,6 +886,11 @@ class LatexWidth(object):
         creates a LatexWidth object by a HTML width-Attribute
         """
 
+        # px is the same as no measure unit, so we can strip it.
+        width = width.strip()
+        if width.endswith('px'):
+            width = width.rstrip('px')
+
         # absolute
         for unit in cls.VALID_ABSOLUTE_UNITS:
             match = re.compile('^([0-9,\.]{1,})(%s)$' % unit).match(width)
