@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.2.7 (unreleased)
+1.2.7 (2013-05-24)
 ------------------
 
 - Table width calculation: treat "px" the same as widths without measure units.
