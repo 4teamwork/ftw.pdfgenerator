@@ -1013,3 +1013,19 @@ class TestBasicPatterns(TestCase):
 
         self.assertEqual(self.convert(u'\u2282'.encode('utf-8')),
                          r'$\subset$')
+
+    def test_swiss_currency_with_dash(self):
+        self.assertEqual([
+                'Fr.~0.--',
+                'Fr.~123.--',
+                'Fr.~45.--',
+                'Fr.~67.--',
+                'Fr. .-',
+
+             ], [
+                self.convert('Fr. 0.-'),
+                self.convert('Fr. 123.-'),
+                self.convert('Fr. 45.--'),
+                self.convert('Fr. 67.\xe2\x80\x93'),
+                self.convert('Fr. .-'),
+                ])
