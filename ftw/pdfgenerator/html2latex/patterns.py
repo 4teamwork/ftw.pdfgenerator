@@ -8,6 +8,8 @@ MODE_REGEXP = interfaces.HTML2LATEX_MODE_REGEXP
 MODE_REGEXP_FUNCTION = interfaces.HTML2LATEX_MODE_REGEXP_FUNCTION
 BACKSLASH_MARKER = 'THISISABACKSLASH' * 2
 
+DASH = '\xe2\x80\x93'  # &ndash;
+
 
 DEFAULT_PATTERNS = ([
         (MODE_REPLACE,  '\\',                      BACKSLASH_MARKER),
@@ -360,6 +362,11 @@ DEFAULT_PATTERNS = ([
         (MODE_REPLACE,  'z. B.',                   'z.\,B.'),
         (MODE_REPLACE,  'lic.iur.',                'lic.\,iur.'),
         (MODE_REPLACE,  'Dr.iur.',                 'Dr.\,iur.'),
+
+        # Use dashes and non breaking space in swiss currencies
+        (MODE_REGEXP, r'Fr\.[ ~](\d{1,})\.(%s|-{1,2})' % DASH,
+                      r'Fr.~\1.--'),
+
 
         # date replacements: we use nonbreakable spaces
         # TODO: make regexp patterns or subconverter
