@@ -4,6 +4,9 @@ Changelog
 1.2.8 (unreleased)
 ------------------
 
+- Remove HTML comments when converting HTML to LaTeX.
+  [jone]
+
 - Use non-breaking spaces and en-dashes for formatting swiss currency.
   [jone]
 
