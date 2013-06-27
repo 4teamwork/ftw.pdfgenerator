@@ -25,6 +25,9 @@ DEFAULT_PATTERNS = ([
         (MODE_REGEXP,   '',                    '--'),
         (MODE_REGEXP,   '',                      ''),
 
+        # remove comments
+        (MODE_REGEXP,  r'<!--(?:(?!-->).)*-->',    ''),
+
         # generally remove empty no-singleton-tags
         (MODE_REGEXP,  r'<(?P<tag>[\w]{0,})>[\s]{0,}</(?P=tag)?>',
          r'',         (interfaces.HTML2LATEX_REPEAT_MODIFIER)),
