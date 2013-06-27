@@ -1022,10 +1022,36 @@ class TestBasicPatterns(TestCase):
                 'Fr.~67.--',
                 'Fr. .-',
 
-             ], [
+                ], [
                 self.convert('Fr. 0.-'),
                 self.convert('Fr. 123.-'),
                 self.convert('Fr. 45.--'),
                 self.convert('Fr. 67.\xe2\x80\x93'),
                 self.convert('Fr. .-'),
                 ])
+
+    def test_html_comments_are_removed(self):
+        samples = (
+            ('<!-- foo -->', ''),
+            ('<!-- foo --> bar <!-- baz -->', 'bar'),
+            ('<!-- <b>foo</b> -->', ''),
+            ('<!--foo-->', ''),
+            ('<!--[foo]-->', ''),
+            ('<!--[if x]> <b>bar</b> <![endif]-->', ''),
+            )
+
+        self.assertEquals(
+            [item[1] for item in samples],
+            [self.convert(item[0]).strip() for item in samples])
+
+    def test_cleans_up_bad_word_comments(self):
+        input = '\n'.join((
+                '<!--[if gte mso 9]><xml>',
+                '<o:OfficeDocumentSettings>',
+                '<o:TargetScreenSize>800x600</o:TargetScreenSize>',
+                '</o:OfficeDocumentSettings>',
+                '</xml><![endif]-->',
+
+                ))
+
+        self.assertEqual('', self.convert(input).strip())
