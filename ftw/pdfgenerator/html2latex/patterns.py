@@ -366,6 +366,12 @@ DEFAULT_PATTERNS = ([
         (MODE_REPLACE,  'lic.iur.',                'lic.\,iur.'),
         (MODE_REPLACE,  'Dr.iur.',                 'Dr.\,iur.'),
 
+        (MODE_REGEXP,   r'S\. (\d+)',             r'S.~\1'),
+        (MODE_REGEXP,   r'Abs\. (\d+)',           r'Abs.~\1'),
+        (MODE_REGEXP,   r'(\d+) m2',              r'\1~m2'),
+        (MODE_REGEXP,   r'Art\. (\d+)',           r'Art.~\1'),
+        (MODE_REGEXP,   r'SR (\d+)',              r'SR~\1'),
+
         # Use dashes and non breaking space in swiss currencies
         (MODE_REGEXP, r'Fr\.[ ~](\d{1,})\.(%s|-{1,2})' % DASH,
                       r'Fr.~\1.--'),

@@ -4,6 +4,9 @@ Changelog
 1.2.8 (unreleased)
 ------------------
 
+- Use non-breaking spaces for some more abbreviations.
+  [jone]
+
 - Remove HTML comments when converting HTML to LaTeX.
   [jone]
 

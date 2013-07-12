@@ -150,6 +150,34 @@ class TestBasicPatterns(TestCase):
                                       '</strong><br />'),
                          '\\textbf{"`sieben"\'\\\\\n }')
 
+    def test_abbreviations_are_not_breakable(self):
+        self.maxDiff = None
+
+        self.assert_convertions({
+                'S. 5': 'S.~5',
+                'S. 15': 'S.~15',
+                'S. 17. Bar': 'S.~17. Bar',
+                'Sa 2': 'Sa 2',
+
+                'Abs. 5': 'Abs.~5',
+                'Abs. 15': 'Abs.~15',
+                'Abs. 17. Bar': 'Abs.~17. Bar',
+                'Absx 2': 'Absx 2',
+
+                '5 m2': '5~m2',
+                '17 m2': '17~m2',
+                'a5 m2': 'a5~m2',
+
+                'Art. 5': 'Art.~5',
+                'Art. 15': 'Art.~15',
+                'Art. 17. Bar': 'Art.~17. Bar',
+                'Arta 1': 'Arta 1',
+
+                'SR 5': 'SR~5',
+                'SR 15': 'SR~15',
+                'SR 17. Bar': 'SR~17. Bar',
+                })
+
     def test_paragraphs_and_newlines(self):
         self.assertEqual(self.convert('Hello<br><br>World'),
                          'Hello\n\nWorld')
@@ -1055,3 +1083,11 @@ class TestBasicPatterns(TestCase):
                 ))
 
         self.assertEqual('', self.convert(input).strip())
+
+    def assert_convertions(self, input_expected):
+        input_output = {}
+
+        for input, _expected in input_expected.items():
+            input_output[input] = self.convert(input).strip()
+
+        self.assertEqual(input_expected, input_output)
