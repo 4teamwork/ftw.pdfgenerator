@@ -4,6 +4,9 @@ Changelog
 1.2.8 (unreleased)
 ------------------
 
+- Make hyphens before commas non-breakable.
+  [jone]
+
 - Use non-breaking spaces for some more abbreviations.
   [jone]
 

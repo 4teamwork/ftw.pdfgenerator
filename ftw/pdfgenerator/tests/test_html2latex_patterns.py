@@ -353,6 +353,11 @@ class TestBasicPatterns(TestCase):
         self.assertEqual(
             self.convert('ergo&shy;nomic'), 'ergo"-nomic')
 
+    def test_non_breakable_hyphens_before_comma(self):
+        self.assert_convertions({
+                'foo-, bar': 'foo"~, bar',
+                'foo- bar': 'foo"= bar'})
+
     def test_remove_css(self):
         self.assertEqual(self.convert(
                 'hello\n'

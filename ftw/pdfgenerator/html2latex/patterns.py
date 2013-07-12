@@ -394,6 +394,7 @@ DEFAULT_PATTERNS = ([
         (MODE_REPLACE,  '►',                       ''),
 
         # misc
+        (MODE_REGEXP,   r'([a-zA-Z])-,',           r'\1"~,'),
         (MODE_REGEXP,   r'([a-zA-Z])-',            r'\1"='),
         # - at the end of a word should not disable hyphenation
 
