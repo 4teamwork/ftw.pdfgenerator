@@ -39,7 +39,7 @@ msgstr "Archives ZIP"
 #. Default: "Figure"
 #: ./ftw/pdfgenerator/html2latex/utils.py:13
 msgid "enviroment_figure"
-msgstr "Figure"
+msgstr "Image"
 
 #. Default: "Table"
 #: ./ftw/pdfgenerator/html2latex/utils.py:8
