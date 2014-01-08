@@ -35,55 +35,55 @@ class TestTextformattingConverter(SubconverterTestBase):
         # "\textbf{X\n\n}" is not allowed, use "\textbf{X\\}"
         self.assertEqual(
             self.convert(r'<p><b>foo<br /> <br /></b></p>'),
-            r'\textbf{foo\\\\}')
+            r'\textbf{foo\\\vspace{\baselineskip}}')
 
     def test_newline_in_bold_command2(self):
         # "\textbf{X\n\nY}" is not allowed, use "\textbf{X\\Y}"
         self.assertEqual(
             self.convert(r'<p><b>foo<br /> <br />bar</b></p>'),
-            r'\textbf{foo\\\\bar}')
+            r'\textbf{foo\\\vspace{\baselineskip}bar}')
 
     def test_newline_in_bold_command3(self):
         # "\textbf{\n\nY}" is not allowed, use "\textbf{\\Y}"
         self.assertEqual(
             self.convert(r'<b><br /> <br />bar</b>' * 2),
-            r'\textbf{\\\\bar}' * 2)
+            r'\textbf{\\\vspace{\baselineskip}bar}' * 2)
 
     def test_newline_in_emph_command(self):
         # "\emph{X\n\n}" is not allowed, use "\emph{X\\}"
         self.assertEqual(
             self.convert(r'foo <u>bar<br /> <br /></u> baz'),
-            r'foo \emph{bar\\\\} baz')
+            r'foo \emph{bar\\\vspace{\baselineskip}} baz')
 
     def test_newline_in_emph_command2(self):
         # "\emph{X\n\nY}" is not allowed, use "\emph{X\\Y}"
         self.assertEqual(
             self.convert(r'<u>foo<br /> <br />bar</u>'),
-            r'\emph{foo\\\\bar}')
+            r'\emph{foo\\\vspace{\baselineskip}bar}')
 
     def test_newline_in_emph_command3(self):
         # "\emph{\n\nY}" is not allowed, use "\emph{\\Y}"
         self.assertEqual(
             self.convert(r'<u><br /> <br />bar</u>' * 2),
-            r'\emph{\\\\bar}' * 2)
+            r'\emph{\\\vspace{\baselineskip}bar}' * 2)
 
     def test_newline_in_italic_command(self):
         # "\textit{X\n\n}" is not allowed, use "\textit{X\\}"
         self.assertEqual(
             self.convert(r'<p><i>foo<br /> <br /></i></p>'),
-            r'\textit{foo\\\\}')
+            r'\textit{foo\\\vspace{\baselineskip}}')
 
     def test_newline_in_italic_command2(self):
         # "\textit{X\n\nY}" is not allowed, use "\textit{X\\Y}"
         self.assertEqual(
             self.convert(r'<p><i>foo<br /> <br />bar</i></p>'),
-            r'\textit{foo\\\\bar}')
+            r'\textit{foo\\\vspace{\baselineskip}bar}')
 
     def test_newline_in_italic_command3(self):
         # "\textit{\n\nY}" is not allowed, use "\textit{\\Y}"
         self.assertEqual(
             self.convert(r'<i><br /> <br />bar</i>' * 2),
-            r'\textit{\\\\bar}' * 2)
+            r'\textit{\\\vspace{\baselineskip}bar}' * 2)
 
     def test_newline_in_combined_italic_and_bold_command(self):
         # "\textit{*\n\n*}" is not allowed, use "\textit{*\\*}"
@@ -93,11 +93,12 @@ class TestTextformattingConverter(SubconverterTestBase):
                          r'<b>bar</b><br /> <br />'
                          r'<u>baz</u><br /> <br />'
                          r'</i>'),
-            r'\textit{foo\textbf{bar}\\\\\emph{baz}\\\\}')
+            r'\textit{foo\textbf{bar}\\\vspace{\baselineskip}'
+            r'\emph{baz}\\\vspace{\baselineskip}}')
 
         self.assertEqual(
             self.convert(r'<b>foo<i>bar</i><br /> <br /></b>'),
-            r'\textbf{foo\textit{bar}\\\\}')
+            r'\textbf{foo\textit{bar}\\\vspace{\baselineskip}}')
 
     def test_newline_only_in_textish_environments_changed(self):
         self.assertEqual(
