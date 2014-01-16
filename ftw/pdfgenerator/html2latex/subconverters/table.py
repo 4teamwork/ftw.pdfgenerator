@@ -88,6 +88,8 @@ class TableConverter(subconverter.SubConverter):
             self.converter.converter.layout.use_package('longtable')
         self.converter.converter.layout.use_package('multirow')
         self.converter.converter.layout.use_package('multicol')
+        # The "calc" package allows to use "length+length" inline.
+        self.converter.converter.layout.use_package('calc')
 
     def parse(self):
         html = self.get_html()
@@ -751,6 +753,9 @@ class LatexCell(object):
                 except (TypeError, ValueError):
                     # one of the columns has no or invalid width (not addable)
                     return None
+            # Compensate padding of spanned columns
+            padding = r'%i\tabcolsep' % (2 * (len(self.columns) - 1))
+            width = '+'.join((str(width), padding))
             return width
 
     def get_align(self):

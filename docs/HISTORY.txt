@@ -12,6 +12,10 @@ Changelog
 - Table: fix error where rowspan cells made other cells swap rows.
   [jone]
 
+- Tables: fix width of cells spanning multiple columns.
+  This is especially visible when they are centered.
+  [jone]
+
 
 1.2.8 (2013-10-21)
 ------------------
