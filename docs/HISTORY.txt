@@ -4,7 +4,8 @@ Changelog
 1.2.9 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Table: fix error where rowspan cells made other cells swap rows.
+  [jone]
 
 
 1.2.8 (2013-10-21)

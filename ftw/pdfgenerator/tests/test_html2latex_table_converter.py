@@ -643,6 +643,49 @@ class TestTableConverter(MockTestCase):
         self.maxDiff = None
         self.assertMultiLineEqual(self.convert(html), latex)
 
+    def test_rowspan_error_in_last_column(self):
+        # Regression test that cells do not swap rows.
+
+        html = '\n'.join((
+                r'<table>',
+                r'    <colspan>',
+                r'        <col width="50%" />',
+                r'        <col width="50%" />',
+                r'    </colspan>',
+                r'    <tbody>',
+                r'        ',
+                r'        <tr>',
+                r'            <td>A</td>',
+                r'            <td rowspan="2">2xB</td>',
+                r'        </tr>',
+                r'        <tr>',
+                r'            <td>A</td>',
+                r'        </tr>',
+                r'        <tr>',
+                r'            <td>A</td>',
+                r'            <td>B</td>',
+                r'        </tr>',
+                r'        ',
+                r'    </tbody>',
+                r'</table>'))
+
+        latex = '\n'.join((
+                r'\makeatletter\@ifundefined{tablewidth}{' + \
+                    r'\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\begin{tabular}{p{0.5\tablewidth}p{0.5\tablewidth}}',
+                r'\multicolumn{1}{p{0.5\tablewidth}}{A} &' + \
+                    r' \multirow{2}{0.5\tablewidth}{2xB} \\',
+                r'\multicolumn{1}{p{0.5\tablewidth}}{A} &  \\',
+                r'\multicolumn{1}{p{0.5\tablewidth}}{A} &' + \
+                    r' \multicolumn{1}{p{0.5\tablewidth}}{B} \\',
+                r'\end{tabular}',
+                r''))
+
+        self.maxDiff = None
+        self.assertMultiLineEqual(self.convert(html), latex)
+
     def test_gridborder(self):
 
         html = '\n'.join((

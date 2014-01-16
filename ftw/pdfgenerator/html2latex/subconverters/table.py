@@ -4,6 +4,7 @@ from ftw.pdfgenerator.html2latex import subconverter
 from ftw.pdfgenerator.html2latex import wrapper
 from ftw.pdfgenerator.html2latex.utils import generate_manual_caption
 from ftw.pdfgenerator.utils import html2xmlentities
+from operator import methodcaller
 from xml.dom import minidom
 import re
 
@@ -266,9 +267,9 @@ class TableConverter(subconverter.SubConverter):
             }
 
         for domTr in self.dom.getElementsByTagName('tr'):
-            self._parse_tr_dom(domTr, multi_row_cache)
+            self._parse_tr_dom(domTr, multi_row_cache, amount)
 
-    def _parse_tr_dom(self, domTr, multi_row_cache):
+    def _parse_tr_dom(self, domTr, multi_row_cache, amount_of_columns):
         row = self.create_latex_row(domTr=domTr)
         self.rows.append(row)
 
@@ -282,7 +283,8 @@ class TableConverter(subconverter.SubConverter):
         columnIndex = 0
         cell_index = 0
 
-        while len(cells) > cell_index:
+        while sum(map(methodcaller('get_colspan'), row.cells)) < \
+                amount_of_columns:
             if columnIndex in multi_row_cache.keys():
                 multi_row_cache[columnIndex][0].register_row(row)
                 multi_row_cache[columnIndex][1] -= 1
