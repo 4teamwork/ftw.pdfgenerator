@@ -63,7 +63,7 @@ class TestTableConverter(MockTestCase):
                 r'\end{tabular}',
                 r''))
 
-        self.assertEqual(self.convert(html), latex)
+        self.assertMultiLineEqual(self.convert(html), latex)
 
     def test_headings(self):
         html = '\n'.join((
@@ -98,7 +98,7 @@ class TestTableConverter(MockTestCase):
                 r'\end{tabular}',
                 r''))
 
-        self.assertEqual(self.convert(html), latex)
+        self.assertMultiLineEqual(self.convert(html), latex)
 
     def test_colgroup_with_width(self):
         html = '\n'.join((
@@ -133,7 +133,7 @@ class TestTableConverter(MockTestCase):
                 r'\end{tabular}',
                 r''))
 
-        self.assertEqual(self.convert(html), latex)
+        self.assertMultiLineEqual(self.convert(html), latex)
 
     def test_colgroup_with_invalid_width(self):
         html = '\n'.join((
@@ -162,7 +162,7 @@ class TestTableConverter(MockTestCase):
                 r'\end{tabular}',
                 r''))
 
-        self.assertEqual(self.convert(html), latex)
+        self.assertMultiLineEqual(self.convert(html), latex)
 
     def test_col_and_cell_have_widths(self):
         # Colgroup sizes should work even if the alignment is defined
@@ -201,7 +201,7 @@ class TestTableConverter(MockTestCase):
                 r'\end{tabular}',
                 r''))
 
-        self.assertEqual(self.convert(html), latex)
+        self.assertMultiLineEqual(self.convert(html), latex)
 
     def test_style_widths(self):
 
@@ -236,7 +236,7 @@ class TestTableConverter(MockTestCase):
                 r'\end{tabular}',
                 r''))
 
-        self.assertEqual(self.convert(html), latex)
+        self.assertMultiLineEqual(self.convert(html), latex)
 
     def test_style_widths_in_px(self):
 
@@ -271,7 +271,7 @@ class TestTableConverter(MockTestCase):
                 r'\end{tabular}',
                 r''))
 
-        self.assertEqual(self.convert(html), latex)
+        self.assertMultiLineEqual(self.convert(html), latex)
 
 
     def test_caption_is_used(self):
@@ -305,7 +305,7 @@ class TestTableConverter(MockTestCase):
                 r'\end{tabular}',
                 r''))
 
-        self.assertEqual(self.convert(html), latex)
+        self.assertMultiLineEqual(self.convert(html), latex)
 
     def test_caption_not_listed(self):
         # It is also possible to add a caption whithout showing the table
@@ -333,7 +333,7 @@ class TestTableConverter(MockTestCase):
                 r'\end{tabular}',
                 r''))
 
-        self.assertEqual(self.convert(html), latex)
+        self.assertMultiLineEqual(self.convert(html), latex)
 
     def test_caption_at_bottom(self):
         # For putting the caption to the bottom of table, just at the
@@ -368,7 +368,7 @@ class TestTableConverter(MockTestCase):
 
                 r''))
 
-        self.assertEqual(self.convert(html), latex)
+        self.assertMultiLineEqual(self.convert(html), latex)
 
     def test_summary_as_caption(self):
         # Tinymce allows easily to put a <caption> tag at the top but not
@@ -403,7 +403,7 @@ class TestTableConverter(MockTestCase):
 
                 r''))
 
-        self.assertEqual(self.convert(html), latex)
+        self.assertMultiLineEqual(self.convert(html), latex)
 
     def test_summary_as_not_listed_caption(self):
         html = '\n'.join((
@@ -428,7 +428,7 @@ class TestTableConverter(MockTestCase):
 
                 r''))
 
-        self.assertEqual(self.convert(html), latex)
+        self.assertMultiLineEqual(self.convert(html), latex)
 
     def test_multiple_tables(self):
         # Multiple tables should work as well
@@ -453,7 +453,7 @@ class TestTableConverter(MockTestCase):
                 r'\end{tabular}',
                 r''))
 
-        self.assertEqual(self.convert(html, count=2), latex)
+        self.assertMultiLineEqual(self.convert(html, count=2), latex)
 
     def test_convert_cell_html(self):
         # Table cells can contain other HTML which will be converted as well
@@ -469,7 +469,7 @@ class TestTableConverter(MockTestCase):
                 r'\end{tabular}',
                 r''))
 
-        self.assertEqual(self.convert(html), latex)
+        self.assertMultiLineEqual(self.convert(html), latex)
 
     def test_convert_other_html(self):
         # HTML around the Table should be converted as well
@@ -489,7 +489,7 @@ class TestTableConverter(MockTestCase):
                 r'\end{tabular}',
                 r' \textbf{yeah}'))
 
-        self.assertEqual(self.convert(html), latex)
+        self.assertMultiLineEqual(self.convert(html), latex)
 
     def test_htmlentities(self):
         # We should be able to use html entities (minidom has some
@@ -511,7 +511,7 @@ class TestTableConverter(MockTestCase):
                 r'\end{tabular}',
                 r''))
 
-        self.assertEqual(self.convert(html), latex)
+        self.assertMultiLineEqual(self.convert(html), latex)
 
     def test_colspan(self):
         # The td-Attribute "colspan" should work as well
@@ -550,7 +550,8 @@ class TestTableConverter(MockTestCase):
                 r'\end{tabular}',
                 r''))
 
-        self.assertEqual(self.convert(html), latex)
+        self.maxDiff = None
+        self.assertMultiLineEqual(self.convert(html), latex)
 
     def test_rowspan(self):
         # The td-Attribute "rowspan" should work as well
@@ -582,7 +583,7 @@ class TestTableConverter(MockTestCase):
                 r'\end{tabular}',
                 r''))
 
-        self.assertEqual(self.convert(html), latex)
+        self.assertMultiLineEqual(self.convert(html), latex)
 
     def test_complex_rowspan_colspan(self):
         html = '\n'.join((
@@ -639,7 +640,8 @@ class TestTableConverter(MockTestCase):
                 r'\end{tabular}',
                 r''))
 
-        self.assertEqual(self.convert(html), latex)
+        self.maxDiff = None
+        self.assertMultiLineEqual(self.convert(html), latex)
 
     def test_gridborder(self):
 
@@ -679,7 +681,7 @@ class TestTableConverter(MockTestCase):
                 r'\end{tabular}',
                 r''))
 
-        self.assertEqual(self.convert(html), latex)
+        self.assertMultiLineEqual(self.convert(html), latex)
 
     def test_newlines(self):
         # In LaTeX, there should not be a "\\" or "\n" in a table cell, but
@@ -711,7 +713,7 @@ class TestTableConverter(MockTestCase):
                 r''
                 ))
 
-        self.assertEqual(self.convert(html), latex)
+        self.assertMultiLineEqual(self.convert(html), latex)
 
     def test_tabular_environment_depends_on_table_size(self):
         # For big tables we use the "tabular" environment, allowing a table
@@ -742,7 +744,7 @@ class TestTableConverter(MockTestCase):
                 r''
                 ))
 
-        self.assertEqual(self.convert(tabular_html), tabular_latex)
+        self.assertMultiLineEqual(self.convert(tabular_html), tabular_latex)
 
     def test_longtable_environment_depends_on_table_size(self):
         # For big tables we use the "tabular" environment, allowing a table
@@ -765,9 +767,9 @@ class TestTableConverter(MockTestCase):
                 r''
                 ))
 
-        self.assertEqual(self.convert(longtable_html,
-                                      use_packages=['longtable']),
-                         longtable_latex)
+        self.assertMultiLineEqual(self.convert(longtable_html,
+                                               use_packages=['longtable']),
+                                  longtable_latex)
 
     def test_longtable_environment_enforcable_by_cssclass(self):
         longtable_html = '\n'.join((
@@ -794,9 +796,9 @@ class TestTableConverter(MockTestCase):
                 r''
                 ))
 
-        self.assertEqual(self.convert(longtable_html,
-                                      use_packages=['longtable']),
-                         longtable_latex)
+        self.assertMultiLineEqual(self.convert(longtable_html,
+                                               use_packages=['longtable']),
+                                  longtable_latex)
 
     def test_tabular_environment_enforcable_by_cssclass(self):
         tabular_html = '\n'.join((
@@ -815,7 +817,7 @@ class TestTableConverter(MockTestCase):
                 r''
                 ))
 
-        self.assertEqual(self.convert(tabular_html), tabular_latex)
+        self.assertMultiLineEqual(self.convert(tabular_html), tabular_latex)
 
     def test_longtable_uses_endhead_for_ths(self):
         html = '\n'.join((
@@ -903,7 +905,7 @@ class TestTableConverter(MockTestCase):
                 r''
                 ))
 
-        self.assertEqual(self.convert(html), latex)
+        self.assertMultiLineEqual(self.convert(html), latex)
 
     def test_complex_grid_css_class(self):
         html = '\n'.join((
@@ -956,7 +958,8 @@ class TestTableConverter(MockTestCase):
                 r''
                 ))
 
-        self.assertEqual(self.convert(html), latex)
+        self.maxDiff = None
+        self.assertMultiLineEqual(self.convert(html), latex)
 
     def test_border_rowspan_collapse(self):
         html = '\n'.join((
@@ -1003,7 +1006,7 @@ class TestTableConverter(MockTestCase):
                 r''
                 ))
 
-        self.assertEqual(self.convert(html), latex)
+        self.assertMultiLineEqual(self.convert(html), latex)
 
     def test_listing_css_class(self):
         html = '\n'.join((
@@ -1056,7 +1059,7 @@ class TestTableConverter(MockTestCase):
                 r''
                 ))
 
-        self.assertEqual(self.convert(html), latex)
+        self.assertMultiLineEqual(self.convert(html), latex)
 
     def test_vertical_css_class_makes_first_column_bold(self):
         html = '\n'.join((
@@ -1107,7 +1110,8 @@ class TestTableConverter(MockTestCase):
                 r''
                 ))
 
-        self.assertEqual(self.convert(html), latex)
+        self.maxDiff = None
+        self.assertMultiLineEqual(self.convert(html), latex)
 
     def test_colspan_without_width(self):
         html = '\n'.join((
@@ -1134,7 +1138,7 @@ class TestTableConverter(MockTestCase):
                 r'\end{tabular}',
                 r''))
 
-        self.assertEqual(self.convert(html), latex)
+        self.assertMultiLineEqual(self.convert(html), latex)
 
     def test_border_classes(self):
         html = '\n'.join((
@@ -1176,7 +1180,7 @@ class TestTableConverter(MockTestCase):
                 r''
                 ))
 
-        self.assertEqual(self.convert(html), latex)
+        self.assertMultiLineEqual(self.convert(html), latex)
 
     def test_alignment_classes(self):
         html = '\n'.join((
@@ -1223,7 +1227,7 @@ class TestTableConverter(MockTestCase):
                 r''
                 ))
 
-        self.assertEqual(self.convert(html, count=2), latex)
+        self.assertMultiLineEqual(self.convert(html, count=2), latex)
 
     def test_indent2_class(self):
         html = '\n'.join((
@@ -1250,7 +1254,7 @@ class TestTableConverter(MockTestCase):
                 r''
                 ))
 
-        self.assertEqual(self.convert(html), latex)
+        self.assertMultiLineEqual(self.convert(html), latex)
 
     def test_indent10_class(self):
         html = '\n'.join((
@@ -1277,7 +1281,7 @@ class TestTableConverter(MockTestCase):
                 r''
                 ))
 
-        self.assertEqual(self.convert(html), latex)
+        self.assertMultiLineEqual(self.convert(html), latex)
 
     def test_bold_class(self):
         html = '\n'.join((
@@ -1304,7 +1308,7 @@ class TestTableConverter(MockTestCase):
                 r''
                 ))
 
-        self.assertEqual(self.convert(html), latex)
+        self.assertMultiLineEqual(self.convert(html), latex)
 
     def test_grey_class(self):
         html = '\n'.join((
@@ -1331,8 +1335,8 @@ class TestTableConverter(MockTestCase):
                 r''
                 ))
 
-        self.assertEqual(self.convert(html, use_packages=['xcolor']),
-                         latex)
+        self.assertMultiLineEqual(self.convert(html, use_packages=['xcolor']),
+                                  latex)
 
     def test_footnotesize_class(self):
         html = '\n'.join((
@@ -1359,7 +1363,7 @@ class TestTableConverter(MockTestCase):
                 r''
                 ))
 
-        self.assertEqual(self.convert(html), latex)
+        self.assertMultiLineEqual(self.convert(html), latex)
 
     def test_scriptsize_class(self):
         html = '\n'.join((
@@ -1386,7 +1390,7 @@ class TestTableConverter(MockTestCase):
                 r''
                 ))
 
-        self.assertEqual(self.convert(html), latex)
+        self.assertMultiLineEqual(self.convert(html), latex)
 
     def test_ragged_and_style_order(self):
         # \raggedright should be first, the \textbf
@@ -1414,7 +1418,7 @@ class TestTableConverter(MockTestCase):
                 r''
                 ))
 
-        self.assertEqual(self.convert(html), latex)
+        self.assertMultiLineEqual(self.convert(html), latex)
 
 
 class TestLatexWidth(TestCase):
