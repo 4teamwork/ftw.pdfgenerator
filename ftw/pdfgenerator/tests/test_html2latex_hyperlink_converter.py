@@ -7,7 +7,7 @@ from ftw.testing import MockTestCase
 
 
 LATEX_HREF = r'\href{%(url)s}{%(label)s\footnote{\href{%(url)s}' + \
-    r'{%(url_label)s}}}'
+    r'{\url{%(url_label)s}}}}'
 
 
 class TestHyperlinkConverter(MockTestCase):
@@ -46,14 +46,14 @@ class TestHyperlinkConverter(MockTestCase):
         latex = LATEX_HREF % {
             'label': 'baz',
             'url': 'http://nohost/plone/foo/bar',
-            'url_label': 'http://nohost/""plone/""foo/""bar'}
+            'url_label': 'http://nohost/plone/foo/bar'}
         self.assertEqual(self.convert(html), latex)
 
         html = '<a href="foo/bar">baz</a>'
         latex = LATEX_HREF % {
             'label': 'baz',
             'url': 'http://nohost/plone/foo/bar',
-            'url_label': 'http://nohost/""plone/""foo/""bar'}
+            'url_label': 'http://nohost/plone/foo/bar'}
         self.assertEqual(self.convert(html), latex)
 
     def test_links_within_brackets(self):
@@ -87,7 +87,7 @@ class TestHyperlinkConverter(MockTestCase):
         latex = LATEX_HREF % {
             'label': 'foo',
             'url': 'http://foo/foo\%20bar\%20baz',
-            'url_label': 'http://foo/""foo\%20bar\%20baz'}
+            'url_label': 'http://foo/foo\%20bar\%20baz'}
         self.assertEqual(self.convert(html), latex)
 
         html = '<a href="mailto:info@google.com?subject=foo%20bar%20baz">' +\
@@ -110,13 +110,13 @@ class TestHyperlinkConverter(MockTestCase):
         html = '<a href="http://host.com/?foo=1&amp;bar=2">baz</a>'
         latex = LATEX_HREF % {'label': 'baz',
                               'url': 'http://host.com/?foo=1\\&bar=2',
-                              'url_label': 'http://host.com/""?foo=1\\&bar=2'}
+                              'url_label': 'http://host.com/?foo=1\\&bar=2'}
         self.assertEqual(self.convert(html), latex)
 
         html = '<a href="http://host.com/?foo=1&bar=2">baz</a>'
         latex = LATEX_HREF % {'label': 'baz',
                               'url': 'http://host.com/?foo=1\\&bar=2',
-                              'url_label': 'http://host.com/""?foo=1\\&bar=2'}
+                              'url_label': 'http://host.com/?foo=1\\&bar=2'}
         self.assertEqual(self.convert(html), latex)
 
     def test_underscores_in_links(self):
@@ -124,7 +124,7 @@ class TestHyperlinkConverter(MockTestCase):
         html = '<a href="http://host.com/foo_bar">baz</a>'
         latex = LATEX_HREF % {'label': 'baz',
                               'url': 'http://host.com/foo\\_bar',
-                              'url_label': 'http://host.com/""foo\\_bar'}
+                              'url_label': 'http://host.com/foo\\_bar'}
         self.assertEqual(self.convert(html), latex)
 
     def test_hash_key_in_links(self):
@@ -132,7 +132,7 @@ class TestHyperlinkConverter(MockTestCase):
         html = '<a href="http://host.com/foo#bar">baz</a>'
         latex = LATEX_HREF % {'label': 'baz',
                               'url': 'http://host.com/foo\\#bar',
-                              'url_label': 'http://host.com/""foo\\#bar'}
+                              'url_label': 'http://host.com/foo\\#bar'}
         self.assertEqual(self.convert(html), latex)
 
     def test_additional_parameters(self):
@@ -142,7 +142,7 @@ class TestHyperlinkConverter(MockTestCase):
         latex = r'foo %s baz' % LATEX_HREF % {
             'label': 'bar',
             'url': 'http://nohost/bar',
-            'url_label': 'http://nohost/""bar'}
+            'url_label': 'http://nohost/bar'}
 
         self.assertEqual(self.convert(html), latex)
 
@@ -175,7 +175,7 @@ class TestHyperlinkConverter(MockTestCase):
             html = '<a href="%s://foo/bar">baz</a>' % protocol
             latex = LATEX_HREF % {'label': 'baz',
                                   'url': '%s://foo/bar' % protocol,
-                                  'url_label': '%s://foo/""bar' % protocol}
+                                  'url_label': '%s://foo/bar' % protocol}
             self.assertEqual(self.convert(html), latex)
 
     def test_label_is_converted(self):
@@ -206,13 +206,13 @@ class TestHyperlinkConverter(MockTestCase):
         html = '<a href="./resolveuid/THEUID">The Obj</a>'
         latex = LATEX_HREF % {'label': 'The Obj',
                               'url': 'http://nohost/theobj',
-                              'url_label': 'http://nohost/""theobj'}
+                              'url_label': 'http://nohost/theobj'}
         self.assertEqual(self.convert(html), latex)
 
         html = '<a href="./resolveUid/THEUID">The Obj</a>'
         latex = LATEX_HREF % {'label': 'The Obj',
                               'url': 'http://nohost/theobj',
-                              'url_label': 'http://nohost/""theobj'}
+                              'url_label': 'http://nohost/theobj'}
         self.assertEqual(self.convert(html), latex)
 
     def test_links_in_listing_items(self):
@@ -226,7 +226,7 @@ class TestHyperlinkConverter(MockTestCase):
         latex_link = LATEX_HREF % {
             'label': 'foo bar',
             'url': 'http://host/view?foo=1\\&bar=2',
-            'url_label': 'http://host/""view?foo=1\\&bar=2'}
+            'url_label': 'http://host/view?foo=1\\&bar=2'}
 
         latex = '\n'.join((
                 r'\begin{enumerate}',

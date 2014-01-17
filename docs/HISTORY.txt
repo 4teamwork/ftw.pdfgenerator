@@ -4,6 +4,11 @@ Changelog
 1.2.9 (unreleased)
 ------------------
 
+- Hyperlinks in footnotes: use \url instead of manual hyphenation hints.
+  This fixes that "" is visible in footer urls with certain hyperref
+  package versions.
+  [jone]
+
 - Table: fix error where rowspan cells made other cells swap rows.
   [jone]
 
