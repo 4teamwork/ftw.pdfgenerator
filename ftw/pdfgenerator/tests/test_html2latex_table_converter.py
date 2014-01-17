@@ -18,6 +18,7 @@ class TestTableConverter(MockTestCase):
         layout = self.mocker.mock()
         self.expect(layout.use_package('multirow')).count(count)
         self.expect(layout.use_package('multicol')).count(count)
+        self.expect(layout.use_package('calc')).count(0, None)
 
         if 'use_packages' in kwargs:
             for pkg in kwargs['use_packages']:
@@ -530,6 +531,8 @@ class TestTableConverter(MockTestCase):
                 r'    </tr><tr>',
                 r'        <td colspan="2">one and two</td>',
                 r'        <td>three</td>',
+                r'    </tr><tr>',
+                r'        <td colspan="3">all three</td>',
                 r'    </tr>',
                 r'</table>'))
 
@@ -544,8 +547,10 @@ class TestTableConverter(MockTestCase):
                 r'\multicolumn{1}{p{0.33\tablewidth}}{two} & '
                 r'\multicolumn{1}{p{0.34\tablewidth}}{three} \\',
 
-                r'\multicolumn{2}{p{0.66\tablewidth}}{one and two} & '
+                r'\multicolumn{2}{p{0.66\tablewidth+2\tabcolsep}}{one and two} & '
                 r'\multicolumn{1}{p{0.34\tablewidth}}{three} \\',
+
+                r'\multicolumn{3}{p{1.0\tablewidth+4\tabcolsep}}{all three} \\',
 
                 r'\end{tabular}',
                 r''))
@@ -629,13 +634,13 @@ class TestTableConverter(MockTestCase):
                 # row 2
                 r'\multicolumn{1}{p{0.25\tablewidth}}{A2} & ' + \
                     r' & '
-                    r'\multirow{2}{0.25\tablewidth}{C2-C3} & ' + \
+                r'\multirow{2}{0.25\tablewidth}{C2-C3} & ' + \
                     r'\multicolumn{1}{p{0.25\tablewidth}}{D2} \\',
 
                 # row 3
-                r'\multicolumn{2}{p{0.5\tablewidth}}{A3-B3} & ' + \
+                r'\multicolumn{2}{p{0.5\tablewidth+2\tabcolsep}}{A3-B3} & '+\
                     r' & '
-                    r'\multicolumn{2}{l}{D3-E3} \\',
+                r'\multicolumn{2}{l}{D3-E3} \\',
 
                 r'\end{tabular}',
                 r''))
@@ -984,7 +989,8 @@ class TestTableConverter(MockTestCase):
                     r'p{0.25\tablewidth}|}',
                 r'\hline',
 
-                r'\multicolumn{3}{|p{1.0\tablewidth}|}{\textbf{heading}} \\',
+                r'\multicolumn{3}{|p{1.0\tablewidth+4\tabcolsep}|}{' + \
+                    r'\textbf{heading}} \\',
                 r'\hline',
 
                 r'\multicolumn{1}{|p{0.5\tablewidth}|}{content 1A} & ' + \
@@ -994,7 +1000,7 @@ class TestTableConverter(MockTestCase):
 
                 r'\multicolumn{1}{|p{0.5\tablewidth}|}{content 2A} & ' + \
                     r' & '
-                    r'\multicolumn{1}{|p{0.25\tablewidth}|}{content 2C} \\',
+                r'\multicolumn{1}{|p{0.25\tablewidth}|}{content 2C} \\',
                 r'\hline',
 
                 r'\end{tabular}',
@@ -1036,14 +1042,14 @@ class TestTableConverter(MockTestCase):
                     r'p{0.25\tablewidth}p{0.25\tablewidth}}',
 
                 r'\multirow{2}{0.25\tablewidth}{1A} & ' + \
-                r'\multicolumn{1}{p{0.25\tablewidth}|}{content 1B} & ' + \
+                    r'\multicolumn{1}{p{0.25\tablewidth}|}{content 1B} & ' + \
                     r'\multirow{2}{0.25\tablewidth}{content 1/2 C} & ' + \
                     r'\multicolumn{1}{|p{0.25\tablewidth}}{content 1D} \\',
 
                 r' & ' + \
                     r'\multicolumn{1}{p{0.25\tablewidth}|}{content 2B} & ' + \
                     r' & '
-                    r'\multicolumn{1}{|p{0.25\tablewidth}}{content 2D} \\',
+                r'\multicolumn{1}{|p{0.25\tablewidth}}{content 2D} \\',
 
                 r'\end{tabular}',
                 r''
@@ -1085,7 +1091,8 @@ class TestTableConverter(MockTestCase):
                     r'p{0.25\tablewidth}}',
                 r'\hline',
 
-                r'\multicolumn{3}{p{1.0\tablewidth}}{\textbf{heading}} \\',
+                r'\multicolumn{3}{p{1.0\tablewidth+4\tabcolsep}}{' + \
+                    r'\textbf{heading}} \\',
                 r'\hline',
 
                 r'\multicolumn{1}{p{0.5\tablewidth}}{content 1A} & ' + \
@@ -1095,7 +1102,7 @@ class TestTableConverter(MockTestCase):
 
                 r'\multicolumn{1}{p{0.5\tablewidth}}{content 2A} & ' + \
                     r' & '
-                    r'\multicolumn{1}{p{0.25\tablewidth}}{content 2C} \\',
+                r'\multicolumn{1}{p{0.25\tablewidth}}{content 2C} \\',
                 r'\hline',
 
                 r'\end{tabular}',
@@ -1137,7 +1144,8 @@ class TestTableConverter(MockTestCase):
                 r'\begin{tabular}{p{0.5\tablewidth}p{0.25\tablewidth}' + \
                     r'p{0.25\tablewidth}}',
 
-                r'\multicolumn{3}{p{1.0\tablewidth}}{\textbf{heading}} \\',
+                r'\multicolumn{3}{p{1.0\tablewidth+4\tabcolsep}}{' + \
+                    r'\textbf{heading}} \\',
 
                 r'\multicolumn{1}{p{0.5\tablewidth}}' + \
                     r'{\textbf{content 1A}} & ' + \
