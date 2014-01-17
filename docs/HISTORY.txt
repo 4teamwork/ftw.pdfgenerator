@@ -4,6 +4,9 @@ Changelog
 1.2.9 (unreleased)
 ------------------
 
+- Update French translations.
+  [jone]
+
 - Hyperlinks in footnotes: use \url instead of manual hyphenation hints.
   This fixes that "" is visible in footer urls with certain hyperref
   package versions.
