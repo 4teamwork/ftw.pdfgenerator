@@ -4,8 +4,7 @@ Changelog
 1.2.10 (unreleased)
 -------------------
 
-- Fix LaTeX "no line here to end" problem with newlines within text commands.
-  [jone]
+- Nothing changed yet.
 
 
 1.2.9 (2014-01-17)
