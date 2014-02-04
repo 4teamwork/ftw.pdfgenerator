@@ -4,7 +4,8 @@ Changelog
 1.2.10 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- LaTeX: use math mode for asterisks (*), so they get no longer swallowed.
+  [jone]
 
 
 1.2.9 (2014-01-17)

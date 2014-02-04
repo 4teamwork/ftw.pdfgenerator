@@ -260,9 +260,16 @@ class TestBasicPatterns(TestCase):
             self.convert('<span style="font-weight: bold">test</span>'),
             '\\textbf{test}')
 
+    def test_asterisks(self):
+        """Asterisks (*) needs to be defined using the \ast command,
+        which does only work properly in math-environments ($$).
+        """
+        self.assertEqual(self.convert('foo * bar'),
+                         r'foo $\ast$ bar')
+
     def test_sepcial_characters(self):
-        self.assertEqual(self.convert('!#$%&amp;\'()*+-./02345'),
-                         "!\\#\\$\\%\\&'()*+-./02345")
+        self.assertEqual(self.convert('!#$%&amp;\'()+-./02345'),
+                         "!\\#\\$\\%\\&'()+-./02345")
 
         self.assertEqual(self.convert('6789:;&lt;=&gt;?@ABCDEFGHI'),
                          '6789:;<=>?@ABCDEFGHI')
