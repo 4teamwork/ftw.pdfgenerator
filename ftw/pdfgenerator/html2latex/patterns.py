@@ -113,6 +113,7 @@ DEFAULT_PATTERNS = ([
         (MODE_REPLACE,  '&euro;',                  '\\euro{}'),
         (MODE_REPLACE,  '&sect;',                  '\\S'),
         (MODE_REPLACE,  '&amp;',                   '&'),
+        (MODE_REPLACE,  '*',                       r'$\ast$'),
 
         (MODE_REPLACE,  '&lsquo;',                 '‘'),
         (MODE_REPLACE,  '&rsquo;',                 '’'),
