@@ -4,7 +4,10 @@ Changelog
 1.2.11 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Run makeindex when *.idx files were created during PDF build.
+  This allows to create indexes easily just by using the latex commands.
+  The builder takes care that the index is built and the PDF rebuilt properly.
+  [jone]
 
 
 1.2.10 (2014-02-05)

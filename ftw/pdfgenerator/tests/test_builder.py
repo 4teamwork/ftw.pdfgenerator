@@ -261,6 +261,64 @@ class TestBuilder(MockTestCase):
         self.assertEqual(str(cm.exception),
                          'Maximum pdf build limit reached.')
 
+    def test_build_pdf_executes_makeindex(self):
+        builder = self.mocker.patch(getUtility(IBuilderFactory)())
+        aux_path = os.path.join(self.builddir, 'export.aux')
+        pdf_path = os.path.join(self.builddir, 'export.pdf')
+
+        def pdflatex_call_mock(cmd):
+            with open(aux_path, 'w+') as aux:
+                aux.write('first run')
+            with open(pdf_path, 'w+') as pdf:
+                pdf.write('the pdf')
+            return (0, 'the log', '')
+
+        # Runs 2 times by default, does not rerun because _makeindex
+        # returns False (non rerun required)
+        self.expect(builder._execute(ANY)).call(pdflatex_call_mock).count(2)
+        self.expect(builder._makeindex()).result(False)
+
+        self.replay()
+
+        builder._build_pdf(u'LaTeX')
+
+    def test_build_pdf_reruns_when_makeindex_requires_rerun(self):
+        builder = self.mocker.patch(getUtility(IBuilderFactory)())
+        aux_path = os.path.join(self.builddir, 'export.aux')
+        pdf_path = os.path.join(self.builddir, 'export.pdf')
+
+        def pdflatex_call_mock(cmd):
+            with open(aux_path, 'w+') as aux:
+                aux.write('first run')
+            with open(pdf_path, 'w+') as pdf:
+                pdf.write('the pdf')
+            return (0, 'the log', '')
+
+        # Runs 3 times: 2 by default + once because _makeindex requires
+        # an additional run by returning True
+        self.expect(builder._execute(ANY)).call(pdflatex_call_mock).count(3)
+        self.expect(builder._makeindex()).result(True)
+
+        self.replay()
+
+        builder._build_pdf(u'LaTeX')
+
+    def test_makeindex_does_nothing_and_returns_False_without_idx_file(self):
+        builder = getUtility(IBuilderFactory)()
+        self.assertEquals(False, builder._makeindex())
+
+    def test_makeindex_calls_executable_and_returns_True_with_idx_file(self):
+        builder = self.mocker.patch(getUtility(IBuilderFactory)())
+        idx_path = os.path.join(self.builddir, 'export.idx')
+        with open(idx_path, 'w+') as idx:
+            idx.write('\indexentry{Test}{2}')
+
+        (self.expect(builder._execute('makeindex export'))
+         .result((0, 'stdout', 'stderr')))
+
+        self.replay()
+        self.assertEquals(True, builder._makeindex())
+
     def test_cleanup(self):
         builder = getUtility(IBuilderFactory)()
         self.assertTrue(os.path.exists(builder.build_directory))
