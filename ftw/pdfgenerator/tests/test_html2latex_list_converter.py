@@ -13,7 +13,7 @@ class TestListConverter(SubconverterTestBase):
         self.assertEqual(
             self.convert('<ul><li>O:\\foo\\bar\\baz</li></ul>'),
             '\n\\begin{itemize}\n'
-            '\\item O:\\\\foo\\\\bar\\\\baz\n'
+            '\\item O:\\textbackslash foo\\textbackslash bar\\textbackslash baz\n'
             '\\end{itemize}\n')
 
         self.assertEqual(

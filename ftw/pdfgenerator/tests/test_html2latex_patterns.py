@@ -414,7 +414,7 @@ class TestBasicPatterns(TestCase):
 
         # Backslashes
         self.assertEqual(self.convert(r'C:\Programs\foo').strip(),
-                         r'C:\\Programs\\foo')
+                         r'C:\textbackslash Programs\textbackslash foo')
 
     def test_removes_nonbreaking_spaces(self):
         # Non break spaces are evil. In HTML they are usually not used the

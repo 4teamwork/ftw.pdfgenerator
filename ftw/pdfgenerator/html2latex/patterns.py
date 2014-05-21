@@ -419,5 +419,5 @@ DEFAULT_PATTERNS = ([
         interfaces.HTML2LATEX_CUSTOM_PATTERN_PLACEHOLDER_BOTTOM,
         (MODE_REPLACE,  interfaces.HTML2LATEX_PREVENT_CHARACTER,         ''),
         (MODE_REPLACE,  BACKSLASH_MARKER,
-         '\\\\'),
+         r'\textbackslash '),
         ])
