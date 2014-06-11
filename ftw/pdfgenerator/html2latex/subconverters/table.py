@@ -149,7 +149,8 @@ class TableConverter(subconverter.SubConverter):
             r'\newlength\tablewidth}\makeatother',
             r'\setlength\tablewidth\linewidth',
             r'\addtolength\tablewidth{-%i\tabcolsep}' % (
-                2 * len(self.columns))]
+                2 * len(self.columns)),
+            r'\renewcommand{\arraystretch}{1.4}']
 
         caption_command, insert_caption_at_top = self.render_caption()
         if caption_command and insert_caption_at_top:
@@ -159,7 +160,8 @@ class TableConverter(subconverter.SubConverter):
         latex.append(r'\begin{%s}{%s}' % (
                 self.environment, self.get_table_format()))
         latex.append(self.render_rows().strip())
-        latex.append(r'\end{%s}' % self.environment)
+        latex.append(r'\end{%s}\\' % self.environment)
+        latex.append(r'\vspace{4pt}')
 
         if caption_command and not insert_caption_at_top:
             latex.append(r'\vspace{-\baselineskip}')
