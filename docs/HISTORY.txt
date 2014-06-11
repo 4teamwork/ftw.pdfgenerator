@@ -5,7 +5,10 @@ Changelog
 ------------------
 
 - Improve table layouting.
-  Increase vertical padding of table cells.
+
+  - Increase vertical padding of table cells.
+  - Add line break and vertical space after all tables.
+
   [jone]
 
 

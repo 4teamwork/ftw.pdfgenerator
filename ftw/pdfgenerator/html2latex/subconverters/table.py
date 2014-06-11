@@ -160,7 +160,8 @@ class TableConverter(subconverter.SubConverter):
         latex.append(r'\begin{%s}{%s}' % (
                 self.environment, self.get_table_format()))
         latex.append(self.render_rows().strip())
-        latex.append(r'\end{%s}' % self.environment)
+        latex.append(r'\end{%s}\\' % self.environment)
+        latex.append(r'\vspace{4pt}')
 
         if caption_command and not insert_caption_at_top:
             latex.append(r'\vspace{-\baselineskip}')

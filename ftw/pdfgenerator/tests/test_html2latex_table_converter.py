@@ -62,7 +62,8 @@ class TestTableConverter(MockTestCase):
                 r'\begin{tabular}{l}',
                 r'\multicolumn{1}{l}{\textbf{My Head}} \\',
                 r'\multicolumn{1}{l}{My Body} \\',
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
                 r''))
 
         self.assertMultiLineEqual(self.convert(html), latex)
@@ -98,7 +99,8 @@ class TestTableConverter(MockTestCase):
                     r'\multicolumn{1}{l}{\textbf{headB}} \\',
                 r'\multicolumn{1}{l}{1A} & \multicolumn{1}{l}{1B} \\',
                 r'\multicolumn{1}{l}{2A} & \multicolumn{1}{l}{2B} \\',
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
                 r''))
 
         self.assertMultiLineEqual(self.convert(html), latex)
@@ -134,7 +136,8 @@ class TestTableConverter(MockTestCase):
                 r'\multicolumn{1}{p{0.3\tablewidth}}{test3} & '
                 r'\multicolumn{1}{p{0.7\tablewidth}}{test4} \\',
 
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
                 r''))
 
         self.assertMultiLineEqual(self.convert(html), latex)
@@ -164,7 +167,8 @@ class TestTableConverter(MockTestCase):
                 r'\multicolumn{1}{p{0.3\tablewidth}}{test1} & '
                 r'\multicolumn{1}{r}{test2} \\',
 
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
                 r''))
 
         self.assertMultiLineEqual(self.convert(html), latex)
@@ -204,7 +208,8 @@ class TestTableConverter(MockTestCase):
                 r'\multicolumn{1}{p{0.3\tablewidth}}{\centering '
                 r'test3} & \multicolumn{1}{p{0.7\tablewidth}}{test4} \\',
 
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
                 r''))
 
         self.assertMultiLineEqual(self.convert(html), latex)
@@ -240,7 +245,8 @@ class TestTableConverter(MockTestCase):
                 r'\multicolumn{1}{p{0.3\tablewidth}}{\centering '
                 r'test3} & \multicolumn{1}{p{0.7\tablewidth}}{test4} \\',
 
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
                 r''))
 
         self.assertMultiLineEqual(self.convert(html), latex)
@@ -276,7 +282,8 @@ class TestTableConverter(MockTestCase):
                 r'\multicolumn{1}{p{30.0em}}{\centering '
                 r'test3} & \multicolumn{1}{p{70.0em}}{test4} \\',
 
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
                 r''))
 
         self.assertMultiLineEqual(self.convert(html), latex)
@@ -311,7 +318,8 @@ class TestTableConverter(MockTestCase):
 
                 r'\begin{tabular}{l}',
                 r'\multicolumn{1}{l}{test} \\',
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
                 r''))
 
         self.assertMultiLineEqual(self.convert(html), latex)
@@ -340,7 +348,8 @@ class TestTableConverter(MockTestCase):
 
                 r'\begin{tabular}{l}',
                 r'\multicolumn{1}{l}{foo} \\',
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
                 r''))
 
         self.assertMultiLineEqual(self.convert(html), latex)
@@ -364,7 +373,8 @@ class TestTableConverter(MockTestCase):
 
                 r'\begin{tabular}{l}',
                 r'\multicolumn{1}{l}{foo} \\',
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
 
                 r'\vspace{-\baselineskip}',
                 r'\begin{center}',
@@ -400,7 +410,8 @@ class TestTableConverter(MockTestCase):
 
                 r'\begin{tabular}{l}',
                 r'\multicolumn{1}{l}{foo} \\',
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
 
                 r'\vspace{-\baselineskip}',
                 r'\begin{center}',
@@ -432,7 +443,8 @@ class TestTableConverter(MockTestCase):
 
                 r'\begin{tabular}{l}',
                 r'\multicolumn{1}{l}{foo} \\',
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
 
                 r'\vspace{-\baselineskip}',
                 r'\begin{center}',
@@ -457,7 +469,8 @@ class TestTableConverter(MockTestCase):
                 r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{l}',
                 r'\multicolumn{1}{l}{test1} \\',
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
                 r'\makeatletter\@ifundefined{tablewidth}{\newlength' + \
                     r'\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
@@ -465,7 +478,8 @@ class TestTableConverter(MockTestCase):
                 r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{l}',
                 r'\multicolumn{1}{l}{test2} \\',
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
                 r''))
 
         self.assertMultiLineEqual(self.convert(html, count=2), latex)
@@ -482,7 +496,8 @@ class TestTableConverter(MockTestCase):
                 r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{l}',
                 r'\multicolumn{1}{l}{\textbf{Hello} \textit{World}} \\',
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
                 r''))
 
         self.assertMultiLineEqual(self.convert(html), latex)
@@ -503,7 +518,8 @@ class TestTableConverter(MockTestCase):
                 r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{l}',
                 r'\multicolumn{1}{l}{test} \\',
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
                 r' \textbf{yeah}'))
 
         self.assertMultiLineEqual(self.convert(html), latex)
@@ -526,7 +542,8 @@ class TestTableConverter(MockTestCase):
                 r'\begin{tabular}{l}',
                 r'\multicolumn{1}{l}{2>1} \\',
                 '\\multicolumn{1}{l}{X\xc3\xa4Y} \\\\',
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
                 r''))
 
         self.assertMultiLineEqual(self.convert(html), latex)
@@ -570,7 +587,8 @@ class TestTableConverter(MockTestCase):
 
                 r'\multicolumn{3}{p{1.0\tablewidth+4\tabcolsep}}{all three} \\',
 
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
                 r''))
 
         self.maxDiff = None
@@ -604,7 +622,8 @@ class TestTableConverter(MockTestCase):
                 r'{p{0.5\tablewidth}}{two} \\',
 
                 r' & \multicolumn{1}{p{0.5\tablewidth}}{three} \\',
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
                 r''))
 
         self.assertMultiLineEqual(self.convert(html), latex)
@@ -662,7 +681,8 @@ class TestTableConverter(MockTestCase):
                     r' & '
                 r'\multicolumn{2}{l}{D3-E3} \\',
 
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
                 r''))
 
         self.maxDiff = None
@@ -706,7 +726,8 @@ class TestTableConverter(MockTestCase):
                 r'\multicolumn{1}{p{0.5\tablewidth}}{A} &  \\',
                 r'\multicolumn{1}{p{0.5\tablewidth}}{A} &' + \
                     r' \multicolumn{1}{p{0.5\tablewidth}}{B} \\',
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
                 r''))
 
         self.maxDiff = None
@@ -748,7 +769,8 @@ class TestTableConverter(MockTestCase):
                 r'\multicolumn{1}{|p{0.7\tablewidth}|}{test4} \\',
 
                 r'\hline',
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
                 r''))
 
         self.assertMultiLineEqual(self.convert(html), latex)
@@ -780,7 +802,8 @@ class TestTableConverter(MockTestCase):
                     r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
                     r'foo\newline \newline bar} \\',
 
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
                 r''
                 ))
 
@@ -812,7 +835,8 @@ class TestTableConverter(MockTestCase):
                     r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
                     r'bar} \\',
 
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
                 r''
                 ))
 
@@ -836,7 +860,8 @@ class TestTableConverter(MockTestCase):
                 r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{longtable}{l}',
                 (40 * '\\multicolumn{1}{l}{foo} \\\\\n').strip(),
-                r'\end{longtable}',
+                r'\end{longtable}\\',
+                r'\vspace{4pt}',
                 r''
                 ))
 
@@ -866,7 +891,8 @@ class TestTableConverter(MockTestCase):
                     r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
                     r'bar} \\',
 
-                r'\end{longtable}',
+                r'\end{longtable}\\',
+                r'\vspace{4pt}',
                 r''
                 ))
 
@@ -888,7 +914,8 @@ class TestTableConverter(MockTestCase):
                 r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{l}',
                 (20 * '\\multicolumn{1}{l}{foo} \\\\\n').strip(),
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
                 r''
                 ))
 
@@ -977,7 +1004,8 @@ class TestTableConverter(MockTestCase):
                     r'\multicolumn{1}{|l|}{content 2B} \\',
                 r'\hline',
 
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
                 r''
                 ))
 
@@ -1032,7 +1060,8 @@ class TestTableConverter(MockTestCase):
                 r'\multicolumn{1}{|p{0.25\tablewidth}|}{content 2C} \\',
                 r'\hline',
 
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
                 r''
                 ))
 
@@ -1081,7 +1110,8 @@ class TestTableConverter(MockTestCase):
                     r' & '
                 r'\multicolumn{1}{|p{0.25\tablewidth}}{content 2D} \\',
 
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
                 r''
                 ))
 
@@ -1136,7 +1166,8 @@ class TestTableConverter(MockTestCase):
                 r'\multicolumn{1}{p{0.25\tablewidth}}{content 2C} \\',
                 r'\hline',
 
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
                 r''
                 ))
 
@@ -1189,7 +1220,8 @@ class TestTableConverter(MockTestCase):
                     r' & ' + \
                     r'\multicolumn{1}{p{0.25\tablewidth}}{content 2C} \\',
 
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
                 r''
                 ))
 
@@ -1219,7 +1251,8 @@ class TestTableConverter(MockTestCase):
                     r'\multicolumn{1}{l}{bar} \\',
                 r'\multicolumn{2}{l}{baz} \\',
 
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
                 r''))
 
         self.assertMultiLineEqual(self.convert(html), latex)
@@ -1261,7 +1294,8 @@ class TestTableConverter(MockTestCase):
                     r'\multicolumn{1}{|l}{C2} \\',
                 r'\cline{2-3}',
 
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
                 r''
                 ))
 
@@ -1298,7 +1332,8 @@ class TestTableConverter(MockTestCase):
                 r'\multicolumn{1}{l}{left} \\',
                 r'\multicolumn{1}{c}{center} \\',
                 r'\multicolumn{1}{r}{right} \\',
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
 
                 r' with width: '
                 r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
@@ -1310,7 +1345,8 @@ class TestTableConverter(MockTestCase):
                 r'\multicolumn{1}{p{1.0\tablewidth}}{' + \
                     r'\centering center} \\',
                 r'\multicolumn{1}{p{1.0\tablewidth}}{\raggedleft right} \\',
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
                 r''
                 ))
 
@@ -1338,7 +1374,8 @@ class TestTableConverter(MockTestCase):
                     r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
                     r'bar} \\',
 
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
                 r''
                 ))
 
@@ -1366,7 +1403,8 @@ class TestTableConverter(MockTestCase):
                     r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
                     r'bar} \\',
 
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
                 r''
                 ))
 
@@ -1394,7 +1432,8 @@ class TestTableConverter(MockTestCase):
                     r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
                     r'\hangindent 1cm\hspace{1cm} \textbf{bar}} \\',
 
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
                 r''
                 ))
 
@@ -1422,7 +1461,8 @@ class TestTableConverter(MockTestCase):
                     r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
                     r'bar} \\',
 
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
                 r''
                 ))
 
@@ -1451,7 +1491,8 @@ class TestTableConverter(MockTestCase):
                     r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
                     r'bar} \\',
 
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
                 r''
                 ))
 
@@ -1479,7 +1520,8 @@ class TestTableConverter(MockTestCase):
                     r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
                     r'bar} \\',
 
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
                 r''
                 ))
 
@@ -1508,7 +1550,8 @@ class TestTableConverter(MockTestCase):
                     r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
                     r'bar} \\',
 
-                r'\end{tabular}',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
                 r''
                 ))
 
