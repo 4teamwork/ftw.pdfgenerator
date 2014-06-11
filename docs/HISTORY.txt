@@ -4,7 +4,9 @@ Changelog
 1.3.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Improve table layouting.
+  Increase vertical padding of table cells.
+  [jone]
 
 
 1.3.1 (2014-06-02)

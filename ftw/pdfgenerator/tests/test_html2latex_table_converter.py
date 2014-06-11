@@ -58,6 +58,7 @@ class TestTableConverter(MockTestCase):
                 r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-2\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{l}',
                 r'\multicolumn{1}{l}{\textbf{My Head}} \\',
                 r'\multicolumn{1}{l}{My Body} \\',
@@ -91,6 +92,7 @@ class TestTableConverter(MockTestCase):
                 r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{ll}',
                 r'\multicolumn{1}{l}{\textbf{headA}} & ' + \
                     r'\multicolumn{1}{l}{\textbf{headB}} \\',
@@ -123,6 +125,7 @@ class TestTableConverter(MockTestCase):
                 r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{p{0.3\tablewidth}p{0.7\tablewidth}}',
 
                 r'\multicolumn{1}{p{0.3\tablewidth}}{test1} & '
@@ -155,6 +158,7 @@ class TestTableConverter(MockTestCase):
                 r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{p{0.3\tablewidth}r}',
 
                 r'\multicolumn{1}{p{0.3\tablewidth}}{test1} & '
@@ -190,6 +194,7 @@ class TestTableConverter(MockTestCase):
                 r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{p{0.3\tablewidth}p{0.7\tablewidth}}',
 
                 r'\multicolumn{1}{p{0.3\tablewidth}}{'
@@ -225,6 +230,7 @@ class TestTableConverter(MockTestCase):
                 r'\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{p{0.3\tablewidth}p{0.7\tablewidth}}',
 
                 r'\multicolumn{1}{p{0.3\tablewidth}}{'
@@ -260,6 +266,7 @@ class TestTableConverter(MockTestCase):
                 r'\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{p{30.0em}p{70.0em}}',
 
                 r'\multicolumn{1}{p{30.0em}}{'
@@ -289,6 +296,7 @@ class TestTableConverter(MockTestCase):
                     r'\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-2\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
 
                 r'\begin{center}',
                 r'\addtocounter{table}{1}',
@@ -323,6 +331,7 @@ class TestTableConverter(MockTestCase):
                     r'\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-2\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
 
                 r'\begin{center}',
                 r'NotIndexedCaption',
@@ -351,6 +360,7 @@ class TestTableConverter(MockTestCase):
                     r'\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-2\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
 
                 r'\begin{tabular}{l}',
                 r'\multicolumn{1}{l}{foo} \\',
@@ -386,6 +396,7 @@ class TestTableConverter(MockTestCase):
                     r'\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-2\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
 
                 r'\begin{tabular}{l}',
                 r'\multicolumn{1}{l}{foo} \\',
@@ -417,6 +428,7 @@ class TestTableConverter(MockTestCase):
                     r'\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-2\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
 
                 r'\begin{tabular}{l}',
                 r'\multicolumn{1}{l}{foo} \\',
@@ -442,6 +454,7 @@ class TestTableConverter(MockTestCase):
                     r'\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-2\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{l}',
                 r'\multicolumn{1}{l}{test1} \\',
                 r'\end{tabular}',
@@ -449,6 +462,7 @@ class TestTableConverter(MockTestCase):
                     r'\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-2\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{l}',
                 r'\multicolumn{1}{l}{test2} \\',
                 r'\end{tabular}',
@@ -465,6 +479,7 @@ class TestTableConverter(MockTestCase):
                 r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-2\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{l}',
                 r'\multicolumn{1}{l}{\textbf{Hello} \textit{World}} \\',
                 r'\end{tabular}',
@@ -485,6 +500,7 @@ class TestTableConverter(MockTestCase):
                 r' \makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-2\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{l}',
                 r'\multicolumn{1}{l}{test} \\',
                 r'\end{tabular}',
@@ -506,6 +522,7 @@ class TestTableConverter(MockTestCase):
                 r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-2\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{l}',
                 r'\multicolumn{1}{l}{2>1} \\',
                 '\\multicolumn{1}{l}{X\xc3\xa4Y} \\\\',
@@ -540,6 +557,7 @@ class TestTableConverter(MockTestCase):
                 r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-6\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{p{0.33\tablewidth}p{0.33\tablewidth}'
                 r'p{0.34\tablewidth}}',
 
@@ -579,6 +597,7 @@ class TestTableConverter(MockTestCase):
                 r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{p{0.5\tablewidth}p{0.5\tablewidth}}',
 
                 r'\multirow{2}{0.5\tablewidth}{one} & \multicolumn{1}'
@@ -622,6 +641,7 @@ class TestTableConverter(MockTestCase):
                     r'\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-10\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{p{0.25\tablewidth}p{0.25\tablewidth}' + \
                     r'p{0.25\tablewidth}p{0.25\tablewidth}l}',
 
@@ -679,6 +699,7 @@ class TestTableConverter(MockTestCase):
                     r'\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{p{0.5\tablewidth}p{0.5\tablewidth}}',
                 r'\multicolumn{1}{p{0.5\tablewidth}}{A} &' + \
                     r' \multirow{2}{0.5\tablewidth}{2xB} \\',
@@ -714,6 +735,7 @@ class TestTableConverter(MockTestCase):
                 r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{|p{0.3\tablewidth}|p{0.7\tablewidth}|}',
                 r'\hline',
 
@@ -750,6 +772,7 @@ class TestTableConverter(MockTestCase):
                     r'\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{p{0.5\tablewidth}p{0.5\tablewidth}}',
 
                 r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
@@ -781,6 +804,7 @@ class TestTableConverter(MockTestCase):
                 r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{p{0.5\tablewidth}p{0.5\tablewidth}}',
 
                 r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
@@ -809,6 +833,7 @@ class TestTableConverter(MockTestCase):
                 r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-2\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{longtable}{l}',
                 (40 * '\\multicolumn{1}{l}{foo} \\\\\n').strip(),
                 r'\end{longtable}',
@@ -833,6 +858,7 @@ class TestTableConverter(MockTestCase):
                 r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{longtable}{p{0.5\tablewidth}p{0.5\tablewidth}}',
 
                 r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
@@ -859,6 +885,7 @@ class TestTableConverter(MockTestCase):
                 r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-2\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{l}',
                 (20 * '\\multicolumn{1}{l}{foo} \\\\\n').strip(),
                 r'\end{tabular}',
@@ -934,6 +961,7 @@ class TestTableConverter(MockTestCase):
                 r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{|l|l|}',
                 r'\hline',
 
@@ -985,6 +1013,7 @@ class TestTableConverter(MockTestCase):
                 r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-6\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{|p{0.5\tablewidth}|p{0.25\tablewidth}|' + \
                     r'p{0.25\tablewidth}|}',
                 r'\hline',
@@ -1038,6 +1067,7 @@ class TestTableConverter(MockTestCase):
                 r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-8\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{p{0.25\tablewidth}p{0.25\tablewidth}' + \
                     r'p{0.25\tablewidth}p{0.25\tablewidth}}',
 
@@ -1087,6 +1117,7 @@ class TestTableConverter(MockTestCase):
                 r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-6\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{p{0.5\tablewidth}p{0.25\tablewidth}' + \
                     r'p{0.25\tablewidth}}',
                 r'\hline',
@@ -1141,6 +1172,7 @@ class TestTableConverter(MockTestCase):
                 r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-6\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{p{0.5\tablewidth}p{0.25\tablewidth}' + \
                     r'p{0.25\tablewidth}}',
 
@@ -1180,6 +1212,7 @@ class TestTableConverter(MockTestCase):
                     r'\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{ll}',
 
                 r'\multicolumn{1}{l}{foo} & ' + \
@@ -1214,6 +1247,7 @@ class TestTableConverter(MockTestCase):
                 r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-6\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{lll}',
 
                 r'\cline{2-2}',
@@ -1259,6 +1293,7 @@ class TestTableConverter(MockTestCase):
                 r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-2\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{l}',
                 r'\multicolumn{1}{l}{left} \\',
                 r'\multicolumn{1}{c}{center} \\',
@@ -1269,6 +1304,7 @@ class TestTableConverter(MockTestCase):
                 r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-2\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{p{1.0\tablewidth}}',
                 r'\multicolumn{1}{p{1.0\tablewidth}}{\raggedright left} \\',
                 r'\multicolumn{1}{p{1.0\tablewidth}}{' + \
@@ -1294,6 +1330,7 @@ class TestTableConverter(MockTestCase):
                 r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{p{0.5\tablewidth}p{0.5\tablewidth}}',
 
                 r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
@@ -1321,6 +1358,7 @@ class TestTableConverter(MockTestCase):
                 r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{p{0.5\tablewidth}p{0.5\tablewidth}}',
 
                 r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
@@ -1348,6 +1386,7 @@ class TestTableConverter(MockTestCase):
                 r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{p{0.5\tablewidth}p{0.5\tablewidth}}',
 
                 r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
@@ -1375,6 +1414,7 @@ class TestTableConverter(MockTestCase):
                 r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{p{0.5\tablewidth}p{0.5\tablewidth}}',
 
                 r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
@@ -1403,6 +1443,7 @@ class TestTableConverter(MockTestCase):
                 r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{p{0.5\tablewidth}p{0.5\tablewidth}}',
 
                 r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
@@ -1430,6 +1471,7 @@ class TestTableConverter(MockTestCase):
                 r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{p{0.5\tablewidth}p{0.5\tablewidth}}',
 
                 r'\multicolumn{1}{p{0.5\tablewidth}}{' + \
@@ -1458,6 +1500,7 @@ class TestTableConverter(MockTestCase):
                 r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
                 r'\setlength\tablewidth\linewidth',
                 r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
                 r'\begin{tabular}{p{0.5\tablewidth}p{0.5\tablewidth}}',
 
                 r'\multicolumn{1}{p{0.5\tablewidth}}{' + \

@@ -149,7 +149,8 @@ class TableConverter(subconverter.SubConverter):
             r'\newlength\tablewidth}\makeatother',
             r'\setlength\tablewidth\linewidth',
             r'\addtolength\tablewidth{-%i\tabcolsep}' % (
-                2 * len(self.columns))]
+                2 * len(self.columns)),
+            r'\renewcommand{\arraystretch}{1.4}']
 
         caption_command, insert_caption_at_top = self.render_caption()
         if caption_command and insert_caption_at_top:
