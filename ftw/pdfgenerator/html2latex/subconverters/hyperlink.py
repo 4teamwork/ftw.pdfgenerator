@@ -25,10 +25,11 @@ class HyperlinkConverter(subconverter.SubConverter):
         url = url.replace('&amp;', '&')
         url = url.replace('&', '\\&')
         url = url.replace(' ', '%20').replace('%', '\%')
-        url = url.replace('_', '\_').replace('#', '\#')
+        url = url.replace('#', '\#')
 
         # Do not display "mailto:"
         url_label = re.sub('^mailto:', '', url)
+        url_label = url_label.replace('_', '\_')
 
         self.get_layout().use_package('hyperref')
         self.replace_and_lock(self.latex_link(url, label, url_label))
