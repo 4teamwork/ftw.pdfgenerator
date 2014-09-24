@@ -248,6 +248,15 @@ class TestHTML2LatexConverter(MockTestCase):
         self.assertEqual(obj.convert('foo <bar> baz'), 'foo  baz')
         self.assertEqual(obj.convert_plain('foo <bar> baz'), 'foo <bar> baz')
 
+    def test_quoted_umlaut(self):
+        obj = converter.HTML2LatexConverter(
+            object(), object(), object())
+
+        self.assertEqual(
+            '"Uber h"ofliche B"urger aus Rh\xc3\xb4ne-Alpes',
+            obj.quoted_umlauts(
+                '\xc3\x9cber h\xc3\xb6fliche B\xc3\xbcrger'
+                ' aus Rh\xc3\xb4ne-Alpes'))
 
 
 class TestHTML2LaTeXConvertRunner(MockTestCase):
@@ -277,3 +286,14 @@ class TestHTML2LaTeXConvertRunner(MockTestCase):
 
         self.assertEqual(str(cm.exception),
                          'runner_convert() should not be called twice!')
+
+    def test_quoted_umlaut(self):
+        obj = converter.HTML2LatexConverter(
+            object(), object(), object())
+        runner = converter.HTML2LatexConvertRunner(obj, [], '')
+
+        self.assertEqual(
+            '"Uber h"ofliche B"urger aus Rh\xc3\xb4ne-Alpes',
+            runner.quoted_umlauts(
+                '\xc3\x9cber h\xc3\xb6fliche B\xc3\xbcrger'
+                ' aus Rh\xc3\xb4ne-Alpes'))

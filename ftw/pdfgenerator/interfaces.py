@@ -320,6 +320,14 @@ class IHTML2LaTeXConverter(Interface):
         trim -- Strip the HTML before converting to LaTeX. (Default: `True`).
         """
 
+    def quoted_umlauts(text):
+        """Replaces umlauts in text with the LaTeX's quotet umlaut notation.
+        E.g. "a "o "u
+
+        Arguments:
+        text -- Text to convert
+        """
+
     def convert_plain(text, **kwargs):
         """Converts a text to HTML and then to LaTeX.
 
@@ -372,6 +380,14 @@ class IHTML2LaTeXConvertRunner(Interface):
     def runner_convert():
         """This method does the actual converting. It should never by called
         directly, but through HTML2LatexConverter.convert()
+        """
+
+    def quoted_umlauts(text):
+        """Replaces umlauts in text with the LaTeX's quotet umlaut notation.
+        E.g. "a "o "u
+
+        Arguments:
+        text -- Text to convert
         """
 
 
