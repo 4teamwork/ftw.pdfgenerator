@@ -4,7 +4,10 @@ Changelog
 1.3.4 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Index: sort German umlauts correctly by including umlaut.ist.
+  For this to work properly all \index{} entries must escape umlauts
+  with quotes, e.g. ``h"oflich``.
+  [jone]
 
 
 1.3.3 (2014-07-24)
