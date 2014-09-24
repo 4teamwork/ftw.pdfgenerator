@@ -10,6 +10,9 @@ import shutil
 import subprocess
 
 
+RESOURCES_DIR = os.path.abspath(os.path.join(__file__, '..', 'resources'))
+
+
 class Builder(object):
     implements(IBuilder)
 
@@ -107,7 +110,8 @@ class Builder(object):
         if not os.path.exists(idx_path):
             return False
 
-        self._execute('makeindex export')
+        umlaut_ist_path = os.path.join(RESOURCES_DIR, 'umlaut.ist')
+        self._execute('makeindex -g -s {0} export'.format(umlaut_ist_path))
         return True
 
     def _rerun_required(self, stdout):

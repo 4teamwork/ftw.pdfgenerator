@@ -12,6 +12,7 @@ from random import choice
 from zope.component import adapts
 from zope.interface import implements, Interface
 import re
+import unicodedata
 
 
 PLACEHOLDERS = (
@@ -135,6 +136,16 @@ class HTML2LatexConverter(BasePatternAware):
     def convert_plain(self, text, **kwargs):
         html = encode_htmlentities(text)
         return self.convert(html, **kwargs)
+
+    def quoted_umlauts(self, text):
+        if isinstance(text, str):
+            text = text.decode('utf-8')
+
+        text = unicodedata.normalize('NFD', text)
+        text = re.sub(ur'(.)\u0308', '"\g<1>', text, re.UNICODE)
+        text = unicodedata.normalize('NFC', text)
+
+        return text.encode('utf-8')
 
 
 class HTML2LatexConvertRunner(BasePatternAware):
@@ -289,6 +300,9 @@ class HTML2LatexConvertRunner(BasePatternAware):
 
         self._unlock_chars()
         return self.html
+
+    def quoted_umlauts(self, text):
+        return self.converter.quoted_umlauts(text)
 
     def _replace_regexp(self, search, replace, modifiers):
         xpr = re.compile(search, re.DOTALL)
