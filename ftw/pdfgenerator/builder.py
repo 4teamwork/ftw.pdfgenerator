@@ -92,18 +92,21 @@ class Builder(object):
         latex_file.write(latex)
         latex_file.close()
 
-        cmd = 'pdflatex --interaction=nonstopmode %s' % latex_path
-        stdout = ''
-        while self._rerun_required(stdout):
-            _exitcode, stdout, _stderr = self._execute(cmd)
-
+        self._run_pdflatex(latex_path)
         if self._makeindex():
-            self._execute(cmd)
+            self._run_pdflatex(latex_path)
 
         if not os.path.exists(pdf_path):
             raise PDFBuildFailed('PDF missing.')
 
         return pdf_path
+
+    def _run_pdflatex(self, latex_path):
+        self._aux_data = None
+        cmd = 'pdflatex --interaction=nonstopmode %s' % latex_path
+        stdout = ''
+        while self._rerun_required(stdout):
+            _exitcode, stdout, _stderr = self._execute(cmd)
 
     def _makeindex(self):
         idx_path = os.path.join(self.build_directory, 'export.idx')
