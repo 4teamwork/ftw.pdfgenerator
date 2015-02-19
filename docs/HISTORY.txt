@@ -4,7 +4,10 @@ Changelog
 1.3.5 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- PDF Builder: fix pdflatex after making index.
+  When references are used in the index, e.g. the index title is in the TOC,
+  more than one rerun is required after making the index.
+  [jone]
 
 
 1.3.4 (2014-09-30)
