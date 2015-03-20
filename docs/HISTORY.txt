@@ -4,7 +4,8 @@ Changelog
 1.3.6 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Workaround for too long makeindex argument causing buffer overflow.
+  [jone]
 
 
 1.3.5 (2015-02-19)

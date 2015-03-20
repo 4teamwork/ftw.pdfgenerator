@@ -113,8 +113,12 @@ class Builder(object):
         if not os.path.exists(idx_path):
             return False
 
+        # When the makeindex arguments are too long, we might get a
+        # buffer oferflow.
+        # For avoiding this, we copy the "umlaut.ist" to the export directory.
         umlaut_ist_path = os.path.join(RESOURCES_DIR, 'umlaut.ist')
-        self._execute('makeindex -g -s {0} export'.format(umlaut_ist_path))
+        shutil.copyfile(umlaut_ist_path, os.path.join(self.build_directory, 'umlaut.ist'))
+        self._execute('makeindex -g -s umlaut.ist export')
         return True
 
     def _rerun_required(self, stdout):
