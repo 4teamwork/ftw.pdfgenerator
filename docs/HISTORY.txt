@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.3.6 (unreleased)
+1.3.6 (2015-03-20)
 ------------------
 
 - Workaround for too long makeindex argument causing buffer overflow.
