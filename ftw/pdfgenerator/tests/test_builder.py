@@ -313,10 +313,7 @@ class TestBuilder(MockTestCase):
         with open(idx_path, 'w+') as idx:
             idx.write('\indexentry{Test}{2}')
 
-        umlaut_ist_path = os.path.abspath(os.path.join(
-                __file__, '..', '..', 'resources', 'umlaut.ist'))
-        (self.expect(builder._execute('makeindex -g -s {0} export'.format(
-                        umlaut_ist_path)))
+        (self.expect(builder._execute('makeindex -g -s umlaut.ist export'))
          .result((0, 'stdout', 'stderr')))
 
         self.replay()
