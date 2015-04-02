@@ -80,7 +80,7 @@ DEFAULT_PATTERNS = ([
         # quotes
         (MODE_REGEXP,   r'\&quot;',                 '"'),
         (MODE_REGEXP,   r'"([\w\{\\])',             '"`\g<1>'),
-        (MODE_REGEXP,   r'([^ \t\n\r\f\v\{])"',     '\g<1>"\''),
+        (MODE_REGEXP,   r'([^ \t\n\r\f\v\{])"(?!`)',     '\g<1>"\''),
 
         # paragraphs and white space
         (MODE_REGEXP,   r'<p.*?>(.*?)[\r\n ]{0,}</p>',

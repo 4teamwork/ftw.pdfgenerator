@@ -105,6 +105,9 @@ class TestBasicPatterns(TestCase):
         self.assertEqual(self.convert('Bar "foo (1)" blubb'),
                          'Bar "`foo (1)"\' blubb')
 
+        self.assertEqual('"`Hello World"\'',
+                         self.convert('<p>"Hello World"</p>'))
+
     def test_quotation_marks2(self):
         self.assertEqual(self.convert('foo &quot;<b>bar</b>&quot; baz'),
                          'foo "`\\textbf{bar}"\' baz')
