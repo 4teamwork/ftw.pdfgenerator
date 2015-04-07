@@ -257,7 +257,7 @@ class TableConverter(subconverter.SubConverter):
         # create colum objects
         dom_col_list = self.dom.getElementsByTagName('col')
         amount = self.get_amount_of_columns()
-        amount = amount > len(dom_col_list) and amount or len(dom_col_list)
+        amount = amount and amount or len(dom_col_list)
 
         for c in range(amount):
             col = self.create_latex_column()
@@ -325,16 +325,6 @@ class TableConverter(subconverter.SubConverter):
 
     def get_amount_of_columns(self):
         columns = 0
-        # by <colgroup>-Tag
-        colgroups = self.dom.getElementsByTagName('colgroup')
-        if len(colgroups) > 0:
-            colgroup = colgroups[0]
-            for col in colgroup.getElementsByTagName('col'):
-                try:
-                    columns += int(col.getAttribute('colspan'))
-                except (ValueError, TypeError):
-                    columns += 1
-
         # by <td>- and <th>-Tags
         for tr in self.dom.getElementsByTagName('tr'):
             tr_columns = 0

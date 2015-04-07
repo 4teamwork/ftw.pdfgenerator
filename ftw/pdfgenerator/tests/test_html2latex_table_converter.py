@@ -1557,6 +1557,38 @@ class TestTableConverter(MockTestCase):
 
         self.assertMultiLineEqual(self.convert(html), latex)
 
+    def test_more_cols_than_cells(self):
+        # Regression test for when there are more <col> tags than <td> tags per row.
+        html = '\n'.join((
+                '<table class="plain" style="width: 100%;">',
+                '  <colgroup>',
+                '    <col width="17%" />',
+                '    <col width="41%" />',
+                '    <col width="35%" />',
+                '  </colgroup>',
+                '  <tbody>',
+                '    <tr>',
+                '      <th style="width: 30%;">Foo</th>',
+                '      <th style="width: 70%;">Bar</th>',
+                '    </tr>',
+                '  </tbody>',
+                '</table>'))
+
+        latex = '\n'.join((
+                r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
+                r'\setlength\tablewidth\linewidth',
+                r'\addtolength\tablewidth{-4\tabcolsep}',
+                r'\renewcommand{\arraystretch}{1.4}',
+                r'\begin{tabular}{p{0.17\tablewidth}p{0.41\tablewidth}}',
+                r'\multicolumn{1}{p{0.3\tablewidth}}{\textbf{Foo}} & \multicolumn{1}{p{0.7\tablewidth}}{\textbf{Bar}} \\',
+                r'\end{tabular}\\',
+                r'\vspace{4pt}',
+                r''
+                ))
+
+        self.maxDiff = None
+        self.assertMultiLineEqual(self.convert(html), latex)
+
 
 class TestLatexWidth(TestCase):
 
