@@ -4,7 +4,7 @@ Changelog
 1.3.7 (unreleased)
 ------------------
 
-- Fix table converting error when there are more `<col>`s than cells.
+- Fix table converting error when there are more ``<col>`` tags than cells.
   [jone]
 
 - HTML converter: fix leading quote when at beginning of string.
