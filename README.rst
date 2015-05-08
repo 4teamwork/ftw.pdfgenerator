@@ -359,9 +359,9 @@ CSS classes:
 Links
 =====
 
-- Main github project repository: https://github.com/4teamwork/ftw.pdfgenerator
-- Issue tracker: https://github.com/4teamwork/ftw.pdfgenerator/issues
-- Package on pypi: http://pypi.python.org/pypi/ftw.pdfgenerator
+- Github: https://github.com/4teamwork/ftw.pdfgenerator
+- Issues: https://github.com/4teamwork/ftw.pdfgenerator/issues
+- Pypi: http://pypi.python.org/pypi/ftw.pdfgenerator
 - Continuous integration: https://jenkins.4teamwork.ch/search?q=ftw.pdfgenerator
 
 Copyright
