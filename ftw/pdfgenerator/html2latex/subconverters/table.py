@@ -94,7 +94,6 @@ class TableConverter(subconverter.SubConverter):
     def parse(self):
         html = self.get_html()
         # cleanup html with BeautifulSoup
-
         html = str(BeautifulSoup(html))
         # minidom hates htmlentities, but loves xmlentities -.-
 
@@ -297,7 +296,10 @@ class TableConverter(subconverter.SubConverter):
                 columnIndex += 1
 
             else:
-                dom_cell = cells[cell_index]
+                try:
+                    dom_cell = cells[cell_index]
+                except IndexError:
+                    break
                 cell_index += 1
                 cell = self.create_latex_cell(dom_cell=dom_cell, row=row)
                 # rowspan?
@@ -494,7 +496,6 @@ class LatexRow(object):
         line_latex = self.get_horizontal_line_latex(self.get_next_row(), self)
         if line_latex:
             latex.append(line_latex)
-
         return '\n'.join(latex) + '\n'
 
     def get_horizontal_line_latex(self, top_row, bottom_row):
@@ -984,7 +985,6 @@ def apply_borders_to_format(element, format_):
     `element` -- Cell or column object.
     `format_` -- LaTeX format definiton.
     """
-
     if element.has_left_border() and not format_.startswith('|'):
         format_ = '|%s' % format_
 
