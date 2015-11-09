@@ -175,7 +175,7 @@ class TableConverter(subconverter.SubConverter):
 
         for row in self.rows:
             rowLatex = row.render()
-            if row.contains_head_cells():
+            if row.is_head_row():
                 head_rows.append(rowLatex)
             else:
                 body_rows.append(rowLatex)
@@ -459,11 +459,11 @@ class LatexRow(object):
     def register_cell(self, cell):
         self.cells.append(cell)
 
-    def contains_head_cells(self):
+    def is_head_row(self):
         for cell in self.cells:
-            if cell.is_head_cell():
-                return True
-        return False
+            if not cell.is_head_cell():
+                return False
+        return True
 
     def is_first_row(self):
         return self.table_converter.rows.index(self) == 0
