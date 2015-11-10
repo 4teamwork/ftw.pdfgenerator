@@ -1589,6 +1589,44 @@ class TestTableConverter(MockTestCase):
         self.maxDiff = None
         self.assertMultiLineEqual(self.convert(html), latex)
 
+    def test_vertical_th_isnt_repeated(self):
+        html = '\n'.join((
+                r'<table class="plain" style="width: 100%;">',
+                r'  <colgroup>',
+                r'    <col width="17%" />',
+                r'    <col width="41%" />',
+                r'    <col width="35%" />',
+                r'  </colgroup>',
+                r'  <thead>',
+                r'    <tr>',
+                r'      <td style="width: 30%;">Foo</th>',
+                r'      <td style="width: 70%;">Bar</th>',
+                r'    </tr>',
+                r'   </thead>',
+                r'   <tbody>',
+                20 * r'    <tr><th style="width: 30%;">Foo</th><td style="width: 70%;">Batz</td></tr>',
+                r'  </tbody>',
+                r'</table>'))
+
+        latex_list = [
+            r'\makeatletter\@ifundefined{tablewidth}{\newlength\tablewidth}\makeatother',
+            r'\setlength\tablewidth\linewidth',
+            r'\addtolength\tablewidth{-4\tabcolsep}',
+            r'\renewcommand{\arraystretch}{1.4}',
+            r'\begin{longtable}{p{0.17\tablewidth}p{0.41\tablewidth}}',
+            r'\multicolumn{1}{p{0.3\tablewidth}}{\textbf{Foo}} & \multicolumn{1}{p{0.7\tablewidth}}{\textbf{Bar}} \\',
+            r'\endhead',
+        ]
+        for counter in range(20):
+            latex_list.append(r'\multicolumn{1}{p{0.3\tablewidth}}{\textbf{Foo}} & \multicolumn{1}{p{0.7\tablewidth}}{Batz} \\')
+        latex_list.append(r'\end{longtable}\\')
+        latex_list.append(r'\vspace{4pt}')
+        latex_list.append(r'')
+        latex = '\n'.join(latex_list)
+
+        self.maxDiff = None
+        self.assertMultiLineEqual(self.convert(html, use_packages=['longtable']), latex)
+
 
 class TestLatexWidth(TestCase):
 
