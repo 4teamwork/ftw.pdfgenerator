@@ -227,6 +227,19 @@ It uses regular expressions for the simple conversions and python
 subconverters for the more complicated conversions. The converter is heavily
 customizable.
 
+Custom subconverters
+********************
+
+Footnote
+++++++++
+
+Generate a footnote by wrapping any text in a ``span`` with the
+class ``footnote``. Specify the footnote text in the ``data-footnote`` attribute.
+Example:
+
+::
+
+    <span class="footnote" data-footnote="text in footnote">text on the page</span>
 
 Customizable layouts
 --------------------
