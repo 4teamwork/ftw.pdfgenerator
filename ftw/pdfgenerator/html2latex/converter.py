@@ -1,6 +1,7 @@
 from ftw.pdfgenerator import interfaces
 from ftw.pdfgenerator.html2latex import wrapper
 from ftw.pdfgenerator.html2latex.patterns import DEFAULT_PATTERNS
+from ftw.pdfgenerator.html2latex.subconverters import footnote
 from ftw.pdfgenerator.html2latex.subconverters import htmlentities
 from ftw.pdfgenerator.html2latex.subconverters import hyperlink
 from ftw.pdfgenerator.html2latex.subconverters import listing
@@ -29,6 +30,7 @@ DEFAULT_SUBCONVERTERS = (
     htmlentities.HtmlentitiesConverter,
     hyperlink.HyperlinkConverter,
     textformatting.Textformatting,
+    footnote.FootnoteConverter,
     )
 
 

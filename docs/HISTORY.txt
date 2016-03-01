@@ -4,7 +4,8 @@ Changelog
 1.3.9 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Added footnote subconverter.
+  [lknoepfel]
 
 
 1.3.8 (2015-12-11)
