@@ -240,9 +240,14 @@ class HTML2LatexConvertRunner(BasePatternAware):
         Unlocks previously locked HTML (see lockChars()). This method is
         automatically called by _convert() after converting HTML to Latex.
         """
+        html_before = self.html
+
         for id_ in self.lockers.keys():
             value = self.lockers[id_]
             self.html = self.html.replace(id_, value)
+
+        if html_before != self.html:
+            self._unlock_chars()
 
     def convert(self, html, custom_patterns=None, custom_subconverters=None,
                 trim=True):

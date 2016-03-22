@@ -4,7 +4,7 @@ Changelog
 1.4.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fix recursive subconverter locking problem. [jone]
 
 
 1.4 (2016-03-02)
