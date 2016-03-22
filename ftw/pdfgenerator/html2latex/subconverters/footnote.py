@@ -8,7 +8,6 @@ class FootnoteConverter(subconverter.SubConverter):
                '(?P<content>.*?)</span>')
 
     def __call__(self):
-        context = self.get_context()
         if 'footnote' not in self.match.group('class').split():
             return
 
