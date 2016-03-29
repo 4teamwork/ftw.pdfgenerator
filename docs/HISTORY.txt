@@ -4,6 +4,8 @@ Changelog
 1.4.1 (unreleased)
 ------------------
 
+- Listing converter: avoid using beatiful soup. [jone]
+
 - Fix recursive subconverter locking problem. [jone]
 
 

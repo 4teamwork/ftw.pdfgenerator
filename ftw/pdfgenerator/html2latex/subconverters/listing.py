@@ -2,6 +2,7 @@ from BeautifulSoup import BeautifulSoup
 from ftw.pdfgenerator.html2latex import subconverter
 from ftw.pdfgenerator.utils import html2xmlentities
 from xml.dom import minidom
+from xml.parsers.expat import ExpatError
 
 
 # LaTeX allows a maximum list nesting of 4. Deeper nesting will be flattened
@@ -28,15 +29,19 @@ class ListConverter(subconverter.SubConverter):
 
     def __call__(self):
         html = self.get_html()
-        # cleanup html with BeautifulSoup
-        html = str(BeautifulSoup(html))
 
         # minidom hates htmlentities, but loves xmlentities -.-
         html = '<dummy>%s</dummy>' % html
         html = html2xmlentities(html)
 
         # parse DOM
-        dom = minidom.parseString(html)
+        try:
+            dom = minidom.parseString(html)
+        except ExpatError, exc:
+            # cleanup html with BeautifulSoup
+            html = str(BeautifulSoup(html))
+            dom = minidom.parseString(html)
+
         latex = []
 
         for node in dom.getElementsByTagName('dummy')[0].childNodes:
