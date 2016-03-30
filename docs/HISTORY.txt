@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.4.1 (unreleased)
+1.4.1 (2016-03-30)
 ------------------
 
 - Listing converter: avoid using beatiful soup. [jone]
