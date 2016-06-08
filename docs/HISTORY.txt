@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.4.2 (unreleased)
+1.5.0 (2016-06-08)
 ------------------
 
 - Implement URL converter for supporting hyphenation in URLs. [jone]
