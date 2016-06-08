@@ -3,6 +3,7 @@
 
 from ftw.pdfgenerator.html2latex.converter import HTML2LatexConverter
 from ftw.pdfgenerator.html2latex.subconverters import textformatting
+from ftw.pdfgenerator.html2latex.subconverters import url
 from unittest2 import TestCase
 
 
@@ -11,7 +12,8 @@ class BasicConverter(HTML2LatexConverter):
     """
 
     def get_default_subconverters(self):
-        return [textformatting.Textformatting]
+        return [url.URLConverter,
+                textformatting.Textformatting]
 
 
 class TestBasicPatterns(TestCase):
@@ -1098,6 +1100,17 @@ class TestBasicPatterns(TestCase):
                 ))
 
         self.assertEqual('', self.convert(input).strip())
+
+    def test_hyphenation_infos_are_added_to_urls(self):
+        self.assertEqual(
+            self.convert(
+                'x http://foo.ch/bar y'),
+            'x http://foo.ch""/bar y')
+
+        self.assertEqual(
+            self.convert(
+                'x https://user@pass:domain.com/foo/bar.html?param=true#anchor y'),
+            'x https://user@pass:domain.com""/foo""/bar.html?param=true\\#anchor y')
 
     def assert_convertions(self, input_expected):
         input_output = {}

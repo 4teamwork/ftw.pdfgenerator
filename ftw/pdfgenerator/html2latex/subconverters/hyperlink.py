@@ -12,7 +12,9 @@ class HyperlinkConverter(subconverter.SubConverter):
         context = self.get_context()
 
         url, label = self.match.groups()
-        label = self.converter.convert(label)
+        label = (self.converter.convert(label)
+                 .replace('""/', '/')
+                 .replace('_', '\_'))
 
         is_relative = '://' not in url and not url.startswith('mailto:')
 
@@ -30,7 +32,9 @@ class HyperlinkConverter(subconverter.SubConverter):
         # Do not display "mailto:"
         url_label = re.sub('^mailto:', '', url)
         url_label = url_label.replace('_', '\_')
+        url_label = url_label.replace('""/', '/')
 
+        self.get_layout().use_package('url', 'hyphens')
         self.get_layout().use_package('hyperref')
         self.replace_and_lock(self.latex_link(url, label, url_label))
 
