@@ -20,6 +20,7 @@ class TestHyperlinkConverter(MockTestCase):
             'http://nohost/plone')
 
         self.layout = self.mocker.mock()
+        self.expect(self.layout.use_package('url', 'hyphens')).count(1, None)
         self.expect(self.layout.use_package('hyperref')).count(1, None)
 
         self.converter = HTML2LatexConverter(
