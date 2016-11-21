@@ -27,7 +27,6 @@ setup(name='ftw.pdfgenerator',
       classifiers=[
         "Environment :: Web Environment",
         'Framework :: Plone',
-        'Framework :: Plone :: 4.1',
         'Framework :: Plone :: 4.2',
         'Framework :: Plone :: 4.3',
         "Intended Audience :: Developers",
