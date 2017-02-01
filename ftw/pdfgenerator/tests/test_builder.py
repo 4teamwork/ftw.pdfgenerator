@@ -8,6 +8,7 @@ from ftw.pdfgenerator.interfaces import IBuilder, IBuilderFactory
 from ftw.pdfgenerator.testing import PREDEFINED_BUILD_DIRECTORY_LAYER
 from ftw.testing import MockTestCase
 from mocker import MATCH, ANY
+from StringIO import StringIO
 from zipfile import ZipFile
 from zope.component import getUtility
 from zope.interface.verify import verifyClass
@@ -45,6 +46,16 @@ class TestBuilder(MockTestCase):
     def test_add_file(self):
         builder = getUtility(IBuilderFactory)()
         builder.add_file('foo.txt', 'Foo\nBar')
+
+        self.assertTrue(os.path.exists(self.builddir))
+        filepath = os.path.join(self.builddir, 'foo.txt')
+        self.assertTrue(os.path.exists(filepath),
+                        'File not found: {0}'.format(filepath))
+        self.assertEqual(open(filepath).read(), 'Foo\nBar')
+
+    def test_add_file_by_file_object(self):
+        builder = getUtility(IBuilderFactory)()
+        builder.add_file('foo.txt', StringIO('Foo\nBar'))
 
         self.assertTrue(os.path.exists(self.builddir))
         filepath = os.path.join(self.builddir, 'foo.txt')
