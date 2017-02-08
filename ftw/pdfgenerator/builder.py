@@ -28,9 +28,11 @@ class Builder(object):
             raise BuildTerminated('The build is already terminated.')
 
         path = os.path.join(self.build_directory, filename)
-        file_ = open(path, 'wb')
-        file_.write(data)
-        file_.close()
+        with open(path, 'wb') as fio:
+            if hasattr(data, 'read'):
+                shutil.copyfileobj(data, fio)
+            else:
+                fio.write(data)
 
     def build(self, latex):
         if self._terminated:
