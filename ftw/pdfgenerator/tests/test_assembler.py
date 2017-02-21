@@ -37,6 +37,61 @@ class TestPDFAssembler(MockTestCase):
         latex = obj.build_latex(layout=layout, builder=builder)
         self.assertEqual(latex, 'full latex')
 
+    def test_use_filename_when_given(self):
+        context = self.mocker.mock()
+        layout = self.mocker.mock()
+        self.expect(layout.render_latex_for(context)).result('content latex')
+        self.expect(layout.render_latex('content latex')).result(
+            'full latex')
+
+        builder = self.mocker.mock()
+        self.expect(builder.build('full latex')).result('the pdf')
+
+        request = self.mocker.mock()
+        response = self.mocker.mock()
+        self.expect(request.RESPONSE).result(response)
+        self.expect(response.setHeader(
+                'Content-Type', 'application/pdf; charset=utf-8'))
+        self.expect(response.setHeader(
+                'Content-disposition', 'attachment; filename="my_pdf.pdf"'))
+        self.expect(response.write('the pdf'))
+
+        self.replay()
+
+        obj = getMultiAdapter((context, request), interfaces.IPDFAssembler)
+        self.assertEqual(obj.build_pdf(layout=layout, builder=builder,
+                                       request=request, filename='my_pdf'),
+                         request)
+
+    def test_handles_non_ascii_chars_in_filename_correctly(self):
+        filename = u'm\xe4i_pdf'
+        context = self.mocker.mock()
+        layout = self.mocker.mock()
+        self.expect(layout.render_latex_for(context)).result('content latex')
+        self.expect(layout.render_latex('content latex')).result(
+            'full latex')
+
+        builder = self.mocker.mock()
+        self.expect(builder.build('full latex')).result('the pdf')
+
+        request = self.mocker.mock()
+        response = self.mocker.mock()
+        self.expect(request.RESPONSE).result(response)
+        self.expect(response.setHeader(
+                'Content-Type', 'application/pdf; charset=utf-8'))
+
+        self.expect(response.setHeader(
+            'Content-disposition',
+            'attachment; filename="{}.pdf"'.format(filename.encode('utf-8'))))
+        self.expect(response.write('the pdf'))
+
+        self.replay()
+
+        obj = getMultiAdapter((context, request), interfaces.IPDFAssembler)
+        self.assertEqual(obj.build_pdf(layout=layout, builder=builder,
+                                       request=request, filename=filename),
+                         request)
+
     def test_build_pdf_parameters(self):
         context = self.mocker.mock()
         self.expect(context.id).result('theid')

@@ -4,6 +4,8 @@ Changelog
 1.5.1 (unreleased)
 ------------------
 
+- Add possibility to set the pdf title via build arguments. [phgross]
+
 - Support file objects in Builder.add_file. [jone]
 
 - Drop Plone 4.1 support.
