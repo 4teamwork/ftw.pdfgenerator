@@ -18,7 +18,7 @@ class PDFAssembler(object):
         self._view = None
         self._builder = None
 
-    def build_pdf(self, layout=None, builder=None, request=None):
+    def build_pdf(self, layout=None, builder=None, request=None, filename=None):
         self._layout = layout
         self._builder = builder
 
@@ -29,7 +29,8 @@ class PDFAssembler(object):
             return data
 
         else:
-            return self._attach_to_response(request, data, 'pdf')
+            return self._attach_to_response(
+                request, data, 'pdf', filename=filename)
 
     def build_latex(self, layout=None, builder=None, request=None):
         self._layout = layout
@@ -75,8 +76,15 @@ class PDFAssembler(object):
         content_latex = layout.render_latex_for(self.context)
         return layout.render_latex(content_latex)
 
-    def _attach_to_response(self, request, data, extension):
-        filename = '%s.%s' % (self.context.id, extension)
+    def _attach_to_response(self, request, data, extension, filename=None):
+        if not filename:
+            filename = self.context.id
+
+        if isinstance(filename, unicode):
+            filename = filename.encode('utf-8')
+
+        filename = '{}.{}'.format(filename, extension)
+
         response = request.RESPONSE
         response.setHeader('Content-Type',
                            'application/%s; charset=utf-8' % extension)
