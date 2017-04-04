@@ -32,7 +32,7 @@ class PDFAssembler(object):
             return self._attach_to_response(
                 request, data, 'pdf', filename=filename)
 
-    def build_latex(self, layout=None, builder=None, request=None):
+    def build_latex(self, layout=None, builder=None, request=None, filename=None):
         self._layout = layout
         self._builder = builder
 
@@ -40,7 +40,7 @@ class PDFAssembler(object):
         self.get_builder().cleanup()
         return latex
 
-    def build_zip(self, layout=None, builder=None, request=None):
+    def build_zip(self, layout=None, builder=None, request=None, filename=None):
         self._layout = layout
         self._builder = builder
 
@@ -51,7 +51,7 @@ class PDFAssembler(object):
             return data
 
         else:
-            return self._attach_to_response(request, data, 'zip')
+            return self._attach_to_response(request, data, 'zip', filename=filename)
 
     def get_builder(self):
         """Returns the IBuilder instance.
