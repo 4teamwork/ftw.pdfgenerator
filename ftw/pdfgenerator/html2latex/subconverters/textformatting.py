@@ -29,6 +29,11 @@ class Textformatting(subconverter.SubConverter):
     "\textbf{*\n\n*}" is not allowed, use "\textbf{*\\*}"
     "\textit{*\n\n*}" is not allowed, use "\textit{*\\*}"
     "\emph{*\n\n*}" is not allowed, use "\emph{*\\*}"
+
+    It also not allowed to have multiple newlines (\\{1,}) in those
+    environments.
+    Since we sometimes we have this situation and we cannot end the
+    paragraph we need to fix it with \vspace's.
     """
 
     pattern = r'(\\(textbf|textit|emph){.*})'
@@ -48,4 +53,9 @@ class Textformatting(subconverter.SubConverter):
         self.replace(latex)
 
     def convert_substring(self, latex):
-        return latex.replace('\n\n', r'\\\\')
+        latex = latex.replace(r'\\', '\n')
+
+        latex = re.sub(r'([^\n])\n', r'\g<1>\\\\', latex)
+        latex = re.sub(r'\n+', r'\\vspace{\\baselineskip}', latex)
+
+        return latex

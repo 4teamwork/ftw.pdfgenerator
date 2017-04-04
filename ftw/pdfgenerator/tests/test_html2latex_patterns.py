@@ -140,20 +140,20 @@ class TestBasicPatterns(TestCase):
                          '\\textbf{zwei}\\\\\nzwei')
 
         self.assertEqual(self.convert('<b>drei<br /></b>'),
-                         '\\textbf{drei\\\\\n}')
+                         '\\textbf{drei\\\\\\vspace{\\baselineskip}}')
 
         self.assertEqual(self.convert('<b>vier<br />\n</b>'),
-                         '\\textbf{vier\\\\\n }')
+                         '\\textbf{vier\\\\\\vspace{\\baselineskip} }')
 
         self.assertEqual(self.convert('<b>fuenf<br />\n</b><br />'),
-                         '\\textbf{fuenf\\\\\n }')
+                         '\\textbf{fuenf\\\\\\vspace{\\baselineskip} }')
 
         self.assertEqual(self.convert('<b>sechs<br />\n</b>sechs<br />'),
-                         '\\textbf{sechs\\\\\n }sechs')
+                         '\\textbf{sechs\\\\\\vspace{\\baselineskip} }sechs')
 
         self.assertEqual(self.convert('<strong>&quot;sieben&quot;<br />\n'
                                       '</strong><br />'),
-                         '\\textbf{"`sieben"\'\\\\\n }')
+                         '\\textbf{"`sieben"\'\\\\\\vspace{\\baselineskip} }')
 
     def test_abbreviations_are_not_breakable(self):
         self.maxDiff = None
@@ -213,6 +213,16 @@ class TestBasicPatterns(TestCase):
 
         self.assertEqual(self.convert('<p><strong><br />Text</strong></p>'),
                          r'\textbf{Text}')
+
+    def test_no_double_newlines_within_textbf_command(self):
+        """Within a \textbf command, it is not allowed to finish a
+        paragraph with either \par or \n\n.
+        It is also not allowed to make two newlines (\\\\ or \\\newline).
+        Thus, when we need to have an empty line, we use the workaround
+        \vspace{\baselineskip} after the first newline.
+        """
+        self.assertEqual(self.convert('<strong>foo<br /><br />bar</strong>'),
+                         r'\textbf{foo\\\vspace{\baselineskip}bar}')
 
     def test_curly_bracket_spaces(self):
         # If there is no space at left of the curly brackets, there will
