@@ -4,7 +4,7 @@ Changelog
 1.6.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fixed exporting the zip and latex for pdfs who are setting the pdf title. [phgross]
 
 
 1.6.0 (2017-03-03)
