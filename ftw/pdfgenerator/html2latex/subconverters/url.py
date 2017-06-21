@@ -1,10 +1,6 @@
 from ftw.pdfgenerator.html2latex import subconverter
-from ftw.pdfgenerator.interfaces import HTML2LATEX_PREVENT_CHARACTER
-from Products.CMFCore.utils import getToolByName
 from urlparse import urlparse
 from urlparse import urlunparse
-import os.path
-import re
 
 
 class URLConverter(subconverter.SubConverter):

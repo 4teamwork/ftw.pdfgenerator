@@ -58,6 +58,7 @@ setup(name='ftw.pdfgenerator',
         'zope.interface',
 
         # Plone
+        'Plone',
         'Products.Archetypes',
         'Products.CMFCore',
 
