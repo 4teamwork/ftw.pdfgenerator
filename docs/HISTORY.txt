@@ -4,6 +4,8 @@ Changelog
 1.6.1 (unreleased)
 ------------------
 
+- Fix encoding error by passing charset hint to BeautifulSoup when converting tables. [lgraf]
+
 - Add Plone 5 compatibility. [phgross]
 
 - Fixed exporting the zip and latex for pdfs who are setting the pdf title. [phgross]

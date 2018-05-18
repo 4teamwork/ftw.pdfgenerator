@@ -68,6 +68,34 @@ class TestTableConverter(MockTestCase):
 
         self.assertMultiLineEqual(self.convert(html), latex)
 
+    def test_table_converted_with_non_ascii(self):
+        # Non-ASCII characters that *only* appear in table headings seem to
+        # trip up BeautifulSoups charset sniffing.
+        # This is a test case that would fail if BeautifulSoup was called
+        # without an appropriate charset hint (fromEncoding='utf-8')
+        html = '\n'.join((
+                '<table>',
+                '    <thead>',
+                '        <tr><th>B\xc3\xa4rengraben</th></tr>',
+                '    </thead><tbody>',
+                '        <tr><td>My Body</td></tr>',
+                '    </tbody>',
+                '</table>'))
+
+        latex = '\n'.join((
+                '\\makeatletter\\@ifundefined{tablewidth}{\\newlength\\tablewidth}\\makeatother',
+                '\\setlength\\tablewidth\\linewidth',
+                '\\addtolength\\tablewidth{-2\\tabcolsep}',
+                '\\renewcommand{\\arraystretch}{1.4}',
+                '\\begin{tabular}{l}',
+                '\\multicolumn{1}{l}{\\textbf{B\xc3\xa4rengraben}} \\\\',
+                '\\multicolumn{1}{l}{My Body} \\\\',
+                '\\end{tabular}\\\\',
+                '\\vspace{4pt}',
+                ''))
+
+        self.assertMultiLineEqual(self.convert(html), latex)
+
     def test_headings(self):
         html = '\n'.join((
                 r'<table>',
