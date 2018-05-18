@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.6.1 (unreleased)
+1.6.1 (2018-05-18)
 ------------------
 
 - Fix encoding error by passing charset hint to BeautifulSoup when converting tables. [lgraf]
