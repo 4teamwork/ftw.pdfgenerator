@@ -94,7 +94,7 @@ class TableConverter(subconverter.SubConverter):
     def parse(self):
         html = self.get_html()
         # cleanup html with BeautifulSoup
-        html = str(BeautifulSoup(html))
+        html = str(BeautifulSoup(html, fromEncoding='utf-8'))
         # minidom hates htmlentities, but loves xmlentities -.-
 
         html = html2xmlentities(html)
