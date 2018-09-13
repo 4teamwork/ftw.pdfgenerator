@@ -4,8 +4,7 @@ Changelog
 1.6.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Fix escaping issues for dash characters in hyperlink labels. [jone]
 
 1.6.1 (2018-05-18)
 ------------------
