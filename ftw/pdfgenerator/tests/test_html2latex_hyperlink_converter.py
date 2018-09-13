@@ -187,6 +187,16 @@ class TestHyperlinkConverter(MockTestCase):
                               'url_label': 'http://foo'}
         self.assertEqual(self.convert(html), latex)
 
+    def test_no_escaped_dashes_in_label(self):
+        # In a \href{} environment, a-b should not become a"=b because
+        # this will be printend literal.
+        self.replay()
+        html = '<a href="http://foo">x-y</a>'
+        latex = LATEX_HREF % {'label': r'x-y',
+                              'url': 'http://foo',
+                              'url_label': 'http://foo'}
+        self.assertEqual(self.convert(html), latex)
+
     def test_removes_nonbreaking_spaces(self):
         self.replay()
         # Non break spaces are evil. In HTML they are usually not used the
