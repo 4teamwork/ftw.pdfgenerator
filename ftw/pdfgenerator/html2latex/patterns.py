@@ -15,6 +15,10 @@ DEFAULT_PATTERNS = ([
         (MODE_REPLACE,  '\\',                      BACKSLASH_MARKER),
         # remove ASCII non breaking space:
         (MODE_REPLACE,  '\xc2\xa0',                ' '),
+        # remove ASCII vertical tab control character
+        (MODE_REPLACE,  '\x0b',                ' '),
+        # remove ASCII form feed control character
+        (MODE_REPLACE,  '\x0c',                ' '),
         interfaces.HTML2LATEX_CUSTOM_PATTERN_PLACEHOLDER_TOP,
 
         # special characters
