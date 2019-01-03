@@ -24,7 +24,7 @@ These TeX distributions are recommended:
 - Linux / Unix: `TeX Live`_
 - Windows: `MiKTeX`_
 
-The package is compatible with `Plone`_ 4.x.
+The package is compatible with `Plone`_ 4.3 and 5.1.
 
 
 Installing

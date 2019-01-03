@@ -4,6 +4,7 @@ Changelog
 1.6.3 (unreleased)
 ------------------
 
+- Drop support for plone 4.2. [njohner]
 - Handle vertical tab special character. [njohner]
 
 
