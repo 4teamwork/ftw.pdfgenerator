@@ -15,6 +15,9 @@ DEFAULT_PATTERNS = ([
         (MODE_REPLACE,  '\\',                      BACKSLASH_MARKER),
         # remove ASCII non breaking space:
         (MODE_REPLACE,  '\xc2\xa0',                ' '),
+        # remove secial whitespace characters
+        (MODE_REPLACE,  '\x0b',                ' '),
+        (MODE_REPLACE,  '\x0c',                ' '),
         interfaces.HTML2LATEX_CUSTOM_PATTERN_PLACEHOLDER_TOP,
 
         # special characters

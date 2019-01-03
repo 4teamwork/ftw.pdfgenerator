@@ -4,7 +4,7 @@ Changelog
 1.6.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Handle vertical tab special character. [njohner]
 
 
 1.6.2 (2018-09-13)

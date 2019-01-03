@@ -119,8 +119,8 @@ class TestBasicPatterns(TestCase):
                          'foo \\textbf{"`bar"\'} baz')
 
     def test_whitespace(self):
-        self.assertEqual(self.convert('W\r\nX\nY\rZ'),
-                         'W X Y Z')
+        self.assertEqual(self.convert('U\x0bV\x0cW\r\nX\nY\rZ'),
+                         'U V W X Y Z')
 
         # Use short whitespace (\,) for abbreviation:
         self.assertEqual(self.convert('x e.g. y').strip(),
