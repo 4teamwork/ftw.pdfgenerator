@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.6.3 (unreleased)
+1.6.3 (2019-01-07)
 ------------------
 
 - Drop support for plone 4.2. [njohner]
