@@ -38,8 +38,12 @@ class TestURLConverter(MockTestCase):
 
     def test_advanced_url(self):
         self.replay()
-        html = 'x http://usr@pwd:sub.domain.com/path/to/doc.html' + \
-               '?foo=1&bar=2#anchor y'
-        latex = 'x http://usr@pwd:sub.domain.com""/path""/to""/doc.html' + \
-                '?foo=1&bar=2\\#anchor y'
+        html = 'x http://usr@pwd:sub.domain.com/path/to/doc.html?foo=1&bar=opt_2#anchor y'
+        latex = 'x http://usr@pwd:sub.domain.com""/path""/to""/doc.html?foo=1""\\&bar=opt\\_2\\#anchor y'
+        self.assertEqual(self.convert(html), latex)
+
+    def test_url_from_minidom(self):
+        self.replay()
+        html = 'https://example.com/some.php?get1=1234&amp;weird_get_%5Bbracketed%5D=5678&amp;somemore=blah'
+        latex = 'https://example.com""/some.php?get1=1234""\\&weird\\_get\\_\\%5Bbracketed\\%5D=5678""\\&somemore=blah'
         self.assertEqual(self.convert(html), latex)
