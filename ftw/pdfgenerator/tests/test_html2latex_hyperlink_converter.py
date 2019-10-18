@@ -125,8 +125,15 @@ class TestHyperlinkConverter(MockTestCase):
         html = '<a href="http://host.com/foo_bar">baz</a>'
         latex = LATEX_HREF % {'label': 'baz',
                               'url': 'http://host.com/foo_bar',
-                              'url_label': 'http://host.com/foo\\_bar'}
+                              'url_label': 'http://host.com/foo\_bar'}
         self.assertEqual(self.convert(html), latex)
+
+    def test_underscores_in_links2(self):
+        self.replay()
+        html = '<a href="http://test.com/_something#anchor">http://test.com/_something#anchor</a>'
+        latex = r'\href{http://test.com/_something\#anchor}{http://test.com/\_something\#anchor\footnote{\href{http://test.com/_something\#anchor}{\url{http://test.com/\_something\#anchor}}}}'
+        self.assertMultiLineEqual(latex + '\n',
+                                  self.convert(html) + '\n')
 
     def test_hash_key_in_links(self):
         self.replay()
