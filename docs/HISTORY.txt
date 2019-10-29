@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.6.5 (unreleased)
+1.6.5 (2019-10-29)
 ------------------
 
 - Fix escaping of underscore in hyperlink labels. [jone]
