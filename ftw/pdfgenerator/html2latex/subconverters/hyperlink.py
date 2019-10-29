@@ -14,7 +14,6 @@ class HyperlinkConverter(subconverter.SubConverter):
         url, label = self.match.groups()
         label = (self.converter.convert(label)
                  .replace('""/', '/')
-                 .replace('_', '\_')
                  .replace('"=', '-'))
 
         is_relative = '://' not in url and not url.startswith('mailto:')
