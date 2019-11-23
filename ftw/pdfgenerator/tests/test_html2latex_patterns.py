@@ -4,7 +4,7 @@
 from ftw.pdfgenerator.html2latex.converter import HTML2LatexConverter
 from ftw.pdfgenerator.html2latex.subconverters import textformatting
 from ftw.pdfgenerator.html2latex.subconverters import url
-from unittest2 import TestCase
+from unittest import TestCase
 
 
 class BasicConverter(HTML2LatexConverter):

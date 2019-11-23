@@ -1,7 +1,7 @@
 from ftw.pdfgenerator.browser.standalone import BaseStandalonePDFView
 from ftw.pdfgenerator.interfaces import IBuilder
 from ftw.pdfgenerator.testing import PREDEFINED_BUILD_DIRECTORY_LAYER
-from unittest2 import TestCase
+from unittest import TestCase
 
 
 class TestBaseStandalonePDFView(TestCase):

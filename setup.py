@@ -4,7 +4,6 @@ import os
 version = '1.6.6.dev0'
 
 tests_require = [
-    'unittest2',
     'mock',
     'ftw.testing',
     'plone.testing',

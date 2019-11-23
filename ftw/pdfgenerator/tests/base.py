@@ -1,5 +1,5 @@
 from ftw.pdfgenerator.html2latex.converter import HTML2LatexConverter
-from unittest2 import TestCase
+from unittest import TestCase
 
 
 class SubconverterTestBase(TestCase):

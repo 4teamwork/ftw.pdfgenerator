@@ -2,7 +2,7 @@ from ftw.pdfgenerator.browser.views import DebugPDFGeneratorView
 from ftw.pdfgenerator.interfaces import DEBUG_MODE_SESSION_KEY
 from ftw.pdfgenerator.testing import PDFGENERATOR_ZCML_LAYER
 from ftw.testing.testcase import Dummy
-from unittest2 import TestCase
+from unittest import TestCase
 from zope.component import getMultiAdapter
 from zope.interface import directlyProvides
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer

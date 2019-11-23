@@ -3,7 +3,7 @@ from ftw.pdfgenerator.html2latex.subconverters import table
 from ftw.pdfgenerator.testing import ZCML_WITH_SITE_LAYER
 from ftw.testing import MockTestCase
 from mock import call
-from unittest2 import TestCase
+from unittest import TestCase
 
 
 class TestTableConverter(MockTestCase):

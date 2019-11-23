@@ -9,7 +9,7 @@ from ftw.pdfgenerator.html2latex import wrapper
 from ftw.pdfgenerator.layout.baselayout import BaseLayout
 from ftw.pdfgenerator.testing import PDFGENERATOR_ZCML_LAYER
 from ftw.testing import MockTestCase
-from unittest2 import TestCase
+from unittest import TestCase
 from zope.component import getMultiAdapter
 from zope.interface.verify import verifyClass
 

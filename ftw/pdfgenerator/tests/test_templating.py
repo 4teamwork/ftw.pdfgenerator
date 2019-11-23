@@ -7,7 +7,7 @@
 from ftw.pdfgenerator.interfaces import ITemplating
 from ftw.pdfgenerator.templating import BaseTemplating
 from ftw.pdfgenerator.templating import MakoTemplating
-from unittest2 import TestCase
+from unittest import TestCase
 from zope.interface.verify import verifyClass
 import os
 
