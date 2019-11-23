@@ -175,10 +175,8 @@ class TestBaseLayout(MockTestCase):
             'Conflicting order: bar after baz after foo after bar.')
 
     def test_use_babel_with_linguaplone(self):
-        context = self.mocker.mock()
-        self.expect(context.getLanguage).result(lambda: 'pt-br')
-
-        self.replay()
+        context = self.mock()
+        context.getLanguage.return_value = 'pt-br'
 
         layout = BaseLayout(context, self.create_dummy(),
                             self.builder)
@@ -189,11 +187,9 @@ class TestBaseLayout(MockTestCase):
                          '\\usepackage[brazilian]{babel}\n')
 
     def test_use_babel_with_preferred_language(self):
-        ltool = self.mocker.mock()
+        ltool = self.mock()
         self.mock_tool(ltool, 'portal_languages')
-        self.expect(ltool.getPreferredLanguage()).result('en-gb')
-
-        self.replay()
+        ltool.getPreferredLanguage.return_value = 'en-gb'
 
         layout = BaseLayout(self.create_dummy(), self.create_dummy(),
                             self.builder)
@@ -222,11 +218,9 @@ class TestBaseLayout(MockTestCase):
                          '\\usepackage[latin, french, british]{babel}\n')
 
     def test_use_babel_with_unsupported_language(self):
-        ltool = self.mocker.mock()
+        ltool = self.mock()
         self.mock_tool(ltool, 'portal_languages')
-        self.expect(ltool.getPreferredLanguage()).result('unknown')
-
-        self.replay()
+        ltool.getPreferredLanguage.return_value = 'unknown'
 
         layout = BaseLayout(self.create_dummy(), self.create_dummy(),
                             self.builder)

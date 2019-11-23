@@ -14,11 +14,10 @@ class TestFootnoteConverter(MockTestCase):
     def setUp(self):
         super(TestFootnoteConverter, self).setUp()
 
-        self.context = self.mocker.mock(count=False)
-        self.expect(self.context.absolute_url()).result(
-            'http://nohost/plone')
+        self.context = self.mock()
+        self.context.absolute_url.return_value = 'http://nohost/plone'
 
-        self.layout = self.mocker.mock()
+        self.layout = self.mock()
 
         self.converter = HTML2LatexConverter(
             context=self.context,
@@ -28,7 +27,6 @@ class TestFootnoteConverter(MockTestCase):
         self.convert = self.converter.convert
 
     def test_basic_fn_syntax(self):
-        self.replay()
         html = ('<span class="footnote" data-footnote="thefn">'
                 'complicated</span>')
         latex = LATEX_FOOTNOTE % {'text': 'complicated',
@@ -36,7 +34,6 @@ class TestFootnoteConverter(MockTestCase):
         self.assertEqual(self.convert(html), latex)
 
     def test_fn_with_icon(self):
-        self.replay()
         html = ('<span class="footnote" data-footnote="thefn">complicated'
                 '<i class="some-icon"></i></span>')
         latex = LATEX_FOOTNOTE % {'text': r'complicated\textit{}',
@@ -44,7 +41,6 @@ class TestFootnoteConverter(MockTestCase):
         self.assertEqual(self.convert(html), latex)
 
     def test_fn_with_custom_classes(self):
-        self.replay()
         html = ('<span class="classa footnote classb" '
                 'data-footnote="thefn">complicated</span>')
         latex = LATEX_FOOTNOTE % {'text': r'complicated',
@@ -52,7 +48,6 @@ class TestFootnoteConverter(MockTestCase):
         self.assertEqual(self.convert(html), latex)
 
     def test_fn_with_custom_attributes(self):
-        self.replay()
         html = ('<span stuff="ignored" class="footnote" '
                 'id="nonrelevant" data-footnote="thefn">complicated</span>')
         latex = LATEX_FOOTNOTE % {'text': r'complicated',
@@ -60,17 +55,14 @@ class TestFootnoteConverter(MockTestCase):
         self.assertEqual(self.convert(html), latex)
 
     def test_footnote_without_data_footnote_attribute_is_ignored(self):
-        self.replay()
         html = ('<span class="footnote">complicated</span>')
         self.assertEqual(self.convert(html), 'complicated')
 
     def test_span_without_footnote_is_ignored(self):
-        self.replay()
         html = ('<span>complicated</span>')
         self.assertEqual(self.convert(html), 'complicated')
 
     def test_footnote_with_newlines(self):
-        self.replay()
         html = ('<span class="footnote" data-footnote="fn\ntext">'
                 'complicated</span>')
         latex = LATEX_FOOTNOTE % {'text': 'complicated',
@@ -78,7 +70,6 @@ class TestFootnoteConverter(MockTestCase):
         self.assertEqual(self.convert(html), latex)
 
     def test_footnote_with_umlauts(self):
-        self.replay()
         html = (u'<span class="footnote" data-footnote="\xfcbl\xe4">'
                 u'c\xf6mpli\xe7ated</span>')
         latex = LATEX_FOOTNOTE % {'text': 'c\xc3\xb6mpli\xc3\xa7ated',

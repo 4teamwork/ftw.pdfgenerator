@@ -5,6 +5,7 @@ from ftw.pdfgenerator.interfaces import ILaTeXView, IRecursiveLaTeXView
 from ftw.pdfgenerator.layout.baselayout import BaseLayout
 from ftw.pdfgenerator.view import MakoLaTeXView, RecursiveLaTeXView
 from ftw.testing import MockTestCase
+from mock import patch
 from zope.interface import Interface
 from zope.interface.verify import verifyClass
 import os
@@ -36,29 +37,27 @@ class TestMakoLaTeXView(MockTestCase):
     def test_register_template_file_plain(self):
         context = object()
         request = object()
-        layout = self.mocker.mock()
-        self.expect(layout.get_builder().add_file('one.txt', 'foo one\n'))
+        layout = self.mock()
 
         class FooView(MakoLaTeXView):
             template_directories = [self.templates_foo]
 
-        self.replay()
         FooView(context, request, layout).register_template_file('one.txt')
+        layout.get_builder.return_value.add_file.assert_called_with(
+            'one.txt', 'foo one\n')
 
     def test_register_template_file_rendererd(self):
         context = object()
         request = object()
-        layout = self.mocker.mock()
-        self.expect(layout.get_builder().add_file(
-                'titlepage.tex',
-                '\\title{Hello World}\n\n\\maketitle\n\n'))
+        layout = self.mock()
 
         class FooView(MakoLaTeXView):
             template_directories = [self.templates_foo]
 
-        self.replay()
         FooView(context, request, layout).register_template_file(
             'titlepage.tex', render=True, title='Hello World')
+        layout.get_builder.return_value.add_file.assert_called_with(
+            'titlepage.tex', '\\title{Hello World}\n\n\\maketitle\n\n')
 
     def test_default_rendering_fails_if_template_name_not_defined(self):
         context = request = layout = object()
@@ -101,32 +100,28 @@ class TestMakoLaTeXView(MockTestCase):
 
     def test_convert_passes_to_converter(self):
         context = request = object()
-        layout = self.mocker.mock()
-        converter = self.mocker.mock()
+        layout = self.mock()
+        converter = self.mock()
 
         html = 'this <b>is</b> html\n '
         latex = 'this \textbf{is} html'
 
-        self.expect(layout.get_converter()).result(converter)
-        self.expect(converter.convert(html, trim=True)).result(latex)
-
-        self.replay()
+        layout.get_converter.return_value = converter
+        converter.convert.return_value = latex
 
         view = MakoLaTeXView(context, request, layout)
         self.assertEqual(view.convert(html, trim=True), latex)
 
     def test_convert_plain_passes_to_converter(self):
         context = request = object()
-        layout = self.mocker.mock()
-        converter = self.mocker.mock()
+        layout = self.mock()
+        converter = self.mock()
 
         html = 'this is <not> html\n '
         latex = 'this is <not> html'
 
-        self.expect(layout.get_converter()).result(converter)
-        self.expect(converter.convert_plain(html, trim=True)).result(latex)
-
-        self.replay()
+        layout.get_converter.return_value = converter
+        converter.convert_plain.return_value = latex
 
         view = MakoLaTeXView(context, request, layout)
         self.assertEqual(view.convert_plain(html, trim=True), latex)
@@ -152,24 +147,26 @@ class TestRecursiveLaTeXView(MockTestCase):
         request = {}
         builder = object()
 
-        context = self.mocker.mock()
-        obj1 = self.mocker.mock()
-        obj2 = self.mocker.mock()
+        context = self.mock()
+        obj1 = self.mock()
+        obj2 = self.mock()
 
         layout = BaseLayout(context, request, builder)
 
-        self.expect(context.listFolderContents()).result([obj1, obj2])
+        context.listFolderContents.return_value = [obj1, obj2]
 
-        subview = self.mocker.mock()
-        self.mock_adapter(subview, ILaTeXView,
+        class Subview(object):
+            def __init__(self, context, request, layout):
+                self.context = context
+
+            def render(self):
+                if self.context == obj1:
+                    return 'object one latex'
+                elif self.context == obj2:
+                    return 'object two latex'
+
+        self.mock_adapter(Subview, ILaTeXView,
                           (Interface, Interface, Interface))
-
-        self.expect(subview(obj1, request, layout).render()).result(
-            'object one latex')
-        self.expect(subview(obj2, request, layout).render()).result(
-            'object two latex')
-
-        self.replay()
 
         view = RecursiveLaTeXView(context, request, layout)
         self.assertEqual(view.render_children(),
@@ -181,31 +178,32 @@ class TestRecursiveLaTeXView(MockTestCase):
                 '/plone/parent/child3']}
         builder = object()
 
-        context = self.mocker.mock(count=False)
-        child1 = self.mocker.mock(count=False)
-        child2 = self.mocker.mock(count=False)
-        child3 = self.mocker.mock(count=False)
+        context = self.mock()
+        child1 = self.mock()
+        child2 = self.mock()
+        child3 = self.mock()
 
         base_path = ['', 'plone', 'parent']
-        self.expect(child1.getPhysicalPath()).result(base_path + ['child1'])
-        self.expect(child2.getPhysicalPath()).result(base_path + ['child2'])
-        self.expect(child3.getPhysicalPath()).result(base_path + ['child3'])
+        child1.getPhysicalPath.return_value = base_path + ['child1']
+        child2.getPhysicalPath.return_value = base_path + ['child2']
+        child3.getPhysicalPath.return_value = base_path + ['child3']
 
-        self.expect(context.listFolderContents()).result(
-            [child1, child2, child3])
+        context.listFolderContents.return_value = [child1, child2, child3]
 
         layout = BaseLayout(context, request, builder)
 
-        subview = self.mocker.mock()
-        self.mock_adapter(subview, ILaTeXView,
+        class Subview(object):
+            def __init__(self, context, request, layout):
+                self.context = context
+
+            def render(self):
+                if self.context == child1:
+                    return 'child one latex'
+                elif self.context == child3:
+                    return 'child three latex'
+
+        self.mock_adapter(Subview, ILaTeXView,
                           (Interface, Interface, Interface))
-
-        self.expect(subview(child1, request, layout).render()).result(
-            'child one latex')
-        self.expect(subview(child3, request, layout).render()).result(
-            'child three latex')
-
-        self.replay()
 
         view = RecursiveLaTeXView(context, request, layout)
         self.assertEqual(
@@ -214,42 +212,38 @@ class TestRecursiveLaTeXView(MockTestCase):
 
     def test_get_render_arguments_contains_latex_content(self):
         context = request = layout = object()
-        view = self.mocker.patch(RecursiveLaTeXView(
-                context, request, layout))
+        view = RecursiveLaTeXView(context, request, layout)
 
-        self.expect(view.render_children()).result('children latex')
+        with patch(
+            'ftw.pdfgenerator.tests.test_view.RecursiveLaTeXView.render_children'
+        ) as mocked_render_childern:
+            mocked_render_childern.return_value = 'children latex'
 
-        self.replay()
-
-        self.assertEqual(view.get_render_arguments(),
-                         {'latex_content': 'children latex'})
+            self.assertEqual(view.get_render_arguments(),
+                             {'latex_content': 'children latex'})
 
     def test_paths_respected_when_not_on_context(self):
         request = {'paths': [
                 '/plone/parent/child1']}
         builder = object()
 
-        context = self.mocker.mock(count=False)
-        child1 = self.mocker.mock(count=False)
-        child1a = self.mocker.mock(count=False)
+        context = self.mock()
+        child1 = self.mock()
+        child1a = self.mock()
 
         base_path = ['', 'plone', 'parent']
-        self.expect(child1.getPhysicalPath()).result(base_path + ['child1'])
-        self.expect(child1a.getPhysicalPath()).result(base_path + [
-                'child1', 'child1a'])
+        child1.getPhysicalPath.return_value = base_path + ['child1']
+        child1a.getPhysicalPath.return_value = base_path + ['child1', 'child1a']
 
-        self.expect(child1.listFolderContents()).result([child1a])
+        child1.listFolderContents.return_value = [child1a]
 
         layout = BaseLayout(context, request, builder)
 
-        subview = self.mocker.mock()
+        subview = self.mock()
         self.mock_adapter(subview, ILaTeXView,
                           (Interface, Interface, Interface))
 
-        self.expect(subview(child1a, request, layout).render()).result(
-            'child one A latex')
-
-        self.replay()
+        subview.return_value.render.return_value = 'child one A latex'
 
         view = RecursiveLaTeXView(child1, request, layout)
         self.assertEqual(

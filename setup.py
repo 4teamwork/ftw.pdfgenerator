@@ -5,8 +5,7 @@ version = '1.6.6.dev0'
 
 tests_require = [
     'unittest2',
-    'mocker',
-    'plone.mocktestcase',
+    'mock',
     'ftw.testing',
     'plone.testing',
 

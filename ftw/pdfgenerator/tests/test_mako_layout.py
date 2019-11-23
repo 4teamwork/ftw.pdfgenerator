@@ -55,11 +55,9 @@ class TestMakoLayoutBase(MockTestCase):
         class FooLayout(MakoLayoutBase):
             template_directories = [self.templates_foo]
 
-        builder = self.mocker.mock()
-        self.expect(builder.add_file(
-                'welcome.tex', data='{\\large Hello \\textbf{${view.name}}!}\n'))
-
-        self.replay()
+        builder = self.mock()
 
         foo = FooLayout(object(), object(), builder)
         foo.add_raw_template_file('welcome.tex')
+        builder.add_file.assert_called_with(
+            'welcome.tex', data='{\\large Hello \\textbf{${view.name}}!}\n')
