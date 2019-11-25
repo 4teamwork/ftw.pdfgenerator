@@ -39,30 +39,23 @@ class TestBaseSubConverter(MockTestCase):
     def test_replace_and_lock_passed_to_converter(self):
         html = 'one three five'
         match = re.search('t[\w]*', html)
-        converter = self.mocker.mock()
-
-        self.expect(converter.replace_and_lock(4, 9, 'latex code'))
-
-        self.replay()
+        converter = self.mock()
 
         obj = SubConverter(converter, match, html)
         obj.replace_and_lock('latex code')
+        converter.replace_and_lock.called_with(4, 9, 'latex code')
 
     def test_replace_passed_to_converter(self):
         html = 'one three five'
         match = re.search('t[\w]*', html)
-        converter = self.mocker.mock()
-
-        self.expect(converter.replace(4, 9, 'latex code'))
-
-        self.replay()
+        converter = self.mock()
 
         obj = SubConverter(converter, match, html)
         obj.replace('latex code')
+        converter.replace.called_with(4, 9, 'latex code')
 
     def test_get_context(self):
-        context = self.mocker.mock()
-        self.expect(context.found())
+        context = self.mock()
 
         class MySubConverter(SubConverter):
             pattern = 'y'
@@ -70,18 +63,16 @@ class TestBaseSubConverter(MockTestCase):
             def __call__(self):
                 self.get_context().found()
 
-        self.replay()
-
         converter = HTML2LatexConverter(
             context=context,
             request=object(),
             layout=object())
 
         converter.convert('xyz', custom_subconverters=[MySubConverter])
+        context.found.assert_called()
 
     def test_get_layout(self):
-        layout = self.mocker.mock()
-        self.expect(layout.found())
+        layout = self.mock()
 
         class MySubConverter(SubConverter):
             pattern = 'y'
@@ -89,11 +80,10 @@ class TestBaseSubConverter(MockTestCase):
             def __call__(self):
                 self.get_layout().found()
 
-        self.replay()
-
         converter = HTML2LatexConverter(
             context=object(),
             request=object(),
             layout=layout)
 
         converter.convert('xyz', custom_subconverters=[MySubConverter])
+        layout.found.assert_called()

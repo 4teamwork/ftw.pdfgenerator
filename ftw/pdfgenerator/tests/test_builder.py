@@ -7,7 +7,7 @@ from ftw.pdfgenerator.exceptions import BuildTerminated, PDFBuildFailed
 from ftw.pdfgenerator.interfaces import IBuilder, IBuilderFactory
 from ftw.pdfgenerator.testing import PREDEFINED_BUILD_DIRECTORY_LAYER
 from ftw.testing import MockTestCase
-from mocker import MATCH, ANY
+from mock import patch
 from StringIO import StringIO
 from zipfile import ZipFile
 from zope.component import getUtility
@@ -64,34 +64,34 @@ class TestBuilder(MockTestCase):
         self.assertEqual(open(filepath).read(), 'Foo\nBar')
 
     def test_terminated_exception_raised(self):
-        builder = self.mocker.patch(getUtility(IBuilderFactory)())
+        builder = getUtility(IBuilderFactory)()
         fake_pdf_path = os.path.join(self.builddir, 'export.pdf')
         fake_pdf = open(fake_pdf_path, 'w')
         fake_pdf.write('the pdf')
         fake_pdf.close()
 
-        self.expect(builder._build_pdf(ANY)).result(fake_pdf_path)
-        self.replay()
+        with patch.object(builder, '_build_pdf') as mocked_build_pdf:
+            mocked_build_pdf.return_value = fake_pdf_path
 
-        builder.build('LaTeX')
-
-        with self.assertRaises(BuildTerminated) as cm:
-            builder.add_file('foo.txt', 'Foo\nBar')
-        self.assertEqual(str(cm.exception),
-                         'The build is already terminated.')
-
-        with self.assertRaises(BuildTerminated) as cm:
             builder.build('LaTeX')
-        self.assertEqual(str(cm.exception),
-                         'The build is already terminated.')
 
-        with self.assertRaises(BuildTerminated) as cm:
-            builder.build_zip('LaTeX')
-        self.assertEqual(str(cm.exception),
-                         'The build is already terminated.')
+            with self.assertRaises(BuildTerminated) as cm:
+                builder.add_file('foo.txt', 'Foo\nBar')
+            self.assertEqual(str(cm.exception),
+                             'The build is already terminated.')
+
+            with self.assertRaises(BuildTerminated) as cm:
+                builder.build('LaTeX')
+            self.assertEqual(str(cm.exception),
+                             'The build is already terminated.')
+
+            with self.assertRaises(BuildTerminated) as cm:
+                builder.build_zip('LaTeX')
+            self.assertEqual(str(cm.exception),
+                             'The build is already terminated.')
 
     def test_build_removes_directory(self):
-        builder = self.mocker.patch(getUtility(IBuilderFactory)())
+        builder = getUtility(IBuilderFactory)()
 
         def execute_mock(cmd):
             self.assertEqual(
@@ -103,20 +103,16 @@ class TestBuilder(MockTestCase):
             pdf.close()
             return 0, '', ''
 
-        self.expect(
-            builder._execute(
-                MATCH(lambda cmd: cmd.startswith('pdflatex ')))
-            ).call(execute_mock)
+        with patch.object(builder, '_execute') as mocked_execute:
+            mocked_execute.side_effect = execute_mock
 
-        self.replay()
-
-        self.assertTrue(builder.config.remove_build_directory)
-        self.assertEqual(builder.build('LaTeX Code'), 'Rendered PDF')
-        self.assertFalse(os.path.exists(builder.build_directory))
+            self.assertTrue(builder.config.remove_build_directory)
+            self.assertEqual(builder.build('LaTeX Code'), 'Rendered PDF')
+            self.assertFalse(os.path.exists(builder.build_directory))
 
     def test_build_does_not_remove_directory_if_disabled(self):
-        builder = self.mocker.patch(getUtility(IBuilderFactory)())
-        self.expect(builder.config.remove_build_directory).result(False)
+        builder = getUtility(IBuilderFactory)()
+        builder.config.remove_build_directory = False
 
         def execute_mock(cmd):
             self.assertEqual(
@@ -128,18 +124,14 @@ class TestBuilder(MockTestCase):
             pdf.close()
             return 0, '', ''
 
-        self.expect(
-            builder._execute(
-                MATCH(lambda cmd: cmd.startswith('pdflatex ')))
-            ).call(execute_mock)
+        with patch.object(builder, '_execute') as mocked_execute:
+            mocked_execute.side_effect = execute_mock
 
-        self.replay()
-
-        self.assertEqual(builder.build('LaTeX Code'), 'Rendered PDF')
-        self.assertTrue(os.path.exists(builder.build_directory))
+            self.assertEqual(builder.build('LaTeX Code'), 'Rendered PDF')
+            self.assertTrue(os.path.exists(builder.build_directory))
 
     def test_build_zip_returns_valid_zip_file_as_stream(self):
-        builder = self.mocker.patch(getUtility(IBuilderFactory)())
+        builder = getUtility(IBuilderFactory)()
 
         def execute_mock(cmd):
             self.assertEqual(
@@ -151,17 +143,14 @@ class TestBuilder(MockTestCase):
             pdf.close()
             return 0, '', ''
 
-        self.expect(
-            builder._execute(
-                MATCH(lambda cmd: cmd.startswith('pdflatex ')))
-            ).call(execute_mock)
+        with patch.object(builder, '_execute') as mocked_execute:
+            mocked_execute.side_effect = execute_mock
 
-        self.replay()
-        self.assertTrue(builder.config.remove_build_directory)
+            self.assertTrue(builder.config.remove_build_directory)
 
-        builder.add_file('mystyle.sty', 'LaTeX sty file content')
+            builder.add_file('mystyle.sty', 'LaTeX sty file content')
+            data = builder.build_zip('LaTeX Code')
 
-        data = builder.build_zip('LaTeX Code')
         self.assertTrue(hasattr(data, 'read'))
 
         zipobj = ZipFile(data)
@@ -178,29 +167,28 @@ class TestBuilder(MockTestCase):
         self.assertFalse(os.path.exists(builder.build_directory))
 
     def test_build_removes_directory_even_if_build_failed(self):
-        builder = self.mocker.patch(getUtility(IBuilderFactory)())
+        builder = getUtility(IBuilderFactory)()
 
-        self.expect(builder._execute(ANY)).result((
-                1, '', 'could not build pdf for some reason...'))
+        with patch.object(builder, '_execute') as mocked_execute:
+            mocked_execute.return_value = (
+                1, '', 'could not build pdf for some reason...')
 
-        self.replay()
+            with self.assertRaises(PDFBuildFailed) as cm:
+                builder.build('LaTeX')
 
-        with self.assertRaises(PDFBuildFailed) as cm:
-            builder.build('LaTeX')
         self.assertEqual(str(cm.exception),
                          'PDF missing.')
 
         self.assertFalse(os.path.exists(builder.build_directory))
 
     def test_build_zip_removes_directory_even_if_build_failed(self):
-        builder = self.mocker.patch(getUtility(IBuilderFactory)())
+        builder = getUtility(IBuilderFactory)()
 
-        self.expect(builder._execute(ANY)).result((
-                1, '', 'could not build pdf for some reason...'))
+        with patch.object(builder, '_execute') as mocked_execute:
+            mocked_execute.return_value = (
+                1, '', 'could not build pdf for some reason...')
 
-        self.replay()
-
-        builder.build_zip('LaTeX')
+            builder.build_zip('LaTeX')
 
         self.assertFalse(os.path.exists(builder.build_directory))
 
@@ -217,7 +205,7 @@ class TestBuilder(MockTestCase):
                          (1, '', 'cat: baz: No such file or directory\n'))
 
     def test_build_pdf_reruns_pdflatex_if_needed(self):
-        builder = self.mocker.patch(getUtility(IBuilderFactory)())
+        builder = getUtility(IBuilderFactory)()
         aux_path = os.path.join(self.builddir, 'export.aux')
         pdf_path = os.path.join(self.builddir, 'export.pdf')
 
@@ -244,16 +232,16 @@ class TestBuilder(MockTestCase):
                 # no change in aux
                 return (0, 'some log', '')
 
-        self.expect(builder._execute(ANY)).call(exec_mock).count(3)
+        with patch.object(builder, '_execute') as mocked_execute:
+            mocked_execute.side_effect = exec_mock
 
-        self.replay()
+            builder._build_pdf(u'The latex')
 
-        builder._build_pdf(u'The latex')
+        self.assertEqual(mocked_execute.call_count, 3)
 
     def test_maximum_reruns(self):
         builder = getUtility(IBuilderFactory)()
         rerun_limit = builder._rerun_limit
-        builder = self.mocker.patch(builder)
 
         aux_path = os.path.join(self.builddir, 'export.aux')
 
@@ -263,17 +251,18 @@ class TestBuilder(MockTestCase):
             aux.close()
             return (0, 'some log', '')
 
-        self.expect(builder._execute(ANY)).call(exec_mock).count(rerun_limit)
+        with patch.object(builder, '_execute') as mocked_execute:
+            mocked_execute.side_effect = exec_mock
 
-        self.replay()
+            with self.assertRaises(PDFBuildFailed) as cm:
+                builder._build_pdf('The latex')
 
-        with self.assertRaises(PDFBuildFailed) as cm:
-            builder._build_pdf('The latex')
+        self.assertEqual(mocked_execute.call_count, rerun_limit)
         self.assertEqual(str(cm.exception),
                          'Maximum pdf build limit reached.')
 
     def test_build_pdf_executes_makeindex(self):
-        builder = self.mocker.patch(getUtility(IBuilderFactory)())
+        builder = getUtility(IBuilderFactory)()
         aux_path = os.path.join(self.builddir, 'export.aux')
         pdf_path = os.path.join(self.builddir, 'export.pdf')
 
@@ -286,15 +275,16 @@ class TestBuilder(MockTestCase):
 
         # Runs 2 times by default, does not rerun because _makeindex
         # returns False (non rerun required)
-        self.expect(builder._execute(ANY)).call(pdflatex_call_mock).count(2)
-        self.expect(builder._makeindex()).result(False)
+        with patch.object(builder, '_execute') as mocked_execute:
+            with patch.object(builder, '_makeindex') as mocked_makeindex:
+                mocked_execute.side_effect = pdflatex_call_mock
+                mocked_makeindex.return_value = False
+                builder._build_pdf(u'LaTeX')
 
-        self.replay()
-
-        builder._build_pdf(u'LaTeX')
+        self.assertEqual(mocked_execute.call_count, 2)
 
     def test_build_pdf_reruns_when_makeindex_requires_rerun(self):
-        builder = self.mocker.patch(getUtility(IBuilderFactory)())
+        builder = getUtility(IBuilderFactory)()
         aux_path = os.path.join(self.builddir, 'export.aux')
         pdf_path = os.path.join(self.builddir, 'export.pdf')
 
@@ -307,28 +297,28 @@ class TestBuilder(MockTestCase):
 
         # Runs 3 times: 2 by default + once because _makeindex requires
         # an additional run by returning True
-        self.expect(builder._execute(ANY)).call(pdflatex_call_mock).count(3)
-        self.expect(builder._makeindex()).result(True)
+        with patch.object(builder, '_execute') as mocked_execute:
+            with patch.object(builder, '_makeindex') as mocked_makeindex:
+                mocked_execute.side_effect = pdflatex_call_mock
+                mocked_makeindex.return_value = True
+                builder._build_pdf(u'LaTeX')
 
-        self.replay()
-
-        builder._build_pdf(u'LaTeX')
+        self.assertEqual(mocked_execute.call_count, 3)
 
     def test_makeindex_does_nothing_and_returns_False_without_idx_file(self):
         builder = getUtility(IBuilderFactory)()
         self.assertEquals(False, builder._makeindex())
 
     def test_makeindex_calls_executable_and_returns_True_with_idx_file(self):
-        builder = self.mocker.patch(getUtility(IBuilderFactory)())
+        builder = getUtility(IBuilderFactory)()
         idx_path = os.path.join(self.builddir, 'export.idx')
         with open(idx_path, 'w+') as idx:
             idx.write('\indexentry{Test}{2}')
 
-        (self.expect(builder._execute('makeindex -g -s umlaut.ist export'))
-         .result((0, 'stdout', 'stderr')))
+        with patch.object(builder, '_execute') as mocked_execute:
+            mocked_execute.return_value = (0, 'stdout', 'stderr')
 
-        self.replay()
-        self.assertEquals(True, builder._makeindex())
+            self.assertEquals(True, builder._makeindex())
 
     def test_cleanup(self):
         builder = getUtility(IBuilderFactory)()

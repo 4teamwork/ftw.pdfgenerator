@@ -2,7 +2,7 @@
 # C0321: More than one statement on a single line
 
 from ftw.pdfgenerator import utils
-from unittest2 import TestCase
+from unittest import TestCase
 from ftw.testing import MockTestCase
 from zope.interface import Interface
 from ftw.pdfgenerator.utils import provide_request_layer

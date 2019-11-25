@@ -4,7 +4,7 @@
 from ftw.pdfgenerator.config import DefaultConfig
 from ftw.pdfgenerator.interfaces import IConfig
 from ftw.pdfgenerator.testing import PDFGENERATOR_ZCML_LAYER
-from unittest2 import TestCase
+from unittest import TestCase
 from zope.component import queryUtility
 from zope.interface.verify import verifyClass
 import os

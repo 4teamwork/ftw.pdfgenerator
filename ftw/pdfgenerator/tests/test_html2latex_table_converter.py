@@ -2,7 +2,8 @@ from ftw.pdfgenerator.html2latex.converter import HTML2LatexConverter
 from ftw.pdfgenerator.html2latex.subconverters import table
 from ftw.pdfgenerator.testing import ZCML_WITH_SITE_LAYER
 from ftw.testing import MockTestCase
-from unittest2 import TestCase
+from mock import call
+from unittest import TestCase
 
 
 class TestTableConverter(MockTestCase):
@@ -15,24 +16,29 @@ class TestTableConverter(MockTestCase):
             count = kwargs['count']
             del kwargs['count']
 
-        layout = self.mocker.mock()
-        self.expect(layout.use_package('multirow')).count(count)
-        self.expect(layout.use_package('multicol')).count(count)
-        self.expect(layout.use_package('calc')).count(0, None)
+        layout = self.mock()
 
         if 'use_packages' in kwargs:
-            for pkg in kwargs['use_packages']:
-                self.expect(layout.use_package(pkg)).count(count)
+            use_packages = kwargs['use_packages']
             del kwargs['use_packages']
-
-        self.replay()
+        else:
+            use_packages = []
 
         converter = HTML2LatexConverter(
             context=object(),
             request=object(),
             layout=layout)
 
-        return converter.convert(*args, **kwargs)
+        res = converter.convert(*args, **kwargs)
+
+        calls = layout.use_package.call_args_list
+        self.assertEqual(calls.count(call('multirow')), count)
+        self.assertEqual(calls.count(call('multicol')), count)
+        self.assertEqual(calls.count(call('calc')), count)
+        for pkg in use_packages:
+            self.assertEqual(calls.count(call(pkg)), count)
+
+        return res
 
     def test_converter_is_default(self):
         converter = HTML2LatexConverter(

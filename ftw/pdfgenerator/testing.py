@@ -1,8 +1,7 @@
-from ftw.pdfgenerator.config import DefaultConfig
 from ftw.pdfgenerator.interfaces import IConfig
 from ftw.testing.layer import ComponentRegistryLayer
-from mocker import Mocker, expect
-from plone.mocktestcase.dummy import Dummy
+from ftw.testing.testcase import Dummy
+from mock import Mock
 from plone.testing import Layer
 from zope.component import getGlobalSiteManager
 from zope.component import provideUtility
@@ -58,25 +57,16 @@ class PredefinedBuildDirectoryLayer(Layer):
     defaultBases = (PDFGENERATOR_ZCML_LAYER,)
 
     def setUp(self):
-        self.testcase_mocker = Mocker()
         self.builddir = os.path.join(tempfile.mkdtemp('test-builder'),
                                      'build')
 
-        self.config = self.testcase_mocker.proxy(
-            DefaultConfig(),
-            spec=None,
-            count=False)
-        expect(self.config.get_build_directory()).result(self.builddir)
-
-        self.testcase_mocker.replay()
+        self.config = Mock()
+        self.config.get_build_directory.return_value = self.builddir
+        provideUtility(provides=IConfig, component=self.config)
 
     def testSetUp(self):
-        provideUtility(provides=IConfig, component=self.config)
+        self.config.remove_build_directory = True
         os.mkdir(self.builddir)
-
-    def tearDown(self):
-        self.testcase_mocker.verify()
-        self.testcase_mocker.restore()
 
     def testTearDown(self):
         if os.path.exists(self.builddir):

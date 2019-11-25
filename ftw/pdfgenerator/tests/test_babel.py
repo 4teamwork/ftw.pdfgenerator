@@ -11,17 +11,15 @@ class TestBabel(MockTestCase):
         self.assertEqual(babel.lookup_babel_option('en-gm'), 'english')
 
     def test_get_preferred_babel_option_for_context(self):
-        foo = self.mocker.mock()
-        self.expect(foo.getLanguage).result(lambda: 'de-at')
+        foo = self.mock()
+        foo.getLanguage.return_value = 'de-at'
 
-        language_tool = self.mocker.mock()
+        language_tool = self.mock()
         self.mock_tool(language_tool, 'portal_languages')
-        self.expect(language_tool.getPreferredLanguage()).result('de')
+        language_tool.getPreferredLanguage.return_value = 'de'
 
-        bar = self.mocker.mock()
-        self.expect(getattr(bar, 'getLanguage', None)).result(None)
-
-        self.replay()
+        bar = self.mock()
+        bar.getLanguage = None
 
         self.assertEqual(babel.get_preferred_babel_option_for_context(foo),
                          'naustrian')

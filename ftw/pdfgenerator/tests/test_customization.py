@@ -97,14 +97,12 @@ class TestExampleCustomization(TestLayoutCustomization):
     adapter_class = ExampleCustomization
 
     def test_add_template_file_from_customization_directory(self):
-        layout = self.mocker.mock()
-        self.expect(layout.get_template_directories()).result(
-            [templates_foo])
-        self.expect(layout.template_name).result('welcome.tex')
-
-        self.expect(layout.builder.add_file('three.txt', data='bar three\n'))
-
-        self.replay()
+        layout = self.mock()
+        layout.get_template_directories.return_value = [templates_foo]
+        layout.template_name = 'welcome.tex'
 
         adapter = ExampleCustomization(object(), object(), layout)
         adapter.add_raw_template_file('three.txt')
+
+        layout.builder.add_file.assert_called_with(
+            'three.txt', data='bar three\n')
