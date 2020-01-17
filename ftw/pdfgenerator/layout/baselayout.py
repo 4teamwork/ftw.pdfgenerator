@@ -1,3 +1,4 @@
+from Products.CMFDiffTool.utils import safe_utf8
 from ftw.pdfgenerator.babel import get_preferred_babel_option_for_context
 from ftw.pdfgenerator.exceptions import ConflictingUsePackageOrder
 from ftw.pdfgenerator.interfaces import IBuilder
@@ -232,6 +233,6 @@ class BaseLayout(object):
         latex = []
 
         for view in self.get_views_for(obj):
-            latex.append(view.render())
+            latex.append(safe_utf8(view.render()))
 
         return '\n'.join(latex)
