@@ -314,3 +314,43 @@ class TestBaseLayout(MockTestCase):
 
         self.assertEqual(
             layout.render_latex_for(foo), 'pre\nfoo\npost')
+
+    def test_umlauts_and_mixed_strings(self):
+        class IFoo(Interface):
+            pass
+
+        foo = self.create_dummy()
+        alsoProvides(foo, IFoo)
+
+        class FooView(object):
+            implements(ILaTeXView)
+            data = 'fo\xf6'
+
+            def __init__(self, context, request, layout):
+                pass
+
+            def render(self):
+                return self.data
+        provideAdapter(FooView, (IFoo, Interface, Interface), name='')
+
+        class PreFooView(FooView):
+            data = u'f\xf6\xf6'
+        provideAdapter(PreFooView, (IFoo, Interface, Interface),
+                       name='pre-hook')
+
+        class PostFooView(FooView):
+            data = 'post'
+        provideAdapter(PostFooView, (IFoo, Interface, Interface),
+                       name='post-hook')
+
+        context = self.create_dummy()
+        request = self.create_dummy()
+        builder = self.create_dummy()
+        layout = BaseLayout(context, request, builder)
+
+        views = layout.get_views_for(foo)
+
+        try:
+            layout.render_latex_for(foo)
+        except UnicodeDecodeError:
+            self.fail('A UnicodeDecodeError is raised because of mixed unicode and non-unicode strings containing umlauts when joining strings in render_latex_for.')
