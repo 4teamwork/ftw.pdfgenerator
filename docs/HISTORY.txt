@@ -4,7 +4,7 @@ Changelog
 1.6.6 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fix unicode error (when unicode and non-unicode strings are joined). [busykoala]
 
 
 1.6.5 (2019-10-29)
