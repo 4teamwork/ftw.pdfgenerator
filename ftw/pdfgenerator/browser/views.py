@@ -1,7 +1,8 @@
-from Products.Five import BrowserView
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from ftw.pdfgenerator.interfaces import DEBUG_MODE_SESSION_KEY
 from ftw.pdfgenerator.interfaces import IPDFAssembler
+from plone import api
+from Products.Five import BrowserView
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope.component import getMultiAdapter
 
 
@@ -30,6 +31,9 @@ class ExportPDFView(BrowserView):
         user = self.context.portal_membership.getAuthenticatedMember()
         if user.has_permission('cmf.ManagePortal', self.context):
             return True
+
+        elif api.user.is_anonymous():
+            return False
 
         elif self.request.SESSION.get(DEBUG_MODE_SESSION_KEY, False):
             return True
