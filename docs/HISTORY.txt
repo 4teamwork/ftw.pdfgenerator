@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.6.7 (unreleased)
+1.6.7 (2020-02-03)
 ------------------
 
 - Don't use session storage anymore - does not work with plone 5 for anonymous users. [mathias.leimgruber]
