@@ -58,6 +58,7 @@ setup(name='ftw.pdfgenerator',
         # Plone
         'Products.Archetypes',
         'Products.CMFCore',
+        'plone.api',
 
         'Mako',
         'BeautifulSoup!=4.0b',

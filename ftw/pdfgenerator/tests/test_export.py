@@ -100,17 +100,31 @@ class TestAsPDFView(MockTestCase):
         aspdf = ExportPDFView(context, request)
         self.assertEqual(aspdf.allow_alternate_output(), True)
 
-    def test_allow_alternate_output_False(self):
+    @patch('plone.api.user.is_anonymous')
+    def test_allow_alternate_output_False(self, is_anonymous):
+        is_anonymous.return_value = False
+
         context, request = self.mock_allow_alternate_output(False)
 
         aspdf = ExportPDFView(context, request)
         self.assertEqual(aspdf.allow_alternate_output(), False)
 
-    def test_allow_alternate_output_in_debug_mode_False(self):
+    @patch('plone.api.user.is_anonymous')
+    def test_allow_alternate_output_in_debug_mode_False(self, is_anonymous):
+        is_anonymous.return_value = False
         context, request = self.mock_allow_alternate_output(False, True)
 
         aspdf = ExportPDFView(context, request)
         self.assertEqual(aspdf.allow_alternate_output(), True)
+
+    @patch('plone.api.user.is_anonymous')
+    def test_do_not_allow_alternate_output_for_anonymous(self, is_anonymous):
+        is_anonymous.return_value = True
+
+        context, request = self.mock_allow_alternate_output(False)
+
+        aspdf = ExportPDFView(context, request)
+        self.assertEqual(aspdf.allow_alternate_output(), False)
 
     def test_call_renders_template_if_admin(self):
         context, request = self.mock_allow_alternate_output(True)
@@ -123,7 +137,9 @@ class TestAsPDFView(MockTestCase):
             aspdf = ExportPDFView(context, request)
             self.assertEqual(aspdf(), 'rendered html')
 
-    def test_call_exports_if_not_admin(self):
+    @patch('plone.api.user.is_anonymous')
+    def test_call_exports_if_not_admin(self, is_anonymous):
+        is_anonymous.return_value = False
         context, request = self.mock_allow_alternate_output(False)
         request_params = {
             'submitted': True,
