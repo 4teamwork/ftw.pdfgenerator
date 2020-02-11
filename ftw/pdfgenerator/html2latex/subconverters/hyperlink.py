@@ -50,12 +50,11 @@ class HyperlinkConverter(subconverter.SubConverter):
         parts = url.split('/')
         if parts[-2] == 'resolveuid' or parts[-2] == 'resolveUid':
             context = self.converter.converter.context
-            reference_catalog = getToolByName(context, 'reference_catalog')
+            catalog = getToolByName(context, 'portal_catalog')
 
             uid = parts[-1]
-            obj = reference_catalog.lookupObject(uid)
-
-            if obj is not None:
-                url = obj.absolute_url()
+            result = catalog.unrestrictedSearchResults(UID=uid)
+            if result:
+                url = result[0].getURL()
 
         return url
