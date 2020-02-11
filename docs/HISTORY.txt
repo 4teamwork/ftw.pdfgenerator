@@ -4,7 +4,7 @@ Changelog
 1.6.8 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Don't use reference_catalog for uid look up, since it does not exist anymore in plone 5. [mathias.leimgruber]
 
 
 1.6.7 (2020-02-03)

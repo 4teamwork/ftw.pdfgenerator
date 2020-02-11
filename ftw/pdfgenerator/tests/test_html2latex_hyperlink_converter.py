@@ -26,8 +26,8 @@ class TestHyperlinkConverter(MockTestCase):
             request=object(),
             layout=self.layout)
 
-        self.reference_catalog = self.mock()
-        self.mock_tool(self.reference_catalog, 'reference_catalog')
+        self.portal_catalog = self.mock()
+        self.mock_tool(self.portal_catalog, 'portal_catalog')
 
     def convert(self, html):
         res = self.converter.convert(html)
@@ -202,10 +202,10 @@ class TestHyperlinkConverter(MockTestCase):
         self.assertEqual(self.convert(html), latex)
 
     def test_resolveuid_links_are_resolved(self):
-        obj = self.mock()
-        obj.absolute_url.return_value = 'http://nohost/theobj'
+        brain = self.mock()
+        brain.getURL.return_value = 'http://nohost/theobj'
 
-        self.reference_catalog.lookupObject.return_value = obj
+        self.portal_catalog.unrestrictedSearchResults.return_value = [brain]
 
         html = '<a href="./resolveuid/THEUID">The Obj</a>'
         latex = LATEX_HREF % {'label': 'The Obj',
