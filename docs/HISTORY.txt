@@ -4,7 +4,7 @@ Changelog
 1.6.9 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add support for converting hexadecimal XML/HTML entities [Nachtalb]
 
 
 1.6.8 (2020-02-11)

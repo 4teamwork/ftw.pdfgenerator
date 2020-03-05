@@ -2,7 +2,6 @@ from ftw.pdfgenerator.html2latex.subconverters import htmlentities
 from ftw.pdfgenerator.tests.base import SubconverterTestBase
 
 
-
 class TestHtmlentitiesConverter(SubconverterTestBase):
 
     def test_converter_is_default(self):
@@ -15,6 +14,8 @@ class TestHtmlentitiesConverter(SubconverterTestBase):
                          '\xc3\xa4\xc3\xab\xc3\xaf\xc3\xb6\xc3\xbc')
         self.assertEqual(self.convert('5 &lt; 6'),
                          '5 < 6')
+        self.assertEqual(self.convert('7 &#x3E; 6'),
+                         '7 > 6')
         self.assertEqual(self.convert('Hello&nbsp;World'),
                          'Hello World')
 

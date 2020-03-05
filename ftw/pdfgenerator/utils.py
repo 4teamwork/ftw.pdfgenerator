@@ -38,11 +38,15 @@ def decode_htmlentities(string):
     """
     Decodes html entities and xml entities.
     """
-    entity_re = re.compile("&(#?)(\d{1,5}|\w{1,8});")
+    entity_re = re.compile("\\\?&\\\?(#?)(\d{1,5}|\w{1,8}|x[\w\d]{1,5});")
 
     def substitute_entity(match):
         ent = match.group(2)
+
         if match.group(1) == "#":
+            if ent.startswith('x'):
+                ent = int('0%s' % ent, 16)  # hex to decimal
+
             return unichr(int(ent))
 
         else:
@@ -81,7 +85,7 @@ def encode_htmlentities(string, encoding='utf-8'):
 
 def html2xmlentities(string):
     """
-    Converts htmlentities to xmlentities
+    Converts htmlentities to xmlentities (decimal)
     """
 
     xpr = re.compile('&(\w{1,8});')
@@ -99,12 +103,18 @@ def html2xmlentities(string):
 
 def xml2htmlentities(string):
     """
-    Converts xmlentities to htmlentities
+    Converts xmlentities (decimal and hex) to htmlentities
     """
-    xpr = re.compile('&#(\d{1,5});')
+    xpr = re.compile('&#(\d{1,5}|x[\d\w]{1,5});')
 
     def substitute_entity(match):
-        ent = int(match.group(1))
+        ent = match.group(1)
+
+        if ent.startswith('x'):
+            ent = int('0%s' % ent, 16)  # hex to decimal
+        else:
+            ent = int(ent)
+
         if ent in cp2n.keys():
             return '&%s;' % cp2n[ent]
 
