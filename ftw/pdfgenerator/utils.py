@@ -38,6 +38,8 @@ def decode_htmlentities(string):
     """
     Decodes html entities and xml entities.
     """
+
+    # e.g. Matches named "&auml;", numeric "&#13;" and hexadecimal "&#xE4;" entities
     entity_re = re.compile("\\\?&\\\?(#?)(\d{1,5}|\w{1,8}|x[\w\d]{1,5});")
 
     def substitute_entity(match):
@@ -105,6 +107,8 @@ def xml2htmlentities(string):
     """
     Converts xmlentities (decimal and hex) to htmlentities
     """
+
+    # e.g. Matches named "&auml;", numeric "&#13;" and hexadecimal "&#xE4;" entities
     xpr = re.compile('&#(\d{1,5}|x[\d\w]{1,5});')
 
     def substitute_entity(match):

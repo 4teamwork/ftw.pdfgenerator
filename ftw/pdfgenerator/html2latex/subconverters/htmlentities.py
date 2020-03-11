@@ -5,6 +5,7 @@ from ftw.pdfgenerator.utils import decode_htmlentities
 
 class HtmlentitiesConverter(subconverter.SubConverter):
 
+    # e.g. Matches named "&auml;", numeric "&#13;" and hexadecimal "&#xE4;" entities
     pattern = r'\\?&\\?(#?)(\d{1,5}|\w{1,8}|x[\w\d]{1,5});'
     placeholder = interfaces.HTML2LATEX_CUSTOM_PATTERN_PLACEHOLDER_BOTTOM
 
