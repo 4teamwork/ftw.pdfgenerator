@@ -84,7 +84,7 @@ class TestEntities(TestCase):
     def test_decode_htmlentites(self):
         self.assertEqual(utils.decode_htmlentities('&quot;X&gt;Y&quot;'),
                          u'"X>Y"')
-        self.assertEqual(utils.decode_htmlentities('m&#38;m'),
+        self.assertEqual(utils.decode_htmlentities('m&#x26;m'),
                          u'm&m')
         self.assertEqual(utils.decode_htmlentities('a&foo;b'),
                          u'a&foo;b')
@@ -110,6 +110,10 @@ class TestEntities(TestCase):
     def test_xml2htmlentities(self):
         self.assertEqual(utils.xml2htmlentities('m&#38;m'),
                          'm&amp;m')
+        self.assertEqual(utils.xml2htmlentities('m&#xE4;m'),
+                         'm&auml;m')
+        self.assertEqual(utils.xml2htmlentities('m&#xFFF;m'),
+                         'm&#xFFF;m')
         self.assertEqual(utils.xml2htmlentities('a&#9999;b'),
                          'a&#9999;b')
 
