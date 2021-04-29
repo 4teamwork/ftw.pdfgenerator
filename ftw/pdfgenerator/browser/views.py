@@ -1,4 +1,4 @@
-from ftw.pdfgenerator.interfaces import DEBUG_MODE_SESSION_KEY
+from ftw.pdfgenerator.interfaces import DEBUG_MODE_COOKIE_KEY
 from ftw.pdfgenerator.interfaces import IPDFAssembler
 from plone import api
 from Products.Five import BrowserView
@@ -35,7 +35,7 @@ class ExportPDFView(BrowserView):
         elif api.user.is_anonymous():
             return False
 
-        elif self.request.SESSION.get(DEBUG_MODE_SESSION_KEY, False):
+        elif self.request.cookies.get(DEBUG_MODE_COOKIE_KEY, False) == 'True':
             return True
 
         else:
@@ -68,10 +68,12 @@ class DebugPDFGeneratorView(BrowserView):
     """
 
     def __call__(self):
-        session = self.request.SESSION
+        cookies = self.request.cookies
 
-        session[DEBUG_MODE_SESSION_KEY] = not session.get(
-            DEBUG_MODE_SESSION_KEY, False)
-
+        self.request.response.setCookie(
+            DEBUG_MODE_COOKIE_KEY,
+            str(not cookies.get(DEBUG_MODE_COOKIE_KEY,  False) == 'True'),
+            quoted=False
+        )
         return 'PDFGenerator debug mode is now %s' % (
-            session.get(DEBUG_MODE_SESSION_KEY) and 'enabled' or 'disabled')
+            self.request.response.cookies.get(DEBUG_MODE_COOKIE_KEY)['value'] == 'True' and 'enabled' or 'disabled')

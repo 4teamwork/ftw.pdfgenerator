@@ -1,34 +1,31 @@
 from ftw.pdfgenerator.browser.views import DebugPDFGeneratorView
-from ftw.pdfgenerator.interfaces import DEBUG_MODE_SESSION_KEY
-from ftw.pdfgenerator.testing import PDFGENERATOR_ZCML_LAYER
-from ftw.testing.testcase import Dummy
+from ftw.pdfgenerator.interfaces import DEBUG_MODE_COOKIE_KEY
+from ftw.pdfgenerator.testing import PDFGENERATOR_FUNCTIONAL
+from ftw.testbrowser import browsing
 from unittest import TestCase
 from zope.component import getMultiAdapter
-from zope.interface import directlyProvides
-from zope.publisher.interfaces.browser import IDefaultBrowserLayer
+from zope.publisher.browser import TestRequest
 
 
 class TestDebugPDFGeneratorView(TestCase):
 
-    layer = PDFGENERATOR_ZCML_LAYER
+    layer = PDFGENERATOR_FUNCTIONAL
 
     def test_component_registered(self):
-        request = Dummy()
-        directlyProvides(request, IDefaultBrowserLayer)
+        request = TestRequest()
         view = getMultiAdapter((object(), request), name='debug-pdf')
         self.assertTrue(isinstance(view, DebugPDFGeneratorView))
 
-    def test_toggle(self):
-        session = {}
-        request = Dummy(SESSION=session)
-        directlyProvides(request, IDefaultBrowserLayer)
+    @browsing
+    def test_toggle(self, browser):
 
-        view = getMultiAdapter((object(), request), name='debug-pdf')
+        browser.visit()
+        self.assertIsNone(browser.cookies.get(DEBUG_MODE_COOKIE_KEY))
 
-        self.assertEquals(session.get(DEBUG_MODE_SESSION_KEY, False), False)
+        browser.visit(view='debug-pdf')
+        self.assertEquals(browser.contents, 'PDFGenerator debug mode is now enabled')
+        self.assertEquals(browser.cookies.get(DEBUG_MODE_COOKIE_KEY)['value'], 'True')
 
-        self.assertEquals(view(), 'PDFGenerator debug mode is now enabled')
-        self.assertEquals(session.get(DEBUG_MODE_SESSION_KEY, False), True)
-
-        self.assertEquals(view(), 'PDFGenerator debug mode is now disabled')
-        self.assertEquals(session.get(DEBUG_MODE_SESSION_KEY, False), False)
+        browser.visit(view='debug-pdf')
+        self.assertEquals(browser.contents, 'PDFGenerator debug mode is now disabled')
+        self.assertEquals(browser.cookies.get(DEBUG_MODE_COOKIE_KEY)['value'], 'False')

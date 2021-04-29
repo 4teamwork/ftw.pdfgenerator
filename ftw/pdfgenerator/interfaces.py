@@ -5,7 +5,7 @@
 from zope.interface import Interface, Attribute
 
 
-DEBUG_MODE_SESSION_KEY = 'pdfgenerator-debug-mode'
+DEBUG_MODE_COOKIE_KEY = 'pdfgenerator-debug-mode'
 
 
 class IPDFAssembler(Interface):

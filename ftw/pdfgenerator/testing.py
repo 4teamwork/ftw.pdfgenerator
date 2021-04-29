@@ -2,10 +2,15 @@ from ftw.pdfgenerator.interfaces import IConfig
 from ftw.testing.layer import ComponentRegistryLayer
 from ftw.testing.testcase import Dummy
 from mock import Mock
+from plone.app.testing import FunctionalTesting
+from plone.app.testing import PLONE_FIXTURE
+from plone.app.testing import PloneSandboxLayer
+from plone.app.testing import applyProfile
 from plone.testing import Layer
 from zope.component import getGlobalSiteManager
 from zope.component import provideUtility
 from zope.component.hooks import setSite
+from zope.configuration import xmlconfig
 from zope.i18n.interfaces import IUserPreferredLanguages
 from zope.interface import alsoProvides
 import os
@@ -74,3 +79,23 @@ class PredefinedBuildDirectoryLayer(Layer):
 
 
 PREDEFINED_BUILD_DIRECTORY_LAYER = PredefinedBuildDirectoryLayer()
+
+
+
+class PdfGeneratorLayer(PloneSandboxLayer):
+    defaultBases = (PLONE_FIXTURE, )
+
+    def setUpZope(self, app, configurationContext):
+        xmlconfig.string(
+            '<configure xmlns="http://namespaces.zope.org/zope">'
+            '  <include package="z3c.autoinclude" file="meta.zcml" />'
+            '  <includePlugins package="plone" />'
+            '  <includePluginsOverrides package="plone" />'
+            '</configure>',
+            context=configurationContext)
+
+
+PDFGENERATOR_FIXTURE = PdfGeneratorLayer()
+PDFGENERATOR_FUNCTIONAL = FunctionalTesting(
+    bases=(PDFGENERATOR_FIXTURE,),
+    name="ftw.pdfgenerator:functional")

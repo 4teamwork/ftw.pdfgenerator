@@ -4,7 +4,7 @@ Changelog
 1.6.10 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Use a cookie instead of session storage to store the debug mode state. [mathias.leimgruber]
 
 
 1.6.9 (2020-03-11)
