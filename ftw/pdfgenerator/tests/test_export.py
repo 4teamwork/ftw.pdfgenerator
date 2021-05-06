@@ -20,9 +20,9 @@ class TestAsPDFView(MockTestCase):
 
         user.has_permission.return_value = result_value
 
-        session = self.mock()
-        session.get.return_value = debug_mode
-        request.SESSION = session
+        cookies = self.mock()
+        cookies.get.return_value = str(debug_mode)
+        request.cookies = cookies
 
         return context, request
 

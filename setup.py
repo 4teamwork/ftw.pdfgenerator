@@ -6,6 +6,7 @@ version = '1.6.10.dev0'
 tests_require = [
     'mock',
     'ftw.testing',
+    'ftw.testbrowser',
     'plone.testing',
 
     'zope.annotation',
