@@ -159,7 +159,7 @@ class TableConverter(subconverter.SubConverter):
         latex.append(r'\begin{%s}{%s}' % (
                 self.environment, self.get_table_format()))
         latex.append(self.render_rows().strip())
-        latex.append(r'\end{%s}\\' % self.environment)
+        latex.append(r'\end{%s}' % self.environment)
         latex.append(r'\vspace{4pt}')
 
         if caption_command and not insert_caption_at_top:
@@ -579,6 +579,16 @@ class LatexCell(object):
         self._css_classes = None
         self.register_row(row)
 
+    def _seqsplit_words(self, input_text):
+        words = input_text.split()
+        seqsplit_words = []
+        for word in words:
+            if all(ord(char) < 128 for char in word):
+                seqsplit_words.append(r'\seqsplit{' + word + '}')
+            else:
+                seqsplit_words.append(word)
+        return ' '.join(seqsplit_words)
+
     def register_row(self, row):
         row.register_cell(self)
         self.rows.append(row)
@@ -627,6 +637,8 @@ class LatexCell(object):
         content = content.encode('utf8')
         latex = self.converter.convert(content,
                                        custom_patterns=custom_patterns)
+
+        latex = self._seqsplit_words(latex)
 
         if 'grey' in self.get_css_classes():
             self.converter.converter.layout.use_package('xcolor')
