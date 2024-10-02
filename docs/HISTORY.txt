@@ -4,7 +4,7 @@ Changelog
 1.6.11 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Remove line break from table environment end and add a smallbreak instead. [buchi]
 
 
 1.6.10 (2021-05-06)
