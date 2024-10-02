@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '1.6.11'
+version = '1.6.12.dev0'
 
 tests_require = [
     'mock',
